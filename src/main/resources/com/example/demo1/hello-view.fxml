@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="10"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.demo1.HelloController">
+
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <Label fx:id="welcomeText"/>
+
+    <TableView fx:id="tableVoyages" prefWidth="600">
+        <columns>
+            <TableColumn fx:id="colDestination" text="Destination"/>
+            <TableColumn fx:id="colDateDepart" text="Date départ"/>
+            <TableColumn fx:id="colDuree" text="Durée (jours)"/>
+            <TableColumn fx:id="colPrix" text="Prix"/>
+        </columns>
+    </TableView>
+
+</VBox>
