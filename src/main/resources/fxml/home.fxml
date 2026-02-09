@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo1.controller.HomeController"
+            stylesheets="@../css/home.css">
+
+    <!-- NAVBAR -->
+    <top>
+        <HBox styleClass="navbar" spacing="0" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="15" right="30" bottom="15" left="30"/>
+            </padding>
+
+            <!-- Logo et nom -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <ImageView fitHeight="140" fitWidth="140" preserveRatio="true" >
+                    <image>
+                        <Image url="@../images/logo.png"/>
+                    </image>
+                </ImageView>
+                <VBox spacing="0">
+                    <Label onSwipeRight="40" text="SMART TRIP" styleClass="logo-text"/>
+                    <Label text="Votre passerelle vers le monde" styleClass="logo-subtitle"/>
+                </VBox>
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Menu Navigation -->
+            <HBox spacing="20" alignment="CENTER">
+                <Button fx:id="btnAccueil" text="Accueil" styleClass="nav-button, nav-button-active"
+                        onAction="#showAccueil"/>
+                <Button fx:id="btnVoyages" text="Voyages" styleClass="nav-button"
+                        onAction="#showVoyages"/>
+                <Button fx:id="btnOffres" text="Offres" styleClass="nav-button"
+                        onAction="#showOffres"/>
+                <Button fx:id="btnOmra" text="Omra" styleClass="nav-button"
+                        onAction="#showOmra"/>
+                <Button text="👤 Admin" styleClass="nav-button-admin"
+                        onAction="#showAdmin"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- CONTENU PRINCIPAL -->
+    <center>
+        <StackPane fx:id="contentArea">
+
+            <!-- PAGE ACCUEIL (par défaut visible) -->
+            <ScrollPane fx:id="accueilPane" fitToWidth="true" styleClass="content-scroll">
+                <VBox spacing="0" styleClass="accueil-container">
+
+                    <!-- HERO SECTION -->
+                    <VBox styleClass="hero-section" alignment="CENTER" spacing="20">
+                        <padding>
+                            <Insets top="80" right="40" bottom="80" left="40"/>
+                        </padding>
+
+                        <Label text="Explorez le Monde avec Nous" styleClass="hero-title"/>
+                        <Label text="Découvrez des destinations exceptionnelles et créez des souvenirs inoubliables"
+                               styleClass="hero-subtitle"/>
+
+                        <HBox spacing="15" alignment="CENTER">
+                            <padding>
+                                <Insets top="20"/>
+                            </padding>
+                            <Button text="🌍 Découvrir nos voyages" styleClass="btn-primary-large"
+                                    onAction="#showVoyages"/>
+                            <Button text="📞 Nous contacter" styleClass="btn-secondary-large"
+                                    onAction="#showContact"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- STATISTIQUES -->
+                    <HBox styleClass="stats-section" spacing="40" alignment="CENTER">
+                        <padding>
+                            <Insets top="60" right="40" bottom="60" left="40"/>
+                        </padding>
+
+                        <VBox styleClass="stat-box" alignment="CENTER" spacing="10">
+                            <Label text="500+" styleClass="stat-number"/>
+                            <Label text="Voyages organisés" styleClass="stat-label"/>
+                        </VBox>
+
+                        <Separator orientation="VERTICAL" prefHeight="60"/>
+
+                        <VBox styleClass="stat-box" alignment="CENTER" spacing="10">
+                            <Label text="50+" styleClass="stat-number"/>
+                            <Label text="Destinations" styleClass="stat-label"/>
+                        </VBox>
+
+                        <Separator orientation="VERTICAL" prefHeight="60"/>
+
+                        <VBox styleClass="stat-box" alignment="CENTER" spacing="10">
+                            <Label text="2000+" styleClass="stat-number"/>
+                            <Label text="Clients satisfaits" styleClass="stat-label"/>
+                        </VBox>
+
+                        <Separator orientation="VERTICAL" prefHeight="60"/>
+
+                        <VBox styleClass="stat-box" alignment="CENTER" spacing="10">
+                            <Label text="15+" styleClass="stat-number"/>
+                            <Label text="Années d'expérience" styleClass="stat-label"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- DESTINATIONS POPULAIRES -->
+                    <VBox styleClass="section" spacing="30">
+                        <padding>
+                            <Insets top="60" right="40" bottom="60" left="40"/>
+                        </padding>
+
+                        <VBox alignment="CENTER" spacing="10">
+                            <Label text="Destinations Populaires" styleClass="section-title"/>
+                            <Label text="Les endroits les plus demandés par nos voyageurs"
+                                   styleClass="section-subtitle"/>
+                        </VBox>
+
+                        <HBox spacing="30" alignment="CENTER">
+                            <!-- Destination 1 -->
+                            <VBox styleClass="destination-card" spacing="15">
+                                <VBox styleClass="destination-image destination-paris"
+                                      prefHeight="200" alignment="BOTTOM_LEFT">
+                                    <padding>
+                                        <Insets top="15" right="15" bottom="15" left="15"/>
+                                    </padding>
+                                    <Label text="Paris" styleClass="destination-name"/>
+                                </VBox>
+                                <VBox spacing="8">
+                                    <padding>
+                                        <Insets top="0" right="15" bottom="15" left="15"/>
+                                    </padding>
+                                    <Label text="La ville lumière vous attend" styleClass="destination-desc"/>
+                                    <Label text="À partir de 850€" styleClass="destination-price"/>
+                                </VBox>
+                            </VBox>
+
+                            <!-- Destination 2 -->
+                            <VBox styleClass="destination-card" spacing="15">
+                                <VBox styleClass="destination-image destination-istanbul"
+                                      prefHeight="200" alignment="BOTTOM_LEFT">
+                                    <padding>
+                                        <Insets top="15" right="15" bottom="15" left="15"/>
+                                    </padding>
+                                    <Label text="Istanbul" styleClass="destination-name"/>
+                                </VBox>
+                                <VBox spacing="8">
+                                    <padding>
+                                        <Insets top="0" right="15" bottom="15" left="15"/>
+                                    </padding>
+                                    <Label text="Entre Orient et Occident" styleClass="destination-desc"/>
+                                    <Label text="À partir de 650€" styleClass="destination-price"/>
+                                </VBox>
+                            </VBox>
+
+                            <!-- Destination 3 -->
+                            <VBox styleClass="destination-card" spacing="15">
+                                <VBox styleClass="destination-image destination-dubai"
+                                      prefHeight="200" alignment="BOTTOM_LEFT">
+                                    <padding>
+                                        <Insets top="15" right="15" bottom="15" left="15"/>
+                                    </padding>
+                                    <Label text="Dubaï" styleClass="destination-name"/>
+                                </VBox>
+                                <VBox spacing="8">
+                                    <padding>
+                                        <Insets top="0" right="15" bottom="15" left="15"/>
+                                    </padding>
+                                    <Label text="Luxe et modernité" styleClass="destination-desc"/>
+                                    <Label text="À partir de 1200€" styleClass="destination-price"/>
+                                </VBox>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- SERVICES -->
+                    <VBox styleClass="services-section" spacing="30">
+                        <padding>
+                            <Insets top="60" right="40" bottom="60" left="40"/>
+                        </padding>
+
+                        <VBox alignment="CENTER" spacing="10">
+                            <Label text="Nos Services" styleClass="section-title-white"/>
+                            <Label text="Un accompagnement complet pour votre voyage"
+                                   styleClass="section-subtitle-white"/>
+                        </VBox>
+
+                        <HBox spacing="30" alignment="CENTER">
+                            <VBox styleClass="service-card" alignment="CENTER" spacing="15">
+                                <Label text="✈️" style="-fx-font-size: 48px;"/>
+                                <Label text="Vols" styleClass="service-title"/>
+                                <Label text="Réservation de vols aux meilleurs tarifs"
+                                       styleClass="service-desc" wrapText="true" alignment="CENTER"/>
+                            </VBox>
+
+                            <VBox styleClass="service-card" alignment="CENTER" spacing="15">
+                                <Label text="🏨" style="-fx-font-size: 48px;"/>
+                                <Label text="Hébergement" styleClass="service-title"/>
+                                <Label text="Hôtels sélectionnés pour votre confort"
+                                       styleClass="service-desc" wrapText="true" alignment="CENTER"/>
+                            </VBox>
+
+                            <VBox styleClass="service-card" alignment="CENTER" spacing="15">
+                                <Label text="🗺️" style="-fx-font-size: 48px;"/>
+                                <Label text="Circuits" styleClass="service-title"/>
+                                <Label text="Itinéraires personnalisés et guidés"
+                                       styleClass="service-desc" wrapText="true" alignment="CENTER"/>
+                            </VBox>
+
+                            <VBox styleClass="service-card" alignment="CENTER" spacing="15">
+                                <Label text="📋" style="-fx-font-size: 48px;"/>
+                                <Label text="Visa" styleClass="service-title"/>
+                                <Label text="Assistance pour vos formalités"
+                                       styleClass="service-desc" wrapText="true" alignment="CENTER"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- FOOTER -->
+                    <VBox styleClass="footer" spacing="20">
+                        <padding>
+                            <Insets top="40" right="40" bottom="40" left="40"/>
+                        </padding>
+
+                        <HBox spacing="80" alignment="CENTER">
+                            <VBox spacing="10">
+                                <Label text="À propos" styleClass="footer-title"/>
+                                <Label text="Notre histoire" styleClass="footer-link"/>
+                                <Label text="Notre équipe" styleClass="footer-link"/>
+                                <Label text="Nos valeurs" styleClass="footer-link"/>
+                            </VBox>
+
+                            <VBox spacing="10">
+                                <Label text="Services" styleClass="footer-title"/>
+                                <Label text="Voyages sur mesure" styleClass="footer-link"/>
+                                <Label text="Voyages organisés" styleClass="footer-link"/>
+                                <Label text="Omra et Hajj" styleClass="footer-link"/>
+                            </VBox>
+
+                            <VBox spacing="10">
+                                <Label text="Contact" styleClass="footer-title"/>
+                                <Label text="📧 contact@voyages-excellence.com" styleClass="footer-link"/>
+                                <Label text="📞 +216 XX XXX XXX" styleClass="footer-link"/>
+                                <Label text="📍 Tunis, Tunisie" styleClass="footer-link"/>
+                            </VBox>
+
+                            <VBox spacing="10">
+                                <Label text="Suivez-nous" styleClass="footer-title"/>
+                                <HBox spacing="15">
+                                    <Label text="📘" style="-fx-font-size: 24px; -fx-cursor: hand;"/>
+                                    <Label text="📷" style="-fx-font-size: 24px; -fx-cursor: hand;"/>
+                                    <Label text="🐦" style="-fx-font-size: 24px; -fx-cursor: hand;"/>
+                                    <Label text="💼" style="-fx-font-size: 24px; -fx-cursor: hand;"/>
+                                </HBox>
+                            </VBox>
+                        </HBox>
+
+                        <Separator/>
+
+                        <Label text="© 2024 Voyages Excellence. Tous droits réservés."
+                               styleClass="footer-copyright" alignment="CENTER"/>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+
+        </StackPane>
+    </center>
+
+</BorderPane>

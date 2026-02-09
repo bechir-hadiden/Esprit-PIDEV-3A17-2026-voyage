@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo1.controller.AddVoyageController"
+            fitToWidth="true"
+            style="-fx-background-color: white;">
+
+    <VBox spacing="15" style="-fx-background-color: white;">
+
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="Ajouter un nouveau voyage"
+               style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+        <Separator/>
+
+        <!-- Destination -->
+        <VBox spacing="5">
+            <Label text="Destination *" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="txtDestination" promptText="Ex: Paris, Rome, Istanbul..."/>
+        </VBox>
+
+        <!-- Date de début -->
+        <VBox spacing="5">
+            <Label text="Date de début *" style="-fx-font-weight: bold;"/>
+            <DatePicker fx:id="dateDebut" promptText="Sélectionnez la date de début"/>
+        </VBox>
+
+        <!-- Date de fin -->
+        <VBox spacing="5">
+            <Label text="Date de fin *" style="-fx-font-weight: bold;"/>
+            <DatePicker fx:id="dateFin" promptText="Sélectionnez la date de fin"/>
+        </VBox>
+
+        <!-- Prix -->
+        <VBox spacing="5">
+            <Label text="Prix (€) *" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="txtPrix" promptText="Ex: 850.00"/>
+        </VBox>
+
+        <!-- Image avec aperçu -->
+        <VBox spacing="5">
+            <Label text="Image du voyage" style="-fx-font-weight: bold;"/>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <TextField fx:id="txtImagePath"
+                           promptText="Aucune image sélectionnée"
+                           editable="false"
+                           HBox.hgrow="ALWAYS"/>
+                <Button text="📁 Parcourir"
+                        onAction="#handleBrowseImage"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 8 15;"/>
+            </HBox>
+            <!-- Aperçu de l'image -->
+            <VBox fx:id="imagePreviewContainer" alignment="CENTER"
+                  style="-fx-border-color: #ddd; -fx-border-width: 1; -fx-background-color: #f5f5f5;"
+                  prefHeight="200" maxHeight="200">
+                <Label fx:id="lblNoImage" text="Aucun aperçu disponible"
+                       style="-fx-text-fill: #999;"/>
+            </VBox>
+        </VBox>
+
+        <!-- Description -->
+        <VBox spacing="5">
+            <Label text="Description" style="-fx-font-weight: bold;"/>
+            <TextArea fx:id="txtDescription"
+                      promptText="Décrivez le voyage..."
+                      prefRowCount="4"
+                      maxHeight="100"/>
+        </VBox>
+
+        <!-- Message d'erreur -->
+        <Label fx:id="lblMessage" style="-fx-text-fill: red;"/>
+
+        <!-- Boutons -->
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Annuler"
+                    onAction="#handleCancel"
+                    style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-padding: 10 20;"/>
+            <Button text="Enregistrer"
+                    onAction="#handleSave"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-padding: 10 20;"/>
+        </HBox>
+
+    </VBox>
+
+</ScrollPane>

@@ -1,82 +1,71 @@
 package com.example.demo1;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.example.demo1.entity.Voyage;
+import com.example.demo1.services.VoyageServices;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import com.example.demo1.entite.Voyage ;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.time.LocalDate;
+
 public class HelloController {
     @FXML
     private Label welcomeText;
 
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
+    private TableView<Voyage> tableView;
 
     @FXML
-    private TableView<Voyage> tableVoyages;
+    private TableColumn<Voyage, Integer> colId;
 
     @FXML
     private TableColumn<Voyage, String> colDestination;
 
     @FXML
-    private TableColumn<Voyage, String> colDateDepart;
+    private TableColumn<Voyage, LocalDate> colDateDebut;
 
     @FXML
-    private TableColumn<Voyage, Integer> colDuree;
+    private TableColumn<Voyage, LocalDate> colDateFin;
 
     @FXML
     private TableColumn<Voyage, Double> colPrix;
 
     @FXML
-    private TextField tfDestination;
+    private TableColumn<Voyage, String> colDescription;
 
-    @FXML
-    private TextField tfDateDepart;
-
-    @FXML
-    private TextField tfDuree;
-
-    @FXML
-    private TextField tfPrix;
-
-    private final ObservableList<Voyage> voyages = FXCollections.observableArrayList();
-
+    private VoyageServices voyageService;
 
     @FXML
     public void initialize() {
-        colDestination.setCellValueFactory(cellData -> cellData.getValue().destinationProperty());
-        colDateDepart.setCellValueFactory(cellData -> cellData.getValue().dateDepartProperty());
-        colDuree.setCellValueFactory(cellData -> cellData.getValue().dureeProperty().asObject());
-        colPrix.setCellValueFactory(cellData -> cellData.getValue().prixProperty().asObject());
+        voyageService = new VoyageServices();
 
-        tableVoyages.setItems(voyages);
+        // Configurer les colonnes du TableView
+        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colDestination.setCellValueFactory(new PropertyValueFactory<>("destination"));
+        colDateDebut.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
+        colDateFin.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
+        colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
+        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        // Charger les données
+        loadVoyages();
+    }
+
+    private void loadVoyages() {
+        tableView.getItems().clear();
+        tableView.getItems().addAll(voyageService.getAllVoyages());
     }
 
     @FXML
-    private void ajouterVoyage() {
-        Voyage v = new Voyage(
-                tfDestination.getText(),
-                tfDateDepart.getText(),
-                Integer.parseInt(tfDuree.getText()),
-                Double.parseDouble(tfPrix.getText())
-        );
-        voyages.add(v);
-        tfDestination.clear();
-        tfDateDepart.clear();
-        tfDuree.clear();
-        tfPrix.clear();
+    protected void onHelloButtonClick() {
+        welcomeText.setText("Bienvenue dans l'agence de voyage!");
     }
 
     @FXML
-    private void supprimerVoyage() {
-        Voyage selected = tableVoyages.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            voyages.remove(selected);
-        }
+    protected void onRefreshButtonClick() {
+        loadVoyages();
+        welcomeText.setText("Données rafraîchies!");
     }
 }

@@ -1,0 +1,305 @@
+/* ============================================
+   VARIABLES ET COULEURS
+   ============================================ */
+.root {
+    -fx-primary: #1e3a8a;        /* Bleu profond */
+    -fx-primary-dark: #1e40af;
+    -fx-secondary: #f59e0b;      /* Orange/Or */
+    -fx-accent: #10b981;         /* Vert émeraude */
+    -fx-background: #f8fafc;     /* Gris très clair */
+    -fx-surface: #ffffff;
+    -fx-text-primary: #1f2937;
+    -fx-text-secondary: #6b7280;
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+.navbar {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+.logo-text {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e3a8a;
+}
+
+.logo-subtitle {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6b7280;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4b5563;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-padding: 10 20;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.nav-button:hover {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #1e3a8a;
+}
+
+.nav-button-active {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #1e3a8a;
+    -fx-font-weight: bold;
+}
+
+.nav-button-admin {
+    -fx-background-color: #1e3a8a;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 10 20;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.nav-button-admin:hover {
+    -fx-background-color: #1e40af;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.hero-section {
+    -fx-background-color: linear-gradient(
+        from top left to bottom right,
+        #1e3a8a,
+        #3b82f6
+    );
+}
+
+.hero-title {
+    -fx-font-size: 48px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.hero-subtitle {
+    -fx-font-size: 20px;
+    -fx-text-fill: rgba(255,255,255,0.9);
+    -fx-max-width: 600px;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+.btn-primary-large {
+    -fx-background-color: #f59e0b;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 15 30;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.btn-primary-large:hover {
+    -fx-background-color: #d97706;
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+}
+
+.btn-secondary-large {
+    -fx-background-color: white;
+    -fx-text-fill: #1e3a8a;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 15 30;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-border-color: white;
+    -fx-border-width: 2;
+}
+
+.btn-secondary-large:hover {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+/* ============================================
+   STATISTIQUES
+   ============================================ */
+.stats-section {
+    -fx-background-color: white;
+}
+
+.stat-number {
+    -fx-font-size: 42px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e3a8a;
+}
+
+.stat-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6b7280;
+}
+
+/* ============================================
+   SECTIONS
+   ============================================ */
+.section {
+    -fx-background-color: #f8fafc;
+}
+
+.section-title {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f2937;
+}
+
+.section-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #6b7280;
+}
+
+.section-title-white {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.section-subtitle-white {
+    -fx-font-size: 16px;
+    -fx-text-fill: rgba(255,255,255,0.9);
+}
+
+/* ============================================
+   DESTINATION CARDS
+   ============================================ */
+.destination-card {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5);
+    -fx-cursor: hand;
+    -fx-max-width: 300px;
+}
+
+.destination-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 20, 0, 0, 8);
+    -fx-translate-y: -5;
+}
+
+.destination-image {
+    -fx-background-radius: 15 15 0 0;
+}
+
+.destination-paris {
+    -fx-background-color: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)),
+                          linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.destination-istanbul {
+    -fx-background-color: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)),
+                          linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.destination-dubai {
+    -fx-background-color: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)),
+                          linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.destination-name {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.destination-desc {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6b7280;
+}
+
+.destination-price {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f59e0b;
+}
+
+/* ============================================
+   SERVICES SECTION
+   ============================================ */
+.services-section {
+    -fx-background-color: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+}
+
+.service-card {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-background-radius: 15;
+    -fx-padding: 30 25;
+    -fx-max-width: 220px;
+    -fx-border-color: rgba(255,255,255,0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 15;
+}
+
+.service-card:hover {
+    -fx-background-color: rgba(255,255,255,0.15);
+}
+
+.service-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.service-desc {
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(255,255,255,0.8);
+    -fx-text-alignment: center;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+    -fx-background-color: #1f2937;
+}
+
+.footer-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.footer-link {
+    -fx-font-size: 14px;
+    -fx-text-fill: #9ca3af;
+    -fx-cursor: hand;
+}
+
+.footer-link:hover {
+    -fx-text-fill: #f59e0b;
+}
+
+.footer-copyright {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6b7280;
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: #f3f4f6;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 5;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #94a3b8;
+}
