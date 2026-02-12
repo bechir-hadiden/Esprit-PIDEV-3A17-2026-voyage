@@ -4,30 +4,44 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.demo1.controller.VoyageController"
-            stylesheets="@../css/style.css">
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.demo1.controller.VoyageController"
+      spacing="20"
+      stylesheets="@../css/style.css">
 
-    <top>
-        <HBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15;">
-            <Label text="Gestion des Voyages"
-                   style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button text="➕ Ajouter un voyage"
-                    onAction="#handleAddVoyage"
-                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20;"/>
-        </HBox>
-    </top>
+    <!-- En-tête -->
+    <HBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15;">
+        <Label text="🌍 Nos Destinations Populaires"
+               style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
 
-    <center>
-        <ScrollPane fitToWidth="true">
-            <FlowPane fx:id="flowPane" hgap="20" vgap="20">
-                <padding>
-                    <Insets top="20" right="20" bottom="20" left="20"/>
-                </padding>
-            </FlowPane>
-        </ScrollPane>
-    </center>
+    <!-- Barre de filtres -->
+    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 15; -fx-background-color: white;">
+        <Label text="Filtrer par:"/>
+        <ComboBox fx:id="cbFiltre" promptText="Toutes les destinations" prefWidth="200"/>
 
-</BorderPane>
+        <Button text="🔄 Actualiser les prix"
+                onAction="#actualiserPrix"
+                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 8 15;"/>
+
+        <Button text="🔍 Recherche personnalisée"
+                onAction="#ouvrirRecherchePersonnalisee"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-padding: 8 15;"/>
+    </HBox>
+
+    <!-- Grille de destinations -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+        <FlowPane fx:id="destinationsGrid"
+                  hgap="20"
+                  vgap="20"
+                  alignment="CENTER"
+                  style="-fx-background-color: #ecf0f1;">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+        </FlowPane>
+    </ScrollPane>
+
+</VBox>

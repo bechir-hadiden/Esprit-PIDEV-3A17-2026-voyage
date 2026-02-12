@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo1.controller.ChatbotController"
+            styleClass="chatbot-container"
+            stylesheets="@../css/chatbot.css">
+
+    <!-- HEADER -->
+    <top>
+        <HBox styleClass="chatbot-header" spacing="10" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            <Label text="🤖" style="-fx-font-size: 24px;"/>
+            <VBox>
+                <Label text="Assistant Voyages" styleClass="chatbot-title"/>
+                <Label text="En ligne" styleClass="chatbot-status"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="✕" styleClass="close-btn" onAction="#fermer"/>
+        </HBox>
+    </top>
+
+    <!-- ZONE DE MESSAGES -->
+    <center>
+        <ScrollPane fx:id="scrollPane" fitToWidth="true"
+                    styleClass="messages-scroll">
+            <VBox fx:id="messagesContainer" spacing="10"
+                  styleClass="messages-container">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <!-- ZONE DE SAISIE -->
+    <bottom>
+        <HBox spacing="10" styleClass="input-area">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            <TextField fx:id="messageInput"
+                       promptText="Tapez votre message..."
+                       styleClass="message-input"
+                       onAction="#envoyerMessage"
+                       HBox.hgrow="ALWAYS"/>
+            <Button text="Envoyer"
+                    styleClass="send-btn"
+                    onAction="#envoyerMessage"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

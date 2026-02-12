@@ -19,16 +19,16 @@
             </padding>
 
             <!-- Logo et nom -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <ImageView fitHeight="140" fitWidth="140" preserveRatio="true" >
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <ImageView fitHeight="300" fitWidth="140" preserveRatio="true" >
                     <image>
                         <Image url="@../images/logo.png"/>
                     </image>
                 </ImageView>
-                <VBox spacing="0">
-                    <Label onSwipeRight="40" text="SMART TRIP" styleClass="logo-text"/>
-                    <Label text="Votre passerelle vers le monde" styleClass="logo-subtitle"/>
-                </VBox>
+<!--                <VBox spacing="0">-->
+<!--                    <Label onSwipeRight="20" text="SMART TRIP" styleClass="logo-text"/>-->
+<!--                    <Label text="Votre passerelle vers le monde" styleClass="logo-subtitle"/>-->
+<!--                </VBox>-->
             </HBox>
 
             <Region HBox.hgrow="ALWAYS"/>
@@ -75,6 +75,12 @@
                                     onAction="#showVoyages"/>
                             <Button text="📞 Nous contacter" styleClass="btn-secondary-large"
                                     onAction="#showContact"/>
+                            <Button text="🛫 Rechercher des vols" onAction="#ouvrirRechercheVols" styleClass="btn-primary-large"/>
+                            <Button text="💬 Aide" styleClass="nav-button"
+                                    onAction="#ouvrirChatbot"/>
+                            <Button text="✈️ Rechercher un Vol"
+                                    onAction="#ouvrirRechercheVols"
+                                    style="-fx-background-color: #48c774; -fx-text-fill: white; -fx-padding: 15 30; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 10;"/>
                         </HBox>
                     </VBox>
 

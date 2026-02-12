@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo1.controller.DeclarationController"
+            stylesheets="@../css/contact.css">
+
+    <!-- HEADER -->
+    <top>
+        <VBox styleClass="header-section" alignment="CENTER" spacing="10">
+            <padding>
+                <Insets top="40" right="30" bottom="40" left="30"/>
+            </padding>
+            <Label text="📋" style="-fx-font-size: 48px;"/>
+            <Label text="Formulaire de Déclaration" styleClass="header-title"/>
+            <Label text="Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais"
+                   styleClass="header-subtitle"/>
+        </VBox>
+    </top>
+
+    <!-- FORMULAIRE -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="form-scroll">
+            <VBox styleClass="form-container" spacing="25">
+                <padding>
+                    <Insets top="40" right="60" bottom="40" left="60"/>
+                </padding>
+
+                <!-- Nom complet -->
+                <VBox spacing="8">
+                    <Label text="Nom complet *" styleClass="field-label"/>
+                    <TextField fx:id="txtNom"
+                               promptText="Entrez votre nom complet"
+                               styleClass="custom-textfield"/>
+                </VBox>
+
+                <!-- Email -->
+                <VBox spacing="8">
+                    <Label text="Adresse email *" styleClass="field-label"/>
+                    <TextField fx:id="txtEmail"
+                               promptText="exemple@email.com"
+                               styleClass="custom-textfield"/>
+                </VBox>
+
+                <!-- Téléphone (optionnel) -->
+                <VBox spacing="8">
+                    <Label text="Téléphone (optionnel)" styleClass="field-label"/>
+                    <TextField fx:id="txtTelephone"
+                               promptText="+216 XX XXX XXX"
+                               styleClass="custom-textfield"/>
+                </VBox>
+
+                <!-- Type de déclaration -->
+                <VBox spacing="8">
+                    <Label text="Type de déclaration *" styleClass="field-label"/>
+                    <ComboBox fx:id="cmbType"
+                              promptText="Sélectionnez le type"
+                              styleClass="custom-combobox"
+                              maxWidth="Infinity">
+                        <items>
+                            <javafx.collections.FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Demande d'information"/>
+                                <String fx:value="Réclamation"/>
+                                <String fx:value="Suggestion"/>
+                                <String fx:value="Autre"/>
+                            </javafx.collections.FXCollections>
+                        </items>
+                    </ComboBox>
+                </VBox>
+
+                <!-- Message -->
+                <VBox spacing="8">
+                    <Label text="Votre déclaration *" styleClass="field-label"/>
+                    <TextArea fx:id="txtDeclaration"
+                              promptText="Décrivez votre demande en détail..."
+                              styleClass="custom-textarea"
+                              prefRowCount="8"
+                              wrapText="true"/>
+                    <Label fx:id="lblCaracteres"
+                           text="0 / 1000 caractères"
+                           styleClass="char-counter"/>
+                </VBox>
+
+                <!-- Séparateur -->
+                <Separator style="-fx-padding: 10 0;"/>
+
+                <!-- Boutons -->
+                <HBox spacing="15" alignment="CENTER">
+                    <Button fx:id="btnEnvoyer"
+                            text="📤 Envoyer la déclaration"
+                            onAction="#handleEnvoyer"
+                            styleClass="btn-primary"/>
+
+                    <Button fx:id="btnReinitialiser"
+                            text="🔄 Réinitialiser"
+                            onAction="#handleReinitialiser"
+                            styleClass="btn-secondary"/>
+                </HBox>
+
+                <!-- Message d'information -->
+                <VBox styleClass="info-box" spacing="10">
+                    <Label text="ℹ️ Information importante" styleClass="info-title"/>
+                    <Label text="• Tous les champs marqués d'un astérisque (*) sont obligatoires"
+                           styleClass="info-text" wrapText="true"/>
+                    <Label text="• Vous recevrez une confirmation par email une fois votre déclaration envoyée"
+                           styleClass="info-text" wrapText="true"/>
+                    <Label text="• Notre équipe vous répondra sous 24-48 heures"
+                           styleClass="info-text" wrapText="true"/>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

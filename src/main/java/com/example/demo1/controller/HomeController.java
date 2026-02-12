@@ -8,9 +8,12 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.ScrollPane;  // ← Ajoutez cet import
-
+import javafx.stage.Stage;
+import javafx.scene.Node;
 import java.io.IOException;
-
+import javafx.event.ActionEvent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 public class HomeController {
 
     @FXML
@@ -44,6 +47,30 @@ public class HomeController {
         System.out.println("📍 Affichage Accueil");
         loadContent("/fxml/homeAccueil.fxml");
         setActiveButton(btnAccueil);
+    }
+    @FXML
+    private void ouvrirRechercheVols(ActionEvent event) {  // ✅ Avec paramètre
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RechercheVolsAmeliore.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root, 1000, 600);
+
+            stage.setScene(scene);
+            stage.setTitle("Recherche de Vols");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @FXML
+    public void showContact() {
+        loadContent("/fxml/contact.fxml");
+        // Optionnel : tu peux mettre un bouton actif si tu veux
     }
 
 
@@ -84,21 +111,21 @@ public class HomeController {
         showVoyages();
     }
 
-    @FXML
-    public void showContact() {
-        System.out.println("📞 Formulaire de contact");
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Contactez-nous");
-        alert.setHeaderText("Informations de contact");
-        alert.setContentText(
-                "📧 Email: contact@voyages-excellence.com\n" +
-                        "📞 Téléphone: +216 XX XXX XXX\n" +
-                        "📍 Adresse: Tunis, Tunisie\n\n" +
-                        "Nous sommes à votre disposition du lundi au vendredi de 9h à 18h."
-        );
-        alert.showAndWait();
-    }
+//    @FXML
+//    public void showContact() {
+//        System.out.println("📞 Formulaire de contact");
+//
+//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//        alert.setTitle("Contactez-nous");
+//        alert.setHeaderText("Informations de contact");
+//        alert.setContentText(
+//                "📧 Email: contact@voyages-excellence.com\n" +
+//                        "📞 Téléphone: +216 XX XXX XXX\n" +
+//                        "📍 Adresse: Tunis, Tunisie\n\n" +
+//                        "Nous sommes à votre disposition du lundi au vendredi de 9h à 18h."
+//        );
+//        alert.showAndWait();
+//    }
 
     private void loadContent(String fxmlPath) {
         try {
@@ -125,4 +152,49 @@ public class HomeController {
             activeButton.getStyleClass().add("nav-button-active");
         }
     }
+
+    @FXML
+    public void ouvrirChatbot() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chatbot.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Assistant Voyages");
+            stage.setScene(new Scene(root, 450, 600));
+            stage.setResizable(false);
+            stage.show();
+
+        } catch (IOException e) {
+            System.err.println("❌ Erreur chatbot: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+//    @FXML
+//    private void ouvrirRechercheVols(ActionEvent event) {
+//        try {
+//            System.out.println("🔍 Ouverture de la recherche de vols...");
+//
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RechercheVolsAmeliore.fxml"));
+//            Parent root = loader.load();
+//
+//            // Remplacer la scène actuelle
+//            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//            stage.setScene(new Scene(root, 1200, 700));
+//            stage.setTitle("✈️ Recherche de Vols");
+//
+//            System.out.println("✅ Page de recherche chargée !");
+//
+//        } catch (IOException e) {
+//            System.err.println("❌ Erreur lors du chargement:");
+//            e.printStackTrace();
+//
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Erreur");
+//            alert.setContentText("Impossible d'ouvrir la recherche de vols");
+//            alert.showAndWait();
+//        }
+//    }
+
 }

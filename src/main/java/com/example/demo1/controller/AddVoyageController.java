@@ -1,5 +1,7 @@
 package com.example.demo1.controller;
 
+import com.example.demo1.controller.VoyageController;
+
 import com.example.demo1.entity.Voyage;
 import com.example.demo1.services.VoyageServices;
 import javafx.fxml.FXML;
@@ -159,9 +161,7 @@ public class AddVoyageController {
                 alert.setContentText("Le voyage vers " + voyage.getDestination() + " a été ajouté avec succès !");
                 alert.showAndWait();
 
-                if (voyageController != null) {
-                    voyageController.refreshVoyages();
-                }
+
 
                 closeWindow();
             } else {

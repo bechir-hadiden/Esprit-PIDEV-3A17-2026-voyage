@@ -1,0 +1,245 @@
+/* ============================================
+   FORMULAIRE DE CONTACT - STYLES MODERNES
+   ============================================ */
+
+/* ----- GÉNÉRAL ----- */
+.root {
+    -fx-background-color: #f5f7fa;
+}
+
+.form-scroll {
+    -fx-background-color: #f5f7fa;
+}
+
+.form-scroll > .viewport {
+    -fx-background-color: #f5f7fa;
+}
+
+/* ----- HEADER ----- */
+.header-section {
+    -fx-background-color: linear-gradient(to bottom, #4472C4, #2E5C9A);
+}
+
+.header-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.header-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: rgba(255, 255, 255, 0.9);
+    -fx-max-width: 600px;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+/* ----- CONTENEUR FORMULAIRE ----- */
+.form-container {
+    -fx-background-color: white;
+    -fx-background-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 25, 0, 0, 5);
+    -fx-max-width: 650px;
+    -fx-pref-width: 650px;
+    -fx-min-width: 500px;
+}
+
+/* ----- LABELS ----- */
+.field-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.char-counter {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7f8c8d;
+    -fx-alignment: center-right;
+}
+
+/* ----- CHAMPS DE TEXTE ----- */
+.custom-textfield {
+    -fx-font-size: 14px;
+    -fx-padding: 14px 18px;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dfe6e9;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-pref-height: 45px;
+}
+
+.custom-textfield:focused {
+    -fx-border-color: #4472C4;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(68, 114, 196, 0.25), 10, 0, 0, 2);
+}
+
+/* ----- TEXTAREA ----- */
+.custom-textarea {
+    -fx-font-size: 14px;
+    -fx-padding: 14px 18px;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dfe6e9;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-width: 2px;
+}
+
+.custom-textarea:focused {
+    -fx-border-color: #4472C4;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(68, 114, 196, 0.25), 10, 0, 0, 2);
+}
+
+.custom-textarea .content {
+    -fx-background-color: transparent;
+}
+
+.custom-textarea .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.custom-textarea .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* ----- COMBOBOX ----- */
+.custom-combobox {
+    -fx-font-size: 14px;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dfe6e9;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-pref-height: 45px;
+}
+
+.custom-combobox:focused {
+    -fx-border-color: #4472C4;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(68, 114, 196, 0.25), 10, 0, 0, 2);
+}
+
+.custom-combobox .list-cell {
+    -fx-padding: 12px 18px;
+    -fx-font-size: 14px;
+}
+
+.custom-combobox .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 10px 0 10px;
+}
+
+/* ----- BOUTONS ----- */
+.btn-primary {
+    -fx-background-color: #4472C4;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 16px 45px;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(68, 114, 196, 0.4), 12, 0, 0, 4);
+    -fx-min-width: 200px;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #2E5C9A;
+    -fx-scale-y: 1.03;
+    -fx-scale-x: 1.03;
+    -fx-effect: dropshadow(gaussian, rgba(68, 114, 196, 0.5), 15, 0, 0, 5);
+}
+
+.btn-primary:pressed {
+    -fx-background-color: #1e4378;
+    -fx-scale-y: 0.97;
+    -fx-scale-x: 0.97;
+}
+
+.btn-primary:disabled {
+    -fx-background-color: #bdc3c7;
+    -fx-text-fill: #7f8c8d;
+    -fx-opacity: 0.7;
+    -fx-cursor: default;
+    -fx-effect: none;
+}
+
+.btn-secondary {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4472C4;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 16px 45px;
+    -fx-border-color: #4472C4;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-min-width: 180px;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: rgba(68, 114, 196, 0.08);
+    -fx-border-color: #2E5C9A;
+    -fx-text-fill: #2E5C9A;
+}
+
+.btn-secondary:pressed {
+    -fx-background-color: rgba(68, 114, 196, 0.15);
+}
+
+/* ----- INFO BOX ----- */
+.info-box {
+    -fx-background-color: #e8f4f8;
+    -fx-padding: 22px;
+    -fx-background-radius: 12px;
+    -fx-border-color: #4472C4;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 12px;
+}
+
+.info-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1565c0;
+}
+
+.info-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 3px 0;
+    -fx-line-spacing: 2px;
+}
+
+/* ----- SÉPARATEUR ----- */
+.separator {
+    -fx-background-color: #dfe6e9;
+    -fx-pref-height: 2px;
+}
+
+.separator .line {
+    -fx-border-color: #dfe6e9;
+    -fx-border-width: 1px;
+}
+
+/* ----- SCROLLBAR ----- */
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #4472C4;
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar:vertical .track,
+.scroll-bar:horizontal .track {
+    -fx-background-color: #ecf0f1;
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar:vertical .increment-button,
+.scroll-bar:vertical .decrement-button,
+.scroll-bar:horizontal .increment-button,
+.scroll-bar:horizontal .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}

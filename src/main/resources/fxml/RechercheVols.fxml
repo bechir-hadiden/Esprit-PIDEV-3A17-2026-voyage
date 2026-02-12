@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.demo1.controller.VolsController"
+      spacing="20"
+      alignment="TOP_CENTER"
+      style="-fx-padding: 30;">
+
+    <Label text="🛫 Recherche de Vols" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="15" alignment="CENTER">
+        <VBox spacing="5">
+            <Label text="Origine (code IATA)"/>
+            <TextField fx:id="tfOrigine" promptText="TUN" prefWidth="120"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Destination (code IATA)"/>
+            <TextField fx:id="tfDestination" promptText="CDG" prefWidth="120"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Date de départ"/>
+            <DatePicker fx:id="dpDepart" prefWidth="150"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Adultes"/>
+            <TextField fx:id="tfAdultes" text="1" prefWidth="60"/>
+        </VBox>
+    </HBox>
+
+    <Button text="🔍 Rechercher les vols" onAction="#rechercherVols"
+            style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 30;"/>
+
+    <TableView fx:id="tableVols" prefHeight="400" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colCompagnie" text="Compagnie" prefWidth="100"/>
+            <TableColumn fx:id="colTrajet" text="Trajet" prefWidth="120"/>
+            <TableColumn fx:id="colDate" text="Date" prefWidth="100"/>
+            <TableColumn fx:id="colHoraires" text="Horaires" prefWidth="120"/>
+            <TableColumn fx:id="colDuree" text="Durée" prefWidth="80"/>
+            <TableColumn fx:id="colEscales" text="Escales" prefWidth="70"/>
+            <TableColumn fx:id="colPrix" text="Prix" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+</VBox>

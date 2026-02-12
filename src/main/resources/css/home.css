@@ -70,11 +70,8 @@
    HERO SECTION
    ============================================ */
 .hero-section {
-    -fx-background-color: linear-gradient(
-        from top left to bottom right,
-        #1e3a8a,
-        #3b82f6
-    );
+ -fx-background-color: #f5f5f5; /* ✅ juste la couleur */
+    -fx-padding: 20px;
 }
 
 .hero-title {

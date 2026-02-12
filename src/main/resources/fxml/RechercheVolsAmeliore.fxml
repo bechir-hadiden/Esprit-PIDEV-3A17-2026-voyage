@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.demo1.controller.RechercheVolsAmelioreController"
+      spacing="0"
+      stylesheets="@../css/recherche-vols.css">
+
+    <!-- En-tête -->
+    <HBox styleClass="header">
+        <Label text="✈️ Rechercher un Vol" styleClass="header-title"/>
+    </HBox>
+
+    <!-- Formulaire de recherche -->
+    <VBox styleClass="search-container" spacing="20">
+
+        <!-- Options de voyage -->
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <RadioButton text="Aller / Retour" selected="true" fx:id="rbAllerRetour" styleClass="radio-option">
+                <toggleGroup>
+                    <ToggleGroup fx:id="typeVoyage"/>
+                </toggleGroup>
+            </RadioButton>
+            <RadioButton text="Aller simple" toggleGroup="$typeVoyage" fx:id="rbAllerSimple" styleClass="radio-option"/>
+        </HBox>
+
+        <!-- Champs de recherche -->
+        <HBox spacing="15" alignment="CENTER">
+
+            <!-- Origine -->
+            <VBox spacing="8" styleClass="search-field" HBox.hgrow="ALWAYS">
+                <Label text="🛫 Départ" styleClass="field-label"/>
+                <VBox styleClass="autocomplete-container">
+                    <TextField fx:id="tfOrigine"
+                               promptText="Tunis (TUN)"
+                               styleClass="search-input"
+                               onKeyReleased="#onOrigineKeyReleased"/>
+                    <ListView fx:id="lvOrigine"
+                              styleClass="autocomplete-list"
+                              visible="false"
+                              maxHeight="200"/>
+                </VBox>
+            </VBox>
+
+            <!-- Bouton d'échange -->
+            <Button text="⇄"
+                    onAction="#echangerAeroports"
+                    styleClass="btn-exchange"/>
+
+            <!-- Destination -->
+            <VBox spacing="8" styleClass="search-field" HBox.hgrow="ALWAYS">
+                <Label text="🛬 Arrivée" styleClass="field-label"/>
+                <VBox styleClass="autocomplete-container">
+                    <TextField fx:id="tfDestination"
+                               promptText="Paris (CDG)"
+                               styleClass="search-input"
+                               onKeyReleased="#onDestinationKeyReleased"/>
+                    <ListView fx:id="lvDestination"
+                              styleClass="autocomplete-list"
+                              visible="false"
+                              maxHeight="200"/>
+                </VBox>
+            </VBox>
+
+            <!-- Date départ -->
+            <VBox spacing="8" styleClass="search-field">
+                <Label text="📅 Départ" styleClass="field-label"/>
+                <DatePicker fx:id="dpDepart"
+                            promptText="Date de départ"
+                            styleClass="date-picker"
+                            prefWidth="150"/>
+            </VBox>
+
+            <!-- Date retour -->
+            <VBox spacing="8" styleClass="search-field" fx:id="vboxRetour">
+                <Label text="📅 Retour" styleClass="field-label"/>
+                <DatePicker fx:id="dpRetour"
+                            promptText="Date de retour"
+                            styleClass="date-picker"
+                            prefWidth="150"/>
+            </VBox>
+
+            <!-- Passagers -->
+            <VBox spacing="8" styleClass="search-field">
+                <Label text="👤 Passagers" styleClass="field-label"/>
+                <ComboBox fx:id="cbPassagers"
+                          styleClass="combo-box"
+                          prefWidth="120"/>
+            </VBox>
+
+        </HBox>
+
+        <!-- Options supplémentaires -->
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <CheckBox text="Vol direct uniquement" fx:id="cbVolDirect" styleClass="checkbox-option"/>
+            <CheckBox text="Avec bagages" fx:id="cbBagages" styleClass="checkbox-option"/>
+        </HBox>
+
+        <!-- Bouton de recherche -->
+        <Button text="🔍 Rechercher les vols"
+                onAction="#rechercherVols"
+                styleClass="btn-search"
+                maxWidth="Infinity"/>
+
+    </VBox>
+
+    <!-- Résultats -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="results-scroll">
+        <VBox fx:id="vboxResultats" spacing="15" styleClass="results-container">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+        </VBox>
+    </ScrollPane>
+
+</VBox>

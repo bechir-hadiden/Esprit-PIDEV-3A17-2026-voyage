@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo1.controller.ContactController"
+            stylesheets="@../css/contact.css">
+
+    <!-- HEADER -->
+<!--    <top>-->
+<!--        <VBox styleClass="header-section" alignment="CENTER" spacing="12">-->
+<!--            <padding>-->
+<!--                <Insets top="45" right="30" bottom="45" left="30"/>-->
+<!--            </padding>-->
+<!--            <Label text="📋" style="-fx-font-size: 52px;"/>-->
+<!--            <Label text="Formulaire de Contact" styleClass="header-title"/>-->
+<!--            <Label text="Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais"-->
+<!--                   styleClass="header-subtitle"/>-->
+<!--        </VBox>-->
+<!--    </top>-->
+
+    <!-- FORMULAIRE CENTRÉ -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="form-scroll" hbarPolicy="NEVER">
+            <HBox alignment="CENTER">
+                <padding>
+                    <Insets top="30" right="20" bottom="30" left="20"/>
+                </padding>
+
+                <VBox styleClass="form-container" spacing="22">
+                    <padding>
+                        <Insets top="35" right="50" bottom="35" left="50"/>
+                    </padding>
+
+                    <!-- Nom complet -->
+                    <VBox spacing="8">
+                        <Label text="Nom complet *" styleClass="field-label"/>
+                        <TextField fx:id="txtNom"
+                                   promptText="Entrez votre nom complet"
+                                   styleClass="custom-textfield"/>
+                    </VBox>
+
+                    <!-- Email -->
+                    <VBox spacing="8">
+                        <Label text="Adresse email *" styleClass="field-label"/>
+                        <TextField fx:id="txtEmail"
+                                   promptText="exemple@email.com"
+                                   styleClass="custom-textfield"/>
+                    </VBox>
+
+                    <!-- Téléphone (optionnel) -->
+                    <VBox spacing="8">
+                        <Label text="Téléphone (optionnel)" styleClass="field-label"/>
+                        <TextField fx:id="txtTelephone"
+                                   promptText="+216 XX XXX XXX"
+                                   styleClass="custom-textfield"/>
+                    </VBox>
+
+                           <!-- Message -->
+                    <VBox spacing="8">
+                        <Label text="Votre message *" styleClass="field-label"/>
+                        <TextArea fx:id="txtDeclaration"
+                                  promptText="Décrivez votre demande en détail..."
+                                  styleClass="custom-textarea"
+                                  prefRowCount="6"
+                                  wrapText="true"/>
+                        <Label fx:id="lblCaracteres"
+                               text="0 / 1000 caractères"
+                               styleClass="char-counter"/>
+                    </VBox>
+
+                    <!-- Séparateur -->
+                    <Separator style="-fx-padding: 8 0;"/>
+
+                    <!-- Boutons -->
+                    <HBox spacing="15" alignment="CENTER">
+                        <padding>
+                            <Insets top="5"/>
+                        </padding>
+
+                        <Button fx:id="btnEnvoyer"
+                                text="📤 Envoyer"
+                                onAction="#handleEnvoyer"
+                                styleClass="btn-primary"/>
+
+<!--                        <Button fx:id="btnReinitialiser"-->
+<!--                                text="🔄 Réinitialiser"-->
+<!--                                onAction="#handleReinitialiser"-->
+<!--                                styleClass="btn-secondary"/>-->
+                    </HBox>
+
+                    <!-- Message d'information -->
+                    <VBox styleClass="info-box" spacing="8">
+                        <padding>
+                            <Insets top="5"/>
+                        </padding>
+
+                        <Label text="ℹ️ Information importante" styleClass="info-title"/>
+                        <Label text="• Tous les champs marqués d'un astérisque (*) sont obligatoires"
+                               styleClass="info-text" wrapText="true"/>
+                        <Label text="• Vous recevrez une confirmation par email"
+                               styleClass="info-text" wrapText="true"/>
+                        <Label text="• Notre équipe vous répondra sous 24-48 heures"
+                               styleClass="info-text" wrapText="true"/>
+                    </VBox>
+
+                </VBox>
+            </HBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

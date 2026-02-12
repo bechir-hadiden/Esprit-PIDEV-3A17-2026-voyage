@@ -29,6 +29,9 @@
                 <Button text="🌍 Découvrir nos voyages" styleClass="btn-primary-large"/>
                 <Button text="📞 Nous contacter" styleClass="btn-secondary-large"
                         onAction="#showContact"/>
+                <Button text="✈️ Rechercher un Vol"
+                        onAction="#ouvrirRechercheVols"
+                        style="-fx-background-color: #48c774; -fx-text-fill: white; -fx-padding: 10 20; -fx-font-size: 14px;"/>
             </HBox>
         </VBox>
 
@@ -76,6 +79,7 @@
                 <Label text="Les endroits les plus demandés par nos voyageurs"
                        styleClass="section-subtitle"/>
             </VBox>
+
 
             <HBox spacing="30" alignment="CENTER">
                 <!-- Destination Card 1 -->
