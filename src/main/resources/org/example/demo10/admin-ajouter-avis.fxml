@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<GridPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="org.example.demo10.controller.AdminAjouterAvisController"
+          hgap="15" vgap="15" style="-fx-background-color: #f8f9fa;">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Ajouter un Avis" GridPane.columnSpan="2"
+           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <Label text="Nom Client:" GridPane.rowIndex="1" style="-fx-font-weight: bold;"/>
+    <TextField fx:id="txtNomClient" GridPane.rowIndex="1" GridPane.columnIndex="1"
+               prefWidth="250" promptText="Nom du client"/>
+
+    <Label text="Email:" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
+    <TextField fx:id="txtEmail" GridPane.rowIndex="2" GridPane.columnIndex="1"
+               promptText="email@exemple.com"/>
+
+    <Label text="Note (1-5):" GridPane.rowIndex="3" style="-fx-font-weight: bold;"/>
+    <ChoiceBox fx:id="choiceNote" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+    <Label text="Commentaire:" GridPane.rowIndex="4" style="-fx-font-weight: bold;"/>
+    <TextArea fx:id="txtCommentaire" GridPane.rowIndex="4" GridPane.columnIndex="1"
+              prefRowCount="4" prefWidth="250" promptText="Commentaire..."/>
+
+    <Label text="Voyage ID:" GridPane.rowIndex="5" style="-fx-font-weight: bold;"/>
+    <TextField fx:id="txtVoyageId" GridPane.rowIndex="5" GridPane.columnIndex="1"
+               promptText="Ex: 1, 2, 3..."/>
+
+    <HBox spacing="15" GridPane.rowIndex="6" GridPane.columnSpan="2" alignment="CENTER">
+        <Button text="Ajouter" fx:id="btnAjouter"
+                style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 25;"/>
+        <Button text="Annuler" fx:id="btnAnnuler"
+                style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 25;"/>
+    </HBox>
+</GridPane>

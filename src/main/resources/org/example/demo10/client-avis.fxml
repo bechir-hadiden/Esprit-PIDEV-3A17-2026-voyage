@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.demo10.controller.ClientAvisController"
+            style="-fx-background-color: linear-gradient(to bottom, #f8f9fa, #e9ecef);">
+
+    <!-- En-tête -->
+    <top>
+        <VBox spacing="10" style="-fx-background-color: #343a40; -fx-padding: 20;">
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Circle radius="25" fill="#007bff"/>
+                <VBox>
+                    <Label text="Voyage &amp; Avis" style="-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+                    <Label text="Partagez votre expérience de voyage" style="-fx-text-fill: #adb5bd; -fx-font-size: 14px;"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- NOUVEAU : Bouton Connexion/Déconnexion -->
+                <Button text="👤 Connexion" fx:id="btnConnexion"
+                        style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-padding: 10 25; -fx-background-radius: 25; -fx-font-size: 14px;"/>
+
+                <Button text="📊 Statistiques" fx:id="btnStatistiquesClient"
+                        style="-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-padding: 10 20; -fx-background-radius: 25; -fx-font-size: 14px;"/>
+            </HBox>
+
+            <!-- Message de bienvenue si connecté (optionnel) -->
+            <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 5 0 0 0;">
+                <Label fx:id="lblMessageBienvenue" text="" style="-fx-text-fill: #ffc107; -fx-font-size: 12px; -fx-font-style: italic;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Contenu principal -->
+    <center>
+        <SplitPane dividerPositions="0.35" orientation="HORIZONTAL">
+
+            <!-- Panneau gauche : Formulaire et recherche -->
+            <VBox spacing="20" style="-fx-padding: 25; -fx-background-color: white;">
+
+                <!-- Formulaire d'avis -->
+                <VBox spacing="15" style="-fx-background-color: #f8f9fa; -fx-padding: 20; -fx-background-radius: 15;">
+                    <Label text="Votre Avis" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #495057;"/>
+
+                    <GridPane hgap="12" vgap="12">
+                        <Label text="Nom complet:" GridPane.rowIndex="0" style="-fx-font-weight: bold; -fx-text-fill: #6c757d;"/>
+                        <TextField fx:id="txtClientNom" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                   style="-fx-background-radius: 8; -fx-border-color: #dee2e6; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                        <Label text="Adresse email:" GridPane.rowIndex="1" style="-fx-font-weight: bold; -fx-text-fill: #6c757d;"/>
+                        <TextField fx:id="txtClientEmail" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                   style="-fx-background-radius: 8; -fx-border-color: #dee2e6; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                        <Label text="Votre note:" GridPane.rowIndex="2" style="-fx-font-weight: bold; -fx-text-fill: #6c757d;"/>
+                        <HBox spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                            <ChoiceBox fx:id="choiceClientNote" prefWidth="120"
+                                       style="-fx-background-radius: 8; -fx-border-color: #dee2e6;"/>
+                            <Label text="(1-5 étoiles)" style="-fx-text-fill: #6c757d; -fx-font-size: 12px;"/>
+                        </HBox>
+
+                        <Label text="ID du voyage:" GridPane.rowIndex="3" style="-fx-font-weight: bold; -fx-text-fill: #6c757d;"/>
+                        <TextField fx:id="txtClientVoyageId" GridPane.rowIndex="3" GridPane.columnIndex="1"
+                                   style="-fx-background-radius: 8; -fx-border-color: #dee2e6; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                        <Label text="Votre commentaire:" GridPane.rowIndex="4" style="-fx-font-weight: bold; -fx-text-fill: #6c757d;"/>
+                        <TextArea fx:id="txtClientCommentaire" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                                  prefRowCount="4" style="-fx-background-radius: 8; -fx-border-color: #dee2e6; -fx-border-radius: 8;"
+                                  promptText="Décrivez votre expérience..."/>
+
+                        <HBox spacing="10" GridPane.rowIndex="5" GridPane.columnIndex="1">
+                            <Button text="Publier" fx:id="btnSoumettre"
+                                    style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold;
+                                           -fx-padding: 12 25; -fx-background-radius: 25; -fx-font-size: 14px;"/>
+                        </HBox>
+                    </GridPane>
+                </VBox>
+
+                <!-- Barre de recherche -->
+                <VBox spacing="12" style="-fx-background-color: #f8f9fa; -fx-padding: 20; -fx-background-radius: 15;">
+                    <Label text="Rechercher des avis" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #495057;"/>
+
+                    <TextField fx:id="txtRechercheClient" promptText="Rechercher par nom..."
+                               style="-fx-background-radius: 25; -fx-border-color: #dee2e6; -fx-border-radius: 25; -fx-padding: 10 15;"/>
+
+                    <HBox spacing="10" alignment="CENTER">
+                        <ComboBox fx:id="comboFiltreNote" prefWidth="140" promptText="Filtrer par note"
+                                  style="-fx-background-radius: 8; -fx-border-color: #dee2e6;"/>
+                        <Button text="Rechercher" fx:id="btnRechercherClient"
+                                style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;
+                                       -fx-padding: 10 20; -fx-background-radius: 25;"/>
+                        <Button text="Réinitialiser" fx:id="btnResetClient"
+                                style="-fx-background-color: #6c757d; -fx-text-fill: white;
+                                       -fx-padding: 10 20; -fx-background-radius: 25;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Instructions améliorées -->
+                <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #e8f4fd; -fx-background-radius: 15;">
+                    <Label text="✨ Comment utiliser :" style="-fx-font-weight: bold; -fx-text-fill: #004085; -fx-font-size: 14px;"/>
+                    <VBox spacing="5" style="-fx-padding: 0 0 0 10;">
+                        <Label text="1. 👤 Connectez-vous pour voter" style="-fx-text-fill: #004085; -fx-font-size: 13px;"/>
+                        <Label text="2. 📝 Remplissez le formulaire pour publier un avis" style="-fx-text-fill: #004085; -fx-font-size: 13px;"/>
+                        <Label text="3. ✏️ Modifiez/Supprimez vos avis avec les boutons sous chaque carte" style="-fx-text-fill: #004085; -fx-font-size: 13px;"/>
+                        <Label text="4. 👍 Votez pour les avis utiles (nécessite connexion)" style="-fx-text-fill: #004085; -fx-font-size: 13px;"/>
+                        <Label text="5. 🔍 Utilisez la recherche pour filtrer" style="-fx-text-fill: #004085; -fx-font-size: 13px;"/>
+                    </VBox>
+                </VBox>
+            </VBox>
+
+            <!-- Panneau droit : Avis sous forme de cartes -->
+            <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-border-color: transparent;">
+                <VBox fx:id="containerAvis" spacing="20" style="-fx-padding: 25; -fx-background-color: #f8f9fa;">
+                    <!-- Les cartes d'avis seront ajoutées dynamiquement ici -->
+                    <Label text="Chargement des avis..." style="-fx-font-size: 16px; -fx-text-fill: #6c757d;"/>
+                </VBox>
+            </ScrollPane>
+        </SplitPane>
+    </center>
+
+    <!-- Pied de page -->
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-background-color: #343a40; -fx-padding: 15;">
+            <Label text="© 2024 Agence de Voyage - Tous les avis sont vérifiés"
+                   style="-fx-text-fill: #adb5bd; -fx-font-size: 12px;"/>
+        </HBox>
+    </bottom>
+</BorderPane>

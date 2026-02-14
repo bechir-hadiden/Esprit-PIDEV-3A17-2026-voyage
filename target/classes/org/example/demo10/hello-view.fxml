@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.demo10.HelloController">
+
+    <padding>
+        <Insets bottom="40" left="40" right="40" top="40"/>
+    </padding>
+
+    <!-- Titre principal -->
+    <Label fx:id="welcomeLabel" text="Agence de Voyage">
+        <font>
+            <Font name="System Bold" size="28.0"/>
+        </font>
+    </Label>
+
+    <Label text="Système de Gestion Complète"
+           style="-fx-text-fill: #7f8c8d; -fx-font-size: 14px;"/>
+
+    <!-- Séparateur -->
+    <Separator prefWidth="400"/>
+
+    <!-- Boutons de navigation -->
+    <Button fx:id="btnGestionAvis" text="📝 Gestion des Avis"
+            onAction="#handleGestionAvis"
+            prefWidth="300" prefHeight="50"
+            style="-fx-font-size: 16px; -fx-cursor: hand; -fx-font-weight: bold;"/>
+
+    <Button fx:id="btnGestionVoyages" text="✈️ Gestion des Voyages"
+            onAction="#handleGestionVoyages"
+            prefWidth="300" prefHeight="50"
+            style="-fx-font-size: 16px; -fx-cursor: hand; -fx-font-weight: bold;"/>
+
+    <Button fx:id="btnGestionClients" text="👥 Gestion des Clients"
+            onAction="#handleGestionClients"
+            prefWidth="300" prefHeight="50"
+            style="-fx-font-size: 16px; -fx-cursor: hand; -fx-font-weight: bold;"/>
+
+    <!-- Séparateur -->
+    <Separator prefWidth="400"/>
+
+    <!-- Boutons utilitaires -->
+    <Button fx:id="btnTestConnexion" text="🔗 Tester Connexion Base de Données"
+            onAction="#handleTestConnexion"
+            prefWidth="300" prefHeight="45"
+            style="-fx-font-size: 14px; -fx-cursor: hand;"/>
+
+    <Button text="🚪 Quitter l'Application"
+            onAction="#handleQuitter"
+            prefWidth="300" prefHeight="45"
+            style="-fx-background-color: #95a5a6; -fx-text-fill: white;
+                   -fx-font-size: 14px; -fx-cursor: hand;"/>
+
+    <!-- Pied de page -->
+    <Label text="© 2024 Agence de Voyage - Version 1.0"
+           style="-fx-text-fill: #bdc3c7; -fx-font-size: 12px; -fx-padding: 20 0 0 0;"/>
+
+</VBox>

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.demo10.controller.ClientStatistiquesController"
+      spacing="15" style="-fx-background-color: linear-gradient(to bottom, #f8f9fa, #e9ecef);">
+
+    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+    <!-- En-tête avec design moderne -->
+    <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: #343a40; -fx-padding: 20; -fx-background-radius: 10;">
+        <Circle radius="25" fill="#17a2b8"/>
+        <VBox>
+            <Label text="📊 ANALYSEUR D'AVIS"
+                   style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <Label text="Statistiques détaillées pour les voyageurs"
+                   style="-fx-text-fill: #adb5bd; -fx-font-size: 14px;"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="⭐ Client"
+               style="-fx-background-color: #ffc107; -fx-text-fill: #343a40; -fx-font-weight: bold;
+                      -fx-padding: 5 15; -fx-background-radius: 20;"/>
+    </HBox>
+
+    <!-- Panneau de recherche -->
+    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;
+                               -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+
+        <Label text="🔍 SÉLECTIONNER UN VOYAGE"
+               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #495057;"/>
+
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <Label text="ID du voyage:" style="-fx-font-weight: bold; -fx-text-fill: #6c757d;"/>
+            <TextField fx:id="txtVoyageId" promptText="Ex: 1, 2, 3..."
+                       prefWidth="150" style="-fx-background-radius: 8; -fx-border-color: #dee2e6; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+            <Button text="🔎 ANALYSER" fx:id="btnVoirStats"
+                    style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;
+                           -fx-padding: 10 25; -fx-background-radius: 25; -fx-font-size: 14px;"/>
+
+            <Label text="💡 Entrez l'ID du voyage qui vous intéresse"
+                   style="-fx-text-fill: #6c757d; -fx-font-size: 12px; -fx-font-style: italic;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Statistiques principales en cartes -->
+    <HBox spacing="15" alignment="CENTER">
+        <!-- Carte Note moyenne -->
+        <VBox spacing="10" alignment="CENTER" prefWidth="200"
+              style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;
+                     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+            <Label text="⭐ NOTE MOYENNE" style="-fx-font-weight: bold; -fx-text-fill: #6c757d; -fx-font-size: 12px;"/>
+            <Label fx:id="lblNoteMoyenne" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #28a745;"/>
+            <ProgressBar fx:id="progressBarNote" prefWidth="150" prefHeight="10"/>
+            <Label text="sur 5" style="-fx-text-fill: #6c757d; -fx-font-size: 12px;"/>
+        </VBox>
+
+        <!-- Carte Statistiques globales -->
+        <VBox spacing="15" prefWidth="300"
+              style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;
+                     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+
+            <Label text="📈 RÉSUMÉ" style="-fx-font-weight: bold; -fx-text-fill: #495057;"/>
+
+            <GridPane hgap="20" vgap="10">
+                <!-- Ligne 1 -->
+                <Label text="Total d'avis:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-text-fill: #6c757d;"/>
+                <Label fx:id="lblTotalAvis" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #007bff;"/>
+
+                <Label text="Taux de reco:" GridPane.rowIndex="0" GridPane.columnIndex="2" style="-fx-text-fill: #6c757d;"/>
+                <Label fx:id="lblTauxRecommandation" GridPane.rowIndex="0" GridPane.columnIndex="3"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #17a2b8;"/>
+
+                <!-- Ligne 2 -->
+                <Label text="Meilleure note:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-text-fill: #6c757d;"/>
+                <Label fx:id="lblNoteMax" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #28a745;"/>
+
+                <Label text="Moins bonne:" GridPane.rowIndex="1" GridPane.columnIndex="2" style="-fx-text-fill: #6c757d;"/>
+                <Label fx:id="lblNoteMin" GridPane.rowIndex="1" GridPane.columnIndex="3"
+                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #dc3545;"/>
+            </GridPane>
+        </VBox>
+    </HBox>
+
+    <!-- Panneau principal avec 3 colonnes -->
+    <HBox spacing="15" VBox.vgrow="ALWAYS">
+
+        <!-- Colonne 1 : Graphique des notes -->
+        <VBox spacing="10" HBox.hgrow="ALWAYS" prefWidth="300"
+              style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;
+                     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="📊" style="-fx-font-size: 20px;"/>
+                <Label text="ANALYSE DÉTAILLÉE" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #495057;"/>
+            </HBox>
+
+            <TextArea fx:id="txtGraphiqueNotes" prefRowCount="12"
+                      style="-fx-font-family: 'Consolas', 'Courier New', monospace; -fx-font-size: 12px;
+                             -fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-radius: 5;"
+                      wrapText="false" editable="false"/>
+        </VBox>
+
+        <!-- Colonne 2 : Distribution des notes -->
+        <VBox spacing="10" prefWidth="350"
+              style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;
+                     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="📋" style="-fx-font-size: 20px;"/>
+                <Label text="DISTRIBUTION DES NOTES" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #495057;"/>
+            </HBox>
+
+            <VBox fx:id="boxDistribution" spacing="12">
+                <!-- 5 étoiles -->
+                <VBox spacing="3">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="⭐⭐⭐⭐⭐" style="-fx-text-fill: #ffc107; -fx-font-size: 16px;"/>
+                        <Label text="Excellent" style="-fx-text-fill: #28a745; -fx-font-weight: bold;"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ProgressBar fx:id="bar5Etoiles" prefWidth="200" prefHeight="12"/>
+                        <Label fx:id="lbl5Etoiles" style="-fx-font-size: 12px; -fx-text-fill: #495057;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- 4 étoiles -->
+                <VBox spacing="3">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="⭐⭐⭐⭐☆" style="-fx-text-fill: #ffc107; -fx-font-size: 16px;"/>
+                        <Label text="Très bon" style="-fx-text-fill: #20c997; -fx-font-weight: bold;"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ProgressBar fx:id="bar4Etoiles" prefWidth="200" prefHeight="12"/>
+                        <Label fx:id="lbl4Etoiles" style="-fx-font-size: 12px; -fx-text-fill: #495057;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- 3 étoiles -->
+                <VBox spacing="3">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="⭐⭐⭐☆☆" style="-fx-text-fill: #ffc107; -fx-font-size: 16px;"/>
+                        <Label text="Moyen" style="-fx-text-fill: #ffc107; -fx-font-weight: bold;"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ProgressBar fx:id="bar3Etoiles" prefWidth="200" prefHeight="12"/>
+                        <Label fx:id="lbl3Etoiles" style="-fx-font-size: 12px; -fx-text-fill: #495057;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- 2 étoiles -->
+                <VBox spacing="3">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="⭐⭐☆☆☆" style="-fx-text-fill: #ffc107; -fx-font-size: 16px;"/>
+                        <Label text="Passable" style="-fx-text-fill: #fd7e14; -fx-font-weight: bold;"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ProgressBar fx:id="bar2Etoiles" prefWidth="200" prefHeight="12"/>
+                        <Label fx:id="lbl2Etoiles" style="-fx-font-size: 12px; -fx-text-fill: #495057;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- 1 étoile -->
+                <VBox spacing="3">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="⭐☆☆☆☆" style="-fx-text-fill: #ffc107; -fx-font-size: 16px;"/>
+                        <Label text="Mauvais" style="-fx-text-fill: #dc3545; -fx-font-weight: bold;"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ProgressBar fx:id="bar1Etoile" prefWidth="200" prefHeight="12"/>
+                        <Label fx:id="lbl1Etoile" style="-fx-font-size: 12px; -fx-text-fill: #495057;"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+
+            <!-- Légende -->
+            <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+                <HBox spacing="5">
+                    <Circle radius="5" fill="#28a745"/>
+                    <Label text="Excellent" style="-fx-font-size: 10px;"/>
+                </HBox>
+                <HBox spacing="5">
+                    <Circle radius="5" fill="#ffc107"/>
+                    <Label text="Moyen" style="-fx-font-size: 10px;"/>
+                </HBox>
+                <HBox spacing="5">
+                    <Circle radius="5" fill="#dc3545"/>
+                    <Label text="À éviter" style="-fx-font-size: 10px;"/>
+                </HBox>
+            </HBox>
+        </VBox>
+
+        <!-- Colonne 3 : Derniers avis -->
+        <VBox spacing="10" HBox.hgrow="ALWAYS" prefWidth="300"
+              style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;
+                     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="💬" style="-fx-font-size: 20px;"/>
+                <Label text="AVIS RÉCENTS" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #495057;"/>
+            </HBox>
+
+            <TextArea fx:id="txtDerniersAvis" prefRowCount="12"
+                      style="-fx-font-family: 'Segoe UI', Arial, sans-serif; -fx-font-size: 12px;
+                             -fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-radius: 5;"
+                      wrapText="true" editable="false"/>
+        </VBox>
+    </HBox>
+
+    <!-- Pied de page avec indicateur de qualité -->
+    <HBox alignment="CENTER" spacing="20" style="-fx-background-color: #343a40; -fx-padding: 15; -fx-background-radius: 10;">
+        <Label text="© 2026 Agence de Voyage" style="-fx-text-fill: #adb5bd; -fx-font-size: 11px;"/>
+        <Separator orientation="VERTICAL"/>
+        <Label text="Analyses basées sur les avis vérifiés" style="-fx-text-fill: #adb5bd; -fx-font-size: 11px;"/>
+        <Separator orientation="VERTICAL"/>
+        <HBox spacing="5">
+            <Label text="✓" style="-fx-text-fill: #28a745; -fx-font-weight: bold;"/>
+            <Label text="Données temps réel" style="-fx-text-fill: #adb5bd; -fx-font-size: 11px;"/>
+        </HBox>
+    </HBox>
+</VBox>

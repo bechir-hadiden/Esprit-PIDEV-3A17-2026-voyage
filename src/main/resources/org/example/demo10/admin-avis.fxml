@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.demo10.controller.AdminAvisController"
+      spacing="10" style="-fx-background-color: #f8f9fa;">
+    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+    <!-- En-tête -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Administration - Gestion des Avis"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Statistiques" fx:id="btnStatistiques"
+                style="-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;"/>
+    </HBox>
+
+    <!-- Barre de recherche -->
+    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;">
+        <Label text="Recherche avancée" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <TextField fx:id="txtRecherche" promptText="Entrez votre recherche..."
+                       prefWidth="250" style="-fx-padding: 8;"/>
+            <Label text="Critère:"/>
+            <ComboBox fx:id="comboCritere" prefWidth="120"/>
+            <Button text="Rechercher" fx:id="btnRechercher"
+                    style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            <Button text="Réinitialiser" fx:id="btnResetRecherche"
+                    style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Tableau des avis -->
+    <VBox spacing="5" VBox.vgrow="ALWAYS">
+        <Label text="Liste des avis" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+        <TableView fx:id="tableViewAvis" VBox.vgrow="ALWAYS"
+                   style="-fx-background-color: white; -fx-border-radius: 5;">
+            <columns>
+                <TableColumn text="ID" fx:id="colId" prefWidth="50"/>
+                <TableColumn text="Nom Client" fx:id="colNom" prefWidth="150"/>
+                <TableColumn text="Email" fx:id="colEmail" prefWidth="200"/>
+                <TableColumn text="Note" fx:id="colNote" prefWidth="80"/>
+                <TableColumn text="Commentaire" fx:id="colCommentaire" prefWidth="300"/>
+                <TableColumn text="Date" fx:id="colDate" prefWidth="100"/>
+                <TableColumn text="Voyage ID" fx:id="colVoyageId" prefWidth="80"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Boutons d'action -->
+    <HBox spacing="15" alignment="CENTER"
+          style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;">
+        <Button text="Ajouter" fx:id="btnAjouter"
+                style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"/>
+        <Button text="Modifier" fx:id="btnModifier"
+                style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"/>
+        <Button text="Supprimer" fx:id="btnSupprimer"
+                style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"/>
+        <Button text="Actualiser" fx:id="btnActualiser"
+                style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"/>
+    </HBox>
+
+    <!-- Informations -->
+    <HBox spacing="10" alignment="CENTER">
+        <Label text="Sélectionnez un avis pour le modifier ou le supprimer"
+               style="-fx-text-fill: #6c757d; -fx-font-style: italic;"/>
+    </HBox>
+</VBox>

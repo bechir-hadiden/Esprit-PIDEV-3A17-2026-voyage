@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.demo10.controller.MainMenuController"
+      spacing="30" alignment="CENTER"
+      style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #c3cfe2);">
+
+    <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
+
+    <Label text="AGENCE DE VOYAGE"
+           style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;">
+        <font>
+            <Font name="Arial" size="36"/>
+        </font>
+    </Label>
+
+    <Label text="Sélectionnez votre mode d'accès"
+           style="-fx-font-size: 18px; -fx-text-fill: #34495e;"/>
+
+    <VBox spacing="20" alignment="CENTER">
+        <!-- Bouton Administration -->
+        <Button text="Mode Administration"
+                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 16px;
+                       -fx-padding: 15 40; -fx-background-radius: 8;"
+                onAction="#handleAdminMode"
+                maxWidth="250"/>
+
+        <!-- Bouton Client -->
+        <Button text="Mode Client"
+                style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 16px;
+                       -fx-padding: 15 40; -fx-background-radius: 8;"
+                onAction="#handleClientMode"
+                maxWidth="250"/>
+
+        <!-- Bouton Quitter -->
+        <Button text="Quitter l'application"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14px;
+                       -fx-padding: 10 30; -fx-background-radius: 8;"
+                onAction="#handleQuit"
+                maxWidth="250"/>
+    </VBox>
+
+    <!-- Informations -->
+    <VBox spacing="10" alignment="CENTER">
+        <Separator prefWidth="300"/>
+        <Label text="© 2024 Agence de Voyage - Tous droits réservés"
+               style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+        <Label text="Version 1.0.0 - Développé avec JavaFX"
+               style="-fx-text-fill: #7f8c8d; -fx-font-size: 10px;"/>
+    </VBox>
+</VBox>

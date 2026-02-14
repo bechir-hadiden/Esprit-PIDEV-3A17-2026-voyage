@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.demo10.controller.AdminStatistiquesController"
+      spacing="15" style="-fx-background-color: #f8f9fa;">
+    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+    <!-- En-tête -->
+    <Label text="Statistiques des Avis - Administration"
+           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <!-- Statistiques générales -->
+    <HBox spacing="20" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;">
+        <VBox spacing="5">
+            <Label text="Total d'avis" style="-fx-font-weight: bold;"/>
+            <Label fx:id="lblTotalAvis" style="-fx-font-size: 28px; -fx-text-fill: #007bff;"/>
+        </VBox>
+        <VBox spacing="5">
+            <Label text="Note moyenne" style="-fx-font-weight: bold;"/>
+            <Label fx:id="lblMoyenneGlobale" style="-fx-font-size: 28px; -fx-text-fill: #28a745;"/>
+        </VBox>
+        <VBox spacing="5">
+            <Label text="Dernier mois" style="-fx-font-weight: bold;"/>
+            <Label fx:id="lblAvisDernierMois" style="-fx-font-size: 28px; -fx-text-fill: #6c757d;"/>
+        </VBox>
+        <VBox spacing="5">
+            <Label text="Aujourd'hui" style="-fx-font-weight: bold;"/>
+            <Label fx:id="lblAvisAujourdhui" style="-fx-font-size: 28px; -fx-text-fill: #ffc107;"/>
+        </VBox>
+        <Button text="Actualiser" fx:id="btnActualiserStats"
+                style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+    </HBox>
+
+    <!-- Graphiques et rapports -->
+    <HBox spacing="15" VBox.vgrow="ALWAYS">
+        <VBox spacing="10" prefWidth="400">
+            <Label text="Distribution des notes" style="-fx-font-weight: bold;"/>
+            <BarChart fx:id="barChartNotes" prefHeight="250">
+                <xAxis>
+                    <CategoryAxis label="Notes"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Nombre d'avis"/>
+                </yAxis>
+            </BarChart>
+
+            <Label text="Statistiques par voyage:" style="-fx-font-weight: bold;"/>
+            <HBox spacing="10">
+                <ComboBox fx:id="comboVoyageStats" promptText="Sélectionnez un voyage" prefWidth="150"/>
+                <Button text="Voir les stats"
+                        style="-fx-background-color: #28a745; -fx-text-fill: white;"/>
+            </HBox>
+        </VBox>
+
+        <VBox spacing="10" prefWidth="400">
+            <Label text="Répartition des notes" style="-fx-font-weight: bold;"/>
+            <PieChart fx:id="pieChartDistribution" prefHeight="250"/>
+
+            <Label text="Rapport complet:" style="-fx-font-weight: bold;"/>
+            <TextArea fx:id="txtRapport" prefRowCount="8" wrapText="true"
+                      style="-fx-font-family: monospace;"/>
+            <Button text="Générer rapport" fx:id="btnGenererRapport"
+                    style="-fx-background-color: #17a2b8; -fx-text-fill: white;"/>
+        </VBox>
+    </HBox>
+</VBox>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<GridPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="org.example.demo10.controller.AdminModifierAvisController"
+          hgap="10" vgap="10">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Modifier un Avis" GridPane.columnSpan="2"
+           style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+    <Label text="Nom Client:" GridPane.rowIndex="1"/>
+    <TextField fx:id="txtNomClient" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="250"/>
+
+    <Label text="Email:" GridPane.rowIndex="2"/>
+    <TextField fx:id="txtEmail" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+    <Label text="Note (1-5):" GridPane.rowIndex="3"/>
+    <ChoiceBox fx:id="choiceNote" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+    <Label text="Commentaire:" GridPane.rowIndex="4"/>
+    <TextArea fx:id="txtCommentaire" GridPane.rowIndex="4" GridPane.columnIndex="1"
+              prefRowCount="3" prefWidth="250"/>
+
+    <Label text="Date:" GridPane.rowIndex="5"/>
+    <DatePicker fx:id="datePicker" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+    <Label text="Voyage ID:" GridPane.rowIndex="6"/>
+    <TextField fx:id="txtVoyageId" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+    <HBox spacing="10" GridPane.rowIndex="7" GridPane.columnSpan="2">
+        <Button text="Modifier" fx:id="btnModifier"
+                style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+        <Button text="Annuler" fx:id="btnAnnuler"
+                style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
+    </HBox>
+</GridPane>
