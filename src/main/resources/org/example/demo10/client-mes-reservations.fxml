@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.demo10.controller.ClientMesReservationsController"
+      spacing="15" style="-fx-background-color: #f8f9fa;">
+
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <!-- En-tête -->
+    <Label text="📋 MES RÉSERVATIONS"
+           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <!-- Statistiques rapides -->
+    <HBox spacing="20" alignment="CENTER" style="-fx-padding: 10;">
+        <VBox spacing="5" alignment="CENTER"
+              style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-min-width: 100;">
+            <Label text="Total" style="-fx-text-fill: #6c757d;"/>
+            <Label fx:id="lblTotalReservations" text="0"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #007bff;"/>
+        </VBox>
+        <VBox spacing="5" alignment="CENTER"
+              style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-min-width: 100;">
+            <Label text="En attente" style="-fx-text-fill: #6c757d;"/>
+            <Label fx:id="lblEnAttente" text="0"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #ffc107;"/>
+        </VBox>
+        <VBox spacing="5" alignment="CENTER"
+              style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-min-width: 100;">
+            <Label text="Confirmées" style="-fx-text-fill: #6c757d;"/>
+            <Label fx:id="lblConfirmees" text="0"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #28a745;"/>
+        </VBox>
+        <VBox spacing="5" alignment="CENTER"
+              style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-min-width: 100;">
+            <Label text="Annulées" style="-fx-text-fill: #6c757d;"/>
+            <Label fx:id="lblAnnulees" text="0"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #dc3545;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Tableau des réservations -->
+    <TableView fx:id="tableViewReservations" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="ID" fx:id="colId" prefWidth="50"/>
+            <TableColumn text="Destination" fx:id="colDestination" prefWidth="200"/>
+            <TableColumn text="Date réservation" fx:id="colDate" prefWidth="150"/>
+            <TableColumn text="Personnes" fx:id="colPersonnes" prefWidth="100"/>
+            <TableColumn text="Statut" fx:id="colStatut" prefWidth="120"/>
+            <TableColumn text="Commentaire" fx:id="colCommentaire" prefWidth="250"/>
+        </columns>
+    </TableView>
+
+    <!-- Bouton d'action -->
+    <HBox alignment="CENTER_RIGHT">
+        <Button text="❌ Annuler la sélection" fx:id="btnAnnuler"
+                style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"
+                onAction="#annulerReservation"/>
+    </HBox>
+
+    <!-- Légende -->
+    <HBox spacing="20" alignment="CENTER" style="-fx-padding: 10;">
+        <HBox spacing="5">
+            <Label text="⏳" style="-fx-text-fill: orange;"/>
+            <Label text="En attente" style="-fx-text-fill: #6c757d;"/>
+        </HBox>
+        <HBox spacing="5">
+            <Label text="✅" style="-fx-text-fill: green;"/>
+            <Label text="Confirmée" style="-fx-text-fill: #6c757d;"/>
+        </HBox>
+        <HBox spacing="5">
+            <Label text="❌" style="-fx-text-fill: red;"/>
+            <Label text="Annulée" style="-fx-text-fill: #6c757d;"/>
+        </HBox>
+    </HBox>
+</VBox>

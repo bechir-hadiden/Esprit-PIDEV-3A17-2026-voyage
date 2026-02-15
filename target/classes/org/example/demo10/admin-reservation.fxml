@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.demo10.controller.AdminReservationController"
+      spacing="10" style="-fx-background-color: #f8f9fa;">
+
+    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+    <!-- En-tête avec statistiques -->
+    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;">
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="🏨 Gestion des Réservations"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="📊 Statistiques" fx:id="btnStats"
+                    style="-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+            <Button text="📥 Exporter" fx:id="btnExporter"
+                    style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+        </HBox>
+
+        <!-- Cartes de statistiques -->
+        <HBox spacing="15" alignment="CENTER">
+            <VBox spacing="5" alignment="CENTER"
+                  style="-fx-background-color: #e3f2fd; -fx-padding: 10; -fx-background-radius: 8; -fx-min-width: 120;">
+                <Label text="Total" style="-fx-text-fill: #0d47a1; -fx-font-weight: bold;"/>
+                <Label fx:id="lblTotalReservations" text="0"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1976d2;"/>
+            </VBox>
+            <VBox spacing="5" alignment="CENTER"
+                  style="-fx-background-color: #fff3e0; -fx-padding: 10; -fx-background-radius: 8; -fx-min-width: 120;">
+                <Label text="En attente" style="-fx-text-fill: #e65100; -fx-font-weight: bold;"/>
+                <Label fx:id="lblEnAttente" text="0"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #f57c00;"/>
+            </VBox>
+            <VBox spacing="5" alignment="CENTER"
+                  style="-fx-background-color: #e8f5e8; -fx-padding: 10; -fx-background-radius: 8; -fx-min-width: 120;">
+                <Label text="Confirmées" style="-fx-text-fill: #1b5e20; -fx-font-weight: bold;"/>
+                <Label fx:id="lblConfirmees" text="0"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+            </VBox>
+            <VBox spacing="5" alignment="CENTER"
+                  style="-fx-background-color: #ffebee; -fx-padding: 10; -fx-background-radius: 8; -fx-min-width: 120;">
+                <Label text="Annulées" style="-fx-text-fill: #b71c1c; -fx-font-weight: bold;"/>
+                <Label fx:id="lblAnnulees" text="0"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #c62828;"/>
+            </VBox>
+            <VBox spacing="5" alignment="CENTER"
+                  style="-fx-background-color: #e8eaf6; -fx-padding: 10; -fx-background-radius: 8; -fx-min-width: 120;">
+                <Label text="Voyageurs" style="-fx-text-fill: #311b92; -fx-font-weight: bold;"/>
+                <Label fx:id="lblTotalPersonnes" text="0"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #3f51b5;"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <!-- Filtres -->
+    <HBox spacing="10" alignment="CENTER_LEFT"
+          style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;">
+        <Label text="Recherche:" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="txtRecherche" promptText="Nom, email, téléphone..." prefWidth="250"/>
+        <Label text="Statut:" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="comboFiltreStatut" prefWidth="120"/>
+        <Button text="🔍 Filtrer" fx:id="btnRechercher"
+                style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 5;"/>
+        <Button text="🔄 Réinitialiser" fx:id="btnReset"
+                style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 5;"/>
+        <Button text="🔄 Actualiser" fx:id="btnActualiser"
+                style="-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 5;"/>
+    </HBox>
+
+    <!-- Tableau des réservations -->
+    <TableView fx:id="tableViewReservations" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="ID" fx:id="colId" prefWidth="50"/>
+            <TableColumn text="Nom" fx:id="colNom" prefWidth="120"/>
+            <TableColumn text="Email" fx:id="colEmail" prefWidth="180"/>
+            <TableColumn text="Téléphone" fx:id="colTel" prefWidth="120"/>
+            <TableColumn text="Destination" fx:id="colDestination" prefWidth="200"/>
+            <TableColumn text="Date" fx:id="colDate" prefWidth="100"/>
+            <TableColumn text="Personnes" fx:id="colPersonnes" prefWidth="80"/>
+            <TableColumn text="Statut" fx:id="colStatut" prefWidth="100"/>
+            <TableColumn text="Commentaire" fx:id="colCommentaire" prefWidth="200"/>
+        </columns>
+    </TableView>
+
+    <!-- Boutons d'action -->
+    <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10;">
+        <Button text="✏️ Modifier" fx:id="btnModifier"
+                style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 30; -fx-background-radius: 5;"/>
+        <Button text="🗑️ Supprimer" fx:id="btnSupprimer"
+                style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 30; -fx-background-radius: 5;"/>
+    </HBox>
+
+    <!-- Légende - CORRECTION ICI : chaque texte dans son propre Label -->
+    <HBox spacing="20" alignment="CENTER" style="-fx-padding: 5;">
+        <HBox spacing="5">
+            <Label text="⏳" style="-fx-text-fill: orange;"/>
+            <Label text="En attente" style="-fx-text-fill: #6c757d;"/>
+        </HBox>
+        <HBox spacing="5">
+            <Label text="✅" style="-fx-text-fill: green;"/>
+            <Label text="Confirmée" style="-fx-text-fill: #6c757d;"/>
+        </HBox>
+        <HBox spacing="5">
+            <Label text="❌" style="-fx-text-fill: red;"/>
+            <Label text="Annulée" style="-fx-text-fill: #6c757d;"/>
+        </HBox>
+    </HBox>
+</VBox>

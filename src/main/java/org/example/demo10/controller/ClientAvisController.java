@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class ClientAvisController {
 
@@ -51,6 +52,13 @@ public class ClientAvisController {
 
     @FXML private VBox containerAvis;
 
+    // Labels pour les messages d'erreur
+    @FXML private Label lblErrorNom;
+    @FXML private Label lblErrorEmail;
+    @FXML private Label lblErrorNote;
+    @FXML private Label lblErrorVoyageId;
+    @FXML private Label lblErrorCommentaire;
+
     // Services
     private AvisService avisService;
     private VoteService voteService;
@@ -64,6 +72,11 @@ public class ClientAvisController {
     private User utilisateurConnecte;
     private boolean estConnecte = false;
 
+    // Patterns de validation
+    private static final Pattern PATTERN_NOM = Pattern.compile("^[a-zA-ZÀ-ÿ\\s\\-']{2,50}$");
+    private static final Pattern PATTERN_EMAIL = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
+    private static final Pattern PATTERN_VOYAGE_ID = Pattern.compile("^[1-9][0-9]*$");
+
     @FXML
     public void initialize() {
         avisService = new AvisService();
@@ -74,6 +87,9 @@ public class ClientAvisController {
         avisClientListFiltree = FXCollections.observableArrayList();
         avisEnCoursModification = null;
 
+        // Initialiser les labels d'erreur (cachés par défaut)
+        initialiserLabelsErreur();
+
         // Initialiser le ChoiceBox des notes
         choiceClientNote.setItems(FXCollections.observableArrayList(1, 2, 3, 4, 5));
 
@@ -82,6 +98,9 @@ public class ClientAvisController {
                 "Toutes les notes", "5 étoiles", "4 étoiles", "3 étoiles", "2 étoiles", "1 étoile"
         ));
         comboFiltreNote.setValue("Toutes les notes");
+
+        // Ajouter les listeners de validation en temps réel
+        ajouterValidateurs();
 
         // Charger les avis
         chargerAvisClients();
@@ -95,6 +114,232 @@ public class ClientAvisController {
 
         // Message de bienvenue
         showAlert("Bienvenue", "Bienvenue dans l'espace client. Connectez-vous pour voter !");
+    }
+
+    /**
+     * Initialise les labels d'erreur (cachés)
+     */
+    private void initialiserLabelsErreur() {
+        // Si vous avez des labels dans votre FXML, sinon créez-les
+        if (lblErrorNom == null) {
+            // Les labels seront créés dynamiquement
+        }
+    }
+
+    /**
+     * Ajoute des validateurs en temps réel sur les champs
+     */
+    private void ajouterValidateurs() {
+        // Validation du nom
+        txtClientNom.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.isEmpty()) {
+                if (!validerNom(newVal)) {
+                    afficherErreurNom("Nom invalide (2-50 caractères, lettres uniquement)");
+                } else {
+                    cacherErreurNom();
+                }
+            } else {
+                cacherErreurNom();
+            }
+        });
+
+        // Validation de l'email
+        txtClientEmail.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.isEmpty()) {
+                if (!validerEmail(newVal)) {
+                    afficherErreurEmail("Email invalide (exemple: nom@domaine.com)");
+                } else {
+                    cacherErreurEmail();
+                }
+            } else {
+                cacherErreurEmail();
+            }
+        });
+
+        // Validation de l'ID voyage
+        txtClientVoyageId.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.isEmpty()) {
+                if (!validerVoyageId(newVal)) {
+                    afficherErreurVoyageId("ID voyage doit être un nombre positif");
+                } else {
+                    cacherErreurVoyageId();
+                }
+            } else {
+                cacherErreurVoyageId();
+            }
+        });
+
+        // Validation du commentaire
+        txtClientCommentaire.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.isEmpty()) {
+                if (!validerCommentaire(newVal)) {
+                    afficherErreurCommentaire("Commentaire trop court (minimum 10 caractères)");
+                } else {
+                    cacherErreurCommentaire();
+                }
+            } else {
+                cacherErreurCommentaire();
+            }
+        });
+
+        // Validation de la note
+        choiceClientNote.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                cacherErreurNote();
+            }
+        });
+    }
+
+    // ========== MÉTHODES DE VALIDATION ==========
+
+    private boolean validerNom(String nom) {
+        return nom != null && PATTERN_NOM.matcher(nom.trim()).matches();
+    }
+
+    private boolean validerEmail(String email) {
+        return email != null && PATTERN_EMAIL.matcher(email.trim()).matches();
+    }
+
+    private boolean validerVoyageId(String id) {
+        return id != null && PATTERN_VOYAGE_ID.matcher(id.trim()).matches();
+    }
+
+    private boolean validerNote(Integer note) {
+        return note != null && note >= 1 && note <= 5;
+    }
+
+    private boolean validerCommentaire(String commentaire) {
+        return commentaire != null && commentaire.trim().length() >= 10;
+    }
+
+    private boolean validerTousLesChamps(String nom, String email, Integer note, String voyageId, String commentaire) {
+        boolean nomValide = validerNom(nom);
+        boolean emailValide = validerEmail(email);
+        boolean noteValide = validerNote(note);
+        boolean voyageIdValide = validerVoyageId(voyageId);
+        boolean commentaireValide = validerCommentaire(commentaire);
+
+        // Afficher les erreurs appropriées
+        if (!nomValide) afficherErreurNom("Nom invalide (2-50 caractères, lettres uniquement)");
+        if (!emailValide) afficherErreurEmail("Email invalide");
+        if (!noteValide) afficherErreurNote("Veuillez sélectionner une note");
+        if (!voyageIdValide) afficherErreurVoyageId("ID voyage doit être un nombre positif");
+        if (!commentaireValide) afficherErreurCommentaire("Commentaire trop court (minimum 10 caractères)");
+
+        return nomValide && emailValide && noteValide && voyageIdValide && commentaireValide;
+    }
+
+    // ========== AFFICHAGE DES ERREURS ==========
+
+    private void afficherErreurNom(String message) {
+        if (lblErrorNom != null) {
+            lblErrorNom.setText(message);
+            lblErrorNom.setVisible(true);
+            lblErrorNom.setStyle("-fx-text-fill: red; -fx-font-size: 11px;");
+        } else {
+            // Créer un tooltip si pas de label
+            Tooltip tooltip = new Tooltip(message);
+            tooltip.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+            txtClientNom.setTooltip(tooltip);
+            txtClientNom.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+        }
+    }
+
+    private void cacherErreurNom() {
+        if (lblErrorNom != null) {
+            lblErrorNom.setVisible(false);
+        } else {
+            txtClientNom.setTooltip(null);
+            txtClientNom.setStyle("");
+        }
+    }
+
+    private void afficherErreurEmail(String message) {
+        if (lblErrorEmail != null) {
+            lblErrorEmail.setText(message);
+            lblErrorEmail.setVisible(true);
+        } else {
+            Tooltip tooltip = new Tooltip(message);
+            tooltip.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+            txtClientEmail.setTooltip(tooltip);
+            txtClientEmail.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+        }
+    }
+
+    private void cacherErreurEmail() {
+        if (lblErrorEmail != null) {
+            lblErrorEmail.setVisible(false);
+        } else {
+            txtClientEmail.setTooltip(null);
+            txtClientEmail.setStyle("");
+        }
+    }
+
+    private void afficherErreurNote(String message) {
+        if (lblErrorNote != null) {
+            lblErrorNote.setText(message);
+            lblErrorNote.setVisible(true);
+        } else {
+            choiceClientNote.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+        }
+    }
+
+    private void cacherErreurNote() {
+        if (lblErrorNote != null) {
+            lblErrorNote.setVisible(false);
+        } else {
+            choiceClientNote.setStyle("");
+        }
+    }
+
+    private void afficherErreurVoyageId(String message) {
+        if (lblErrorVoyageId != null) {
+            lblErrorVoyageId.setText(message);
+            lblErrorVoyageId.setVisible(true);
+        } else {
+            Tooltip tooltip = new Tooltip(message);
+            tooltip.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+            txtClientVoyageId.setTooltip(tooltip);
+            txtClientVoyageId.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+        }
+    }
+
+    private void cacherErreurVoyageId() {
+        if (lblErrorVoyageId != null) {
+            lblErrorVoyageId.setVisible(false);
+        } else {
+            txtClientVoyageId.setTooltip(null);
+            txtClientVoyageId.setStyle("");
+        }
+    }
+
+    private void afficherErreurCommentaire(String message) {
+        if (lblErrorCommentaire != null) {
+            lblErrorCommentaire.setText(message);
+            lblErrorCommentaire.setVisible(true);
+        } else {
+            Tooltip tooltip = new Tooltip(message);
+            tooltip.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+            txtClientCommentaire.setTooltip(tooltip);
+            txtClientCommentaire.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+        }
+    }
+
+    private void cacherErreurCommentaire() {
+        if (lblErrorCommentaire != null) {
+            lblErrorCommentaire.setVisible(false);
+        } else {
+            txtClientCommentaire.setTooltip(null);
+            txtClientCommentaire.setStyle("");
+        }
+    }
+
+    private void reinitialiserToutesErreurs() {
+        cacherErreurNom();
+        cacherErreurEmail();
+        cacherErreurNote();
+        cacherErreurVoyageId();
+        cacherErreurCommentaire();
     }
 
     private void chargerAvisClients() {
@@ -362,6 +607,9 @@ public class ClientAvisController {
         txtClientVoyageId.setText(String.valueOf(avis.getVoyageId()));
         txtClientCommentaire.setText(avis.getCommentaire());
 
+        // Réinitialiser les erreurs
+        reinitialiserToutesErreurs();
+
         // Changer le bouton "Publier" en "Mettre à jour"
         btnSoumettre.setText("Mettre à jour");
         btnSoumettre.setStyle("-fx-background-color: #ffc107; -fx-text-fill: black; -fx-font-weight: bold; " +
@@ -400,23 +648,17 @@ public class ClientAvisController {
             String email = txtClientEmail.getText().trim();
             Integer note = choiceClientNote.getValue();
             String commentaire = txtClientCommentaire.getText().trim();
+            String voyageIdStr = txtClientVoyageId.getText().trim();
 
-            if (txtClientVoyageId.getText().trim().isEmpty()) {
-                showAlert("Erreur", "Veuillez entrer un ID de voyage.");
+            // Réinitialiser les erreurs précédentes
+            reinitialiserToutesErreurs();
+
+            // Validation complète
+            if (!validerTousLesChamps(nom, email, note, voyageIdStr, commentaire)) {
                 return;
             }
 
-            int voyageId = Integer.parseInt(txtClientVoyageId.getText().trim());
-
-            if (nom.isEmpty() || email.isEmpty() || note == null || commentaire.isEmpty()) {
-                showAlert("Erreur", "Veuillez remplir tous les champs.");
-                return;
-            }
-
-            if (note < 1 || note > 5) {
-                showAlert("Erreur", "La note doit être entre 1 et 5.");
-                return;
-            }
+            int voyageId = Integer.parseInt(voyageIdStr);
 
             // Vérifier si on est en mode modification
             if (avisEnCoursModification != null) {
@@ -546,6 +788,7 @@ public class ClientAvisController {
         choiceClientNote.setValue(null);
         txtClientVoyageId.clear();
         txtClientCommentaire.clear();
+        reinitialiserToutesErreurs();
     }
 
     private void resetForm() {

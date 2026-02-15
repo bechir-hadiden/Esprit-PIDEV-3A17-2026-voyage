@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.demo10.controller.ClientVoyagesController"
+            style="-fx-background-color: linear-gradient(to bottom, #f8f9fa, #e9ecef);">
+
+    <!-- En-tête -->
+    <top>
+        <VBox spacing="10" style="-fx-background-color: #343a40; -fx-padding: 20;">
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Circle radius="25" fill="#007bff"/>
+                <VBox>
+                    <Label text="✈️ Voyages &amp; Évasions"
+                           style="-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+                    <!-- ICI: &amp; au lieu de & -->
+                    <Label text="Découvrez nos destinations de rêve"
+                           style="-fx-text-fill: #adb5bd; -fx-font-size: 14px;"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="📋 Mes réservations" fx:id="btnMesReservations"
+                        style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-padding: 10 20; -fx-background-radius: 25; -fx-font-size: 14px;"/>
+                <Button text="👤 Connexion" fx:id="btnConnexion"
+                        style="-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-padding: 10 20; -fx-background-radius: 25; -fx-font-size: 14px;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Barre de recherche et filtres -->
+    <center>
+        <VBox spacing="20" style="-fx-padding: 20;">
+
+            <HBox spacing="15" alignment="CENTER"
+                  style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 15;">
+                <Label text="🔍 Rechercher :" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="txtRecherche" promptText="Destination..." prefWidth="200"/>
+                <Label text="Filtre :" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="comboFiltre" prefWidth="150"/>
+                <Button text="Rechercher" fx:id="btnRechercher"
+                        style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-padding: 10 20; -fx-background-radius: 25;"/>
+                <Button text="Réinitialiser" fx:id="btnReset"
+                        style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-padding: 10 20; -fx-background-radius: 25;"/>
+            </HBox>
+
+            <!-- Liste des voyages -->
+            <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-border-color: transparent;">
+                <VBox fx:id="containerVoyages" spacing="20" style="-fx-padding: 10 0 10 0;"/>
+            </ScrollPane>
+
+        </VBox>
+    </center>
+
+    <!-- Pied de page -->
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-background-color: #343a40; -fx-padding: 15;">
+            <Label text="© 2026 Agence de Voyage - Réservez en toute confiance"
+                   style="-fx-text-fill: #adb5bd; -fx-font-size: 12px;"/>
+        </HBox>
+    </bottom>
+</BorderPane>
