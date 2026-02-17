@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo1.controller.GestionReclamationController"
+            stylesheets="@../css/gestion-reclamation.css"
+            prefWidth="1400" prefHeight="800">
+
+    <!-- HEADER -->
+    <top>
+        <VBox styleClass="header-section" spacing="15">
+            <padding>
+                <Insets top="25" right="30" bottom="25" left="30"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="📋" style="-fx-font-size: 36px;"/>
+                <VBox spacing="5">
+                    <Label text="Gestion des Réclamations" styleClass="header-title"/>
+                    <Label fx:id="lblStatistiques" text="Total: 0 | Nouveau: 0 | En cours: 0 | Traité: 0"
+                           styleClass="header-subtitle"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnActualiser" text="🔄 Actualiser" onAction="#handleActualiser"
+                        styleClass="btn-refresh"/>
+            </HBox>
+
+            <!-- FILTRES ET RECHERCHE -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="Filtrer par:" styleClass="filter-label"/>
+
+                <ComboBox fx:id="cmbStatut" promptText="Statut" prefWidth="150"
+                          onAction="#handleFiltrer" styleClass="filter-combo"/>
+
+                <TextField fx:id="txtRecherche" promptText="🔍 Rechercher par nom ou email..."
+                           prefWidth="300" styleClass="search-field"
+                           onKeyReleased="#handleRechercher"/>
+
+                <Button text="✖ Effacer filtres" onAction="#handleEffacerFiltres"
+                        styleClass="btn-clear"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- CONTENU PRINCIPAL -->
+    <center>
+        <SplitPane dividerPositions="0.45" styleClass="main-split">
+
+            <!-- PARTIE GAUCHE : LISTE DES RÉCLAMATIONS -->
+            <VBox spacing="10" styleClass="list-panel">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+
+                <Label text="Liste des Réclamations" styleClass="panel-title"/>
+
+                <TableView fx:id="tableReclamations" VBox.vgrow="ALWAYS" styleClass="reclamation-table">
+                    <columns>
+                        <TableColumn fx:id="colId" text="ID" minWidth="50" prefWidth="60" maxWidth="80"/>
+                        <TableColumn fx:id="colNom" text="Nom" minWidth="100" prefWidth="140"/>
+                        <TableColumn fx:id="colEmail" text="Email" minWidth="180" prefWidth="220"/>
+                        <TableColumn fx:id="colDate" text="Date" minWidth="140" prefWidth="160"/>
+                        <TableColumn fx:id="colStatut" text="Statut" minWidth="120" prefWidth="130"/>
+                    </columns>
+                </TableView>
+
+                <HBox spacing="10" alignment="CENTER">
+                    <Label fx:id="lblNombreReclamations" text="0 réclamation(s)"
+                           styleClass="info-label"/>
+                </HBox>
+            </VBox>
+
+            <!-- PARTIE DROITE : DÉTAILS ET ACTIONS -->
+            <VBox spacing="15" styleClass="detail-panel">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+
+                <Label text="Détails de la Réclamation" styleClass="panel-title"/>
+
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="detail-scroll">
+                    <VBox fx:id="detailContainer" spacing="20">
+                        <padding>
+                            <Insets top="10" right="10" bottom="10" left="10"/>
+                        </padding>
+
+                        <!-- MESSAGE PAR DÉFAUT -->
+                        <VBox fx:id="emptyState" alignment="CENTER" spacing="15"
+                              style="-fx-padding: 50;">
+                            <Label text="📭" style="-fx-font-size: 64px; -fx-opacity: 0.3;"/>
+                            <Label text="Sélectionnez une réclamation"
+                                   style="-fx-font-size: 16px; -fx-text-fill: #999;"/>
+                            <Label text="pour voir les détails"
+                                   style="-fx-font-size: 14px; -fx-text-fill: #bbb;"/>
+                        </VBox>
+
+                        <!-- DÉTAILS DE LA RÉCLAMATION -->
+                        <VBox fx:id="detailsBox" spacing="15" visible="false" managed="false">
+
+                            <!-- Informations Client -->
+                            <VBox styleClass="info-section" spacing="10">
+                                <Label text="👤 Informations Client" styleClass="section-title"/>
+
+                                <GridPane hgap="15" vgap="10">
+                                    <columnConstraints>
+                                        <ColumnConstraints percentWidth="30"/>
+                                        <ColumnConstraints percentWidth="70"/>
+                                    </columnConstraints>
+
+                                    <Label text="Nom:" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                                           styleClass="detail-label"/>
+                                    <Label fx:id="lblDetailNom" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                           styleClass="detail-value"/>
+
+                                    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                                           styleClass="detail-label"/>
+                                    <Label fx:id="lblDetailEmail" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                                           styleClass="detail-value"/>
+
+                                    <Label text="Téléphone:" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                                           styleClass="detail-label"/>
+                                    <Label fx:id="lblDetailTelephone" GridPane.columnIndex="1" GridPane.rowIndex="2"
+                                           styleClass="detail-value"/>
+
+                                    <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="3"
+                                           styleClass="detail-label"/>
+                                    <Label fx:id="lblDetailDate" GridPane.columnIndex="1" GridPane.rowIndex="3"
+                                           styleClass="detail-value"/>
+                                </GridPane>
+                            </VBox>
+
+                            <!-- Message -->
+                            <VBox styleClass="info-section" spacing="10">
+                                <Label text="💬 Message du Client" styleClass="section-title"/>
+                                <TextArea fx:id="txtDetailMessage" editable="false" wrapText="true"
+                                          prefRowCount="6" styleClass="message-area"/>
+                            </VBox>
+
+                            <!-- Statut -->
+                            <VBox styleClass="info-section" spacing="10">
+                                <Label text="📊 Modifier le Statut" styleClass="section-title"/>
+                                <HBox spacing="15" alignment="CENTER_LEFT">
+                                    <ComboBox fx:id="cmbDetailStatut" prefWidth="200"
+                                              styleClass="status-combo"/>
+                                    <Button text="💾 Enregistrer" onAction="#handleChangerStatut"
+                                            styleClass="btn-save-status"/>
+                                </HBox>
+                            </VBox>
+
+                            <!-- Réponse -->
+                            <VBox styleClass="info-section" spacing="10">
+                                <Label text="✉️ Répondre au Client" styleClass="section-title"/>
+                                <TextArea fx:id="txtReponse" promptText="Tapez votre réponse ici..."
+                                          wrapText="true" prefRowCount="5" styleClass="response-area"/>
+                                <HBox spacing="10">
+                                    <Button fx:id="btnEnvoyerReponse" text="📤 Envoyer la Réponse"
+                                            onAction="#handleEnvoyerReponse" styleClass="btn-send-response"/>
+                                    <Label fx:id="lblReponseInfo" styleClass="info-text"
+                                           text="La réponse sera envoyée par email"/>
+                                </HBox>
+                            </VBox>
+
+                            <Separator/>
+
+                            <!-- Actions -->
+                            <VBox spacing="10">
+                                <Label text="⚙️ Actions" styleClass="section-title"/>
+                                <HBox spacing="15">
+                                    <Button fx:id="btnSupprimer" text="🗑️ Supprimer"
+                                            onAction="#handleSupprimer" styleClass="btn-delete"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label fx:id="lblReclamationId" styleClass="id-label"
+                                           text="Réclamation #0"/>
+                                </HBox>
+                            </VBox>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </VBox>
+        </SplitPane>
+    </center>
+
+    <!-- FOOTER -->
+    <bottom>
+        <HBox styleClass="footer" alignment="CENTER" spacing="20">
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20"/>
+            </padding>
+            <Label fx:id="lblStatus" text="Prêt" styleClass="status-label"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Dernière actualisation:" styleClass="footer-label"/>
+            <Label fx:id="lblLastUpdate" text="Jamais" styleClass="footer-value"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

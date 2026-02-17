@@ -19,6 +19,12 @@ import java.util.*;
 
 public class AmadeusService {
 
+    private VolService volService;  // ⬅️ SERVICE POUR BD
+
+    public AmadeusService() {
+        this.volService = new VolService();  // ⬅️ INITIALISER VolService
+    }
+
     // ========================================
     // 🔑 CLÉS API AMADEUS
     // ========================================
@@ -231,6 +237,9 @@ public class AmadeusService {
         int maxDestinations = 12;
         int index = 0;
 
+        // ⬅️ CRÉER UNE INSTANCE POUR LA RECHERCHE
+        AmadeusService service = new AmadeusService();
+
         while (destinations.size() < maxDestinations && index < destinationsTest.length) {
             String[] destInfo = destinationsTest[index];
             index++;
@@ -243,7 +252,8 @@ public class AmadeusService {
                 System.out.println("🔍 [" + (destinations.size() + 1) + "/" + maxDestinations +
                         "] Test de " + nom + " (" + codeIATA + ")...");
 
-                List<Vol> vols = rechercherVols(origine, codeIATA, date, 1);
+                // ⬅️ UTILISER L'INSTANCE NON-STATIQUE
+                List<Vol> vols = service.rechercherVols(origine, codeIATA, date, 1);
 
                 if (!vols.isEmpty()) {
                     double prixMin = vols.stream()
@@ -273,10 +283,10 @@ public class AmadeusService {
     }
 
     // ========================================
-    // ✅ RECHERCHE DE VOLS DYNAMIQUE
+    // ✅ RECHERCHE DE VOLS DYNAMIQUE - AVEC SAUVEGARDE EN BD
     // ========================================
-    public static List<Vol> rechercherVols(String origine, String destination,
-                                           String dateDepart, int adultes) {
+    public List<Vol> rechercherVols(String origine, String destination,
+                                    String dateDepart, int adultes) {
         List<Vol> vols = new ArrayList<>();
 
         try {
@@ -348,6 +358,14 @@ public class AmadeusService {
                                     prix, devise, escales, duree
                             );
 
+                            // ✅ ✅ ✅ SAUVEGARDER LE VOL DANS LA BASE DE DONNÉES ✅ ✅ ✅
+//                            try {
+//                                volService.create(vol);
+//                                System.out.println("   💾 Vol sauvegardé en BD avec ID: " + vol.getId());
+//                            } catch (Exception e) {
+//                                System.err.println("   ⚠️ Erreur sauvegarde BD: " + e.getMessage());
+//                            }
+
                             vols.add(vol);
 
                             System.out.println("   ✅ Vol " + (i+1) + ": " + compagnie +
@@ -368,7 +386,7 @@ public class AmadeusService {
             System.err.println("❌ Erreur recherche vols: " + e.getMessage());
         }
 
-        System.out.println("📊 Résultat: " + vols.size() + " vols trouvés");
+        System.out.println("📊 Résultat: " + vols.size() + " vols trouvés et sauvegardés");
         return vols;
     }
 
@@ -556,76 +574,7 @@ public class AmadeusService {
 
         return display.toString();
     }
-//    public static List<Map<String, String>> rechercherAeroports(String keyword) {
-//        List<Map<String, String>> aeroports = new ArrayList<>();
-//
-//        try {
-//            String token = getAccessToken();
-//            if (token == null) {
-//                return aeroports;
-//            }
-//
-//            HttpClient client = HttpClient.newHttpClient();
-//
-//            // API Amadeus Airport & City Search
-//            String url = String.format(
-//                    "https://test.api.amadeus.com/v1/reference-data/locations?subType=AIRPORT,CITY&keyword=%s&page[limit]=10",
-//                    URLEncoder.encode(keyword, StandardCharsets.UTF_8)
-//            );
-//
-//            HttpRequest request = HttpRequest.newBuilder()
-//                    .uri(URI.create(url))
-//                    .header("Authorization", "Bearer " + token)
-//                    .GET()
-//                    .build();
-//
-//            HttpResponse<String> response = client.send(request,
-//                    HttpResponse.BodyHandlers.ofString());
-//
-//            if (response.statusCode() == 200) {
-//                JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
-//
-//                if (jsonObject.has("data")) {
-//                    JsonArray data = jsonObject.getAsJsonArray("data");
-//
-//                    for (JsonElement element : data) {
-//                        JsonObject location = element.getAsJsonObject();
-//
-//                        Map<String, String> aeroport = new HashMap<>();
-//                        aeroport.put("code", location.get("iataCode").getAsString());
-//                        aeroport.put("name", location.get("name").getAsString());
-//
-//                        // Adresse
-//                        if (location.has("address")) {
-//                            JsonObject address = location.getAsJsonObject("address");
-//                            String ville = address.has("cityName") ? address.get("cityName").getAsString() : "";
-//                            String pays = address.has("countryName") ? address.get("countryName").getAsString() : "";
-//                            aeroport.put("city", ville);
-//                            aeroport.put("country", pays);
-//                            aeroport.put("display", String.format("%s (%s) - %s, %s",
-//                                    location.get("name").getAsString(),
-//                                    location.get("iataCode").getAsString(),
-//                                    ville,
-//                                    pays
-//                            ));
-//                        } else {
-//                            aeroport.put("display", String.format("%s (%s)",
-//                                    location.get("name").getAsString(),
-//                                    location.get("iataCode").getAsString()
-//                            ));
-//                        }
-//
-//                        aeroports.add(aeroport);
-//                    }
-//                }
-//            }
-//
-//        } catch (Exception e) {
-//            System.err.println("❌ Erreur recherche aéroports: " + e.getMessage());
-//        }
-//
-//        return aeroports;
-//    }
+
     private static String buildFormData(Map<String, String> params) {
         StringBuilder result = new StringBuilder();
         for (Map.Entry<String, String> entry : params.entrySet()) {

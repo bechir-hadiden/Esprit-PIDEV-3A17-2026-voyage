@@ -15,7 +15,10 @@ public class HelloApplication extends Application {
 
         FXMLLoader loader = new FXMLLoader(
                 Objects.requireNonNull(
-                        getClass().getResource("/fxml/home.fxml"),
+//                        getClass().getResource("/fxml/gestion-reclamation.fxml"),
+//                        "home.fxml introuvable"
+
+                                                getClass().getResource("/fxml/home.fxml"),
                         "home.fxml introuvable"
                 )
         );

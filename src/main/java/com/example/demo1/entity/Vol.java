@@ -1,6 +1,7 @@
 package com.example.demo1.entity;
 
 public class Vol {
+    private Long id; // ⚠️ AJOUTÉ pour la base de données
     private String compagnie;
     private String depart;
     private String arrivee;
@@ -31,6 +32,19 @@ public class Vol {
     }
 
     // Getters
+
+
+    public Vol() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getCompagnie() {
         return compagnie;
     }
@@ -81,5 +95,49 @@ public class Vol {
 
     public String getHoraires() {
         return heureDepart + " - " + heureArrivee;
+    }
+
+    public void setCompagnie(String compagnie) {
+        this.compagnie = compagnie;
+    }
+
+    public void setDepart(String depart) {
+        this.depart = depart;
+    }
+
+    public void setArrivee(String arrivee) {
+        this.arrivee = arrivee;
+    }
+
+    public void setDateDepart(String dateDepart) {
+        this.dateDepart = dateDepart;
+    }
+
+    public void setDateArrivee(String dateArrivee) {
+        this.dateArrivee = dateArrivee;
+    }
+
+    public void setHeureDepart(String heureDepart) {
+        this.heureDepart = heureDepart;
+    }
+
+    public void setHeureArrivee(String heureArrivee) {
+        this.heureArrivee = heureArrivee;
+    }
+
+    public void setPrix(double prix) {
+        this.prix = prix;
+    }
+
+    public void setDevise(String devise) {
+        this.devise = devise;
+    }
+
+    public void setEscales(int escales) {
+        this.escales = escales;
+    }
+
+    public void setDuree(String duree) {
+        this.duree = duree;
     }
 }

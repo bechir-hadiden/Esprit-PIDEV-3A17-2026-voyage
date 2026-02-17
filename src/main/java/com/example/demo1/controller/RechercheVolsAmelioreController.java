@@ -45,6 +45,7 @@ public class RechercheVolsAmelioreController {
     // ============ Constantes ============
     private static final int DELAI_RECHERCHE_MS = 300;
     private static final int CARACTERES_MIN_RECHERCHE = 2;
+    private AmadeusService amadeusService;
 
     /**
      * Initialisation du contrôleur
@@ -52,6 +53,7 @@ public class RechercheVolsAmelioreController {
     @FXML
     public void initialize() {
         System.out.println("🚀 Initialisation de la recherche intelligente de vols");
+        amadeusService = new AmadeusService();
 
         initialiserPassagers();
         initialiserDates();
@@ -94,41 +96,82 @@ public class RechercheVolsAmelioreController {
      * Configure le système d'autocomplétion pour les deux champs
      */
     private void configurerAutocompletion() {
-        // Configuration Origine
-        configurerListeAutocompletion(lvOrigine, this::selectionnerOrigine);
-        configurerFermetureAutocompletion(tfOrigine, lvOrigine);
+        // ✅ CORRECTION: Configuration Origine avec gestion correcte du clic
+        configurerListeAutocompletion(lvOrigine, tfOrigine, this::selectionnerOrigine);
 
-        // Configuration Destination
-        configurerListeAutocompletion(lvDestination, this::selectionnerDestination);
-        configurerFermetureAutocompletion(tfDestination, lvDestination);
+        // ✅ CORRECTION: Configuration Destination avec gestion correcte du clic
+        configurerListeAutocompletion(lvDestination, tfDestination, this::selectionnerDestination);
     }
 
     /**
      * Configure une liste d'autocomplétion avec son comportement de sélection
+     * ✅ CORRECTION: Ajout du TextField pour gérer le focus correctement
      */
-    private void configurerListeAutocompletion(ListView<String> liste, Runnable actionSelection) {
+    private void configurerListeAutocompletion(ListView<String> liste, TextField champ, Runnable actionSelection) {
+        // Gestion du clic sur un élément
         liste.setOnMouseClicked(event -> {
             if (liste.getSelectionModel().getSelectedItem() != null) {
                 actionSelection.run();
                 liste.setVisible(false);
+                champ.requestFocus(); // ✅ Redonner le focus au champ
             }
         });
-    }
 
-    /**
-     * Configure la fermeture automatique de la liste quand on quitte le champ
-     */
-    private void configurerFermetureAutocompletion(TextField champ, ListView<String> liste) {
-        champ.focusedProperty().addListener((obs, old, hasFocus) -> {
-            if (!hasFocus) {
+        // ✅ CORRECTION: Gestion du focus AMÉLIORÉE
+        champ.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) { // Quand le champ perd le focus
+                // ✅ Vérifier si le focus n'est pas sur la liste
                 Platform.runLater(() -> {
-                    try {
-                        Thread.sleep(200); // Délai pour permettre le clic
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
+                    // Si la liste n'a pas le focus, on la cache
+                    if (!liste.isFocused()) {
+                        new Thread(() -> {
+                            try {
+                                Thread.sleep(300); // ✅ Délai augmenté pour permettre le clic
+                            } catch (InterruptedException e) {
+                                Thread.currentThread().interrupt();
+                            }
+                            Platform.runLater(() -> liste.setVisible(false));
+                        }).start();
                     }
-                    liste.setVisible(false);
                 });
+            }
+        });
+
+        // ✅ NOUVEAU: Gestion de la sélection avec les flèches + ENTRÉE
+        champ.setOnKeyPressed(event -> {
+            if (liste.isVisible()) {
+                switch (event.getCode()) {
+                    case DOWN:
+                        // Naviguer vers le bas dans la liste
+                        liste.requestFocus();
+                        liste.getSelectionModel().selectFirst();
+                        event.consume();
+                        break;
+                    case ESCAPE:
+                        // Fermer la liste
+                        liste.setVisible(false);
+                        event.consume();
+                        break;
+                }
+            }
+        });
+
+        // ✅ NOUVEAU: Navigation clavier dans la liste
+        liste.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case ENTER:
+                    if (liste.getSelectionModel().getSelectedItem() != null) {
+                        actionSelection.run();
+                        liste.setVisible(false);
+                        champ.requestFocus();
+                    }
+                    event.consume();
+                    break;
+                case ESCAPE:
+                    liste.setVisible(false);
+                    champ.requestFocus();
+                    event.consume();
+                    break;
             }
         });
     }
@@ -147,7 +190,7 @@ public class RechercheVolsAmelioreController {
             codeOrigine = aeroport.get("code");
             tfOrigine.setText(selection);
 
-            System.out.println("✅ Origine: " + aeroport.get("name") + " (" + codeOrigine + ")");
+            System.out.println("✅ Origine sélectionnée: " + aeroport.get("name") + " (" + codeOrigine + ")");
         }
     }
 
@@ -165,7 +208,7 @@ public class RechercheVolsAmelioreController {
             codeDestination = aeroport.get("code");
             tfDestination.setText(selection);
 
-            System.out.println("✅ Destination: " + aeroport.get("name") + " (" + codeDestination + ")");
+            System.out.println("✅ Destination sélectionnée: " + aeroport.get("name") + " (" + codeDestination + ")");
         }
     }
 
@@ -211,7 +254,7 @@ public class RechercheVolsAmelioreController {
         Task<List<Map<String, String>>> task = new Task<>() {
             @Override
             protected List<Map<String, String>> call() throws Exception {
-                Thread.sleep(DELAI_RECHERCHE_MS); // Anti-rebond
+                Thread.sleep(DELAI_RECHERCHE_MS);
                 return AmadeusService.rechercherAeroports(keyword);
             }
         };
@@ -256,6 +299,9 @@ public class RechercheVolsAmelioreController {
 
         liste.setItems(suggestions);
         liste.setVisible(true);
+
+        // ✅ CORRECTION: S'assurer que la liste est au premier plan
+        liste.toFront();
 
         System.out.println("✅ " + suggestions.size() + " suggestions affichées");
     }
@@ -316,7 +362,7 @@ public class RechercheVolsAmelioreController {
             afficherErreur("Sélection requise",
                     "Veuillez sélectionner une origine et une destination.\n\n" +
                             "💡 Astuce: Tapez au moins 2 lettres (ex: 'tun', 'paris', 'alger') " +
-                            "puis sélectionnez dans la liste.");
+                            "puis CLIQUEZ sur un résultat dans la liste.");
             return false;
         }
 
@@ -367,7 +413,8 @@ public class RechercheVolsAmelioreController {
         Task<List<Vol>> task = new Task<>() {
             @Override
             protected List<Vol> call() {
-                return AmadeusService.rechercherVols(origine, destination, date, passagers);
+                // ✅ CORRECTION: Utiliser l'instance
+                return amadeusService.rechercherVols(origine, destination, date, passagers);
             }
         };
 

@@ -1,6 +1,8 @@
 package com.example.demo1.controller;
 
+import com.example.demo1.entity.Reclamation;
 import com.example.demo1.services.EmailService;
+import com.example.demo1.services.ReclamationService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -11,11 +13,12 @@ public class ContactController {
     @FXML private TextField txtNom;
     @FXML private TextField txtEmail;
     @FXML private TextField txtTelephone;
-    // ❌ SUPPRIMÉ : @FXML private ComboBox<String> cmbType;
     @FXML private TextArea txtDeclaration;
     @FXML private Label lblCaracteres;
     @FXML private Button btnEnvoyer;
-    // ❌ SUPPRIMÉ : @FXML private Button btnReinitialiser;
+
+    // ----- SERVICES -----
+    private ReclamationService reclamationService;
 
     // ----- CONSTANTES -----
     private static final int MAX_CARACTERES = 1000;
@@ -25,6 +28,10 @@ public class ContactController {
     @FXML
     private void initialize() {
         System.out.println("✅ Initialisation du ContactController...");
+
+        // Initialiser le service
+        reclamationService = new ReclamationService();
+
         configurerCompteurCaracteres();
         System.out.println("✅ Initialisation terminée");
     }
@@ -71,25 +78,56 @@ public class ContactController {
         String telephone = txtTelephone.getText().trim();
         String message = txtDeclaration.getText().trim();
 
-        // Construction du message complet
+        // Créer l'objet Reclamation
+        Reclamation reclamation = new Reclamation(nom, email, telephone, message);
+
+        // Construction du message complet pour l'email
         String messageComplet = construireMessage(nom, email, telephone, message);
 
         // Désactivation pendant l'envoi
         desactiverFormulaire(true);
 
-        // Envoi en arrière-plan
+        // Traitement en arrière-plan
         new Thread(() -> {
-            boolean succes = EmailService.envoyerDeclaration(nom, email, messageComplet);
+            boolean successDB = false;
+            boolean successEmail = false;
+
+            try {
+                // 1. Enregistrer dans la base de données
+                System.out.println("💾 Enregistrement dans la base de données...");
+                successDB = reclamationService.ajouterReclamation(reclamation);
+
+                // 2. Envoyer l'email
+                System.out.println("📧 Envoi de l'email...");
+                successEmail = EmailService.envoyerDeclaration(nom, email, messageComplet);
+
+            } catch (Exception e) {
+                System.err.println("❌ Erreur lors du traitement : " + e.getMessage());
+                e.printStackTrace();
+            }
 
             // Retour sur le thread JavaFX
+            final boolean dbSuccess = successDB;
+            final boolean emailSuccess = successEmail;
+
             Platform.runLater(() -> {
                 desactiverFormulaire(false);
 
-                if (succes) {
-                    afficherSucces();
+                if (dbSuccess && emailSuccess) {
+                    // Succès complet
+                    afficherSuccesComplet(reclamation.getId());
+                    reinitialiserFormulaire();
+                } else if (dbSuccess && !emailSuccess) {
+                    // Base de données OK, mais email échoué
+                    afficherSuccesPartiel(reclamation.getId());
+                    reinitialiserFormulaire();
+                } else if (!dbSuccess && emailSuccess) {
+                    // Email OK, mais base de données échouée
+                    afficherAvertissement();
                     reinitialiserFormulaire();
                 } else {
-                    afficherErreur("Impossible d'envoyer le message.\nVeuillez réessayer plus tard.");
+                    // Échec complet
+                    afficherErreur("Impossible d'enregistrer votre réclamation.\nVeuillez réessayer plus tard.");
                 }
             });
         }).start();
@@ -100,7 +138,7 @@ public class ContactController {
      */
     private String construireMessage(String nom, String email, String telephone, String message) {
         StringBuilder msg = new StringBuilder();
-        msg.append("=== INFORMATIONS DU CLIENT ===\n\n");
+        msg.append("=== NOUVELLE RÉCLAMATION CLIENT ===\n\n");
         msg.append("Nom: ").append(nom).append("\n");
         msg.append("Email: ").append(email).append("\n");
 
@@ -177,7 +215,7 @@ public class ContactController {
         txtDeclaration.setDisable(desactiver);
 
         if (desactiver) {
-            btnEnvoyer.setText("⏳ Envoi en cours...");
+            btnEnvoyer.setText("⏳ Traitement en cours...");
             btnEnvoyer.setDisable(true);
         } else {
             btnEnvoyer.setText("📤 Envoyer");
@@ -186,16 +224,49 @@ public class ContactController {
     }
 
     /**
-     * Affiche un message de succès
+     * Affiche un message de succès complet
      */
-    private void afficherSucces() {
+    private void afficherSuccesComplet(int reclamationId) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Succès");
-        alert.setHeaderText("✅ Message envoyé !");
+        alert.setHeaderText("✅ Réclamation enregistrée avec succès !");
         alert.setContentText(
-                "Votre message a été envoyé avec succès.\n\n" +
-                        "Nous vous répondrons dans les plus brefs délais à l'adresse email que vous avez fournie.\n\n" +
+                "Numéro de réclamation : #" + reclamationId + "\n\n" +
+                        "Votre réclamation a été enregistrée dans notre système.\n" +
+                        "Un email de confirmation vous a été envoyé.\n\n" +
+                        "Nous traiterons votre demande dans les plus brefs délais.\n\n" +
                         "Merci de votre confiance !"
+        );
+        alert.showAndWait();
+    }
+
+    /**
+     * Affiche un message de succès partiel (DB OK, Email KO)
+     */
+    private void afficherSuccesPartiel(int reclamationId) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Réclamation enregistrée");
+        alert.setHeaderText("⚠️ Réclamation enregistrée (email non envoyé)");
+        alert.setContentText(
+                "Numéro de réclamation : #" + reclamationId + "\n\n" +
+                        "Votre réclamation a été enregistrée avec succès.\n" +
+                        "Cependant, l'email de confirmation n'a pas pu être envoyé.\n\n" +
+                        "Nous vous contacterons directement pour le suivi."
+        );
+        alert.showAndWait();
+    }
+
+    /**
+     * Affiche un avertissement (Email OK, DB KO)
+     */
+    private void afficherAvertissement() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Avertissement");
+        alert.setHeaderText("⚠️ Email envoyé");
+        alert.setContentText(
+                "Votre email a été envoyé avec succès.\n" +
+                        "Cependant, une erreur est survenue lors de l'enregistrement.\n\n" +
+                        "Nous avons bien reçu votre message par email."
         );
         alert.showAndWait();
     }

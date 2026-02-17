@@ -26,6 +26,7 @@ public class VolsController {
     @FXML private TableColumn<Vol, String> colDuree;
     @FXML private TableColumn<Vol, Integer> colEscales;
     @FXML private TableColumn<Vol, Double> colPrix;
+    private AmadeusService amadeusService;  // ⬅️ DÉCLARER
 
     @FXML
     public void initialize() {
@@ -80,7 +81,7 @@ public class VolsController {
         Task<List<Vol>> task = new Task<>() {
             @Override
             protected List<Vol> call() {
-                return AmadeusService.rechercherVols(origine, destination, dateDepart, adultes);
+                return amadeusService.rechercherVols(origine, destination, dateDepart, adultes);
             }
         };
 
