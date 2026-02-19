@@ -26,13 +26,20 @@ public class VoyageController {
 
     @FXML private FlowPane destinationsGrid;
     @FXML private ComboBox<String> cbFiltre;
-    @FXML private TextField tfOrigine; // Nouveau : pour changer l'origine
+    @FXML private TextField tfOrigine;
 
+    private DestinationService destinationService; // ✅ Déclaration
     private List<Destination> toutesLesDestinations;
 
+    // ============================================
+    // 🚀 INITIALISATION
+    // ============================================
     @FXML
     public void initialize() {
         System.out.println("🌍 Initialisation de la page Voyages...");
+
+        // ⬅️ AJOUT : Initialiser le service
+        destinationService = new DestinationService();
 
         // Charger les destinations de manière asynchrone
         chargerDestinationsEnArrierePlan("TUN");
@@ -43,6 +50,9 @@ public class VoyageController {
         }
     }
 
+    // ============================================
+    // 📋 CHARGER LES DESTINATIONS
+    // ============================================
     private void chargerDestinationsEnArrierePlan(String origine) {
         // Afficher un indicateur de chargement
         destinationsGrid.getChildren().clear();
@@ -53,7 +63,7 @@ public class VoyageController {
         Task<List<Destination>> task = new Task<>() {
             @Override
             protected List<Destination> call() {
-                return DestinationService.getDestinationsDepuis(origine);
+                return destinationService.getAll();  // ⬅️ Utiliser getAll()
             }
         };
 
@@ -88,7 +98,6 @@ public class VoyageController {
         System.out.println("🔄 Rafraîchissement des voyages...");
 
         if (destinationsGrid != null) {
-            // Réinitialiser et recharger
             chargerDestinationsEnArrierePlan("TUN");
         } else {
             System.err.println("❌ destinationsGrid est null, impossible de rafraîchir");
@@ -183,16 +192,56 @@ public class VoyageController {
             prixBox.getChildren().addAll(prixLabel, prix);
         }
 
-        // Bouton
+        // ⬅️ AJOUT : Bouton QR Code
+        HBox boutons = new HBox(10);
+        boutons.setAlignment(Pos.CENTER);
+
+        // Bouton Rechercher
         Button btnRechercher = new Button("Rechercher des vols");
         btnRechercher.getStyleClass().add("btn-rechercher");
-        btnRechercher.setMaxWidth(Double.MAX_VALUE);
         btnRechercher.setOnAction(e -> rechercherVolsPourDestination(dest));
 
-        content.getChildren().addAll(titre, description, prixBox, btnRechercher);
+        // Bouton QR Code
+        Button btnQR = new Button("📱 QR Code");
+        btnQR.setStyle(
+                "-fx-background-color: #667eea;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 12px;" +
+                        "-fx-padding: 8 15;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-cursor: hand;"
+        );
+        btnQR.setOnAction(e -> afficherQRCode(dest));
+
+        boutons.getChildren().addAll(btnRechercher, btnQR);
+
+        content.getChildren().addAll(titre, description, prixBox, boutons);
         card.getChildren().add(content);
 
         return card;
+    }
+
+    // ============================================
+    // 📱 AFFICHER LE QR CODE
+    // ============================================
+    // Dans VoyageController.java
+
+    private void afficherQRCode(Destination destination) {
+        try {
+            // ⬅️ APPEL AVEC LES BONS PARAMÈTRES
+            QRCodeController.afficherPopupQRCode(
+                    destination.getId(),      // int
+                    destination.getNom()      // String
+            );
+        } catch (Exception e) {
+            System.err.println("❌ Erreur affichage QR Code: " + e.getMessage());
+            e.printStackTrace();
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setContentText("Impossible d'afficher le QR Code");
+            alert.showAndWait();
+        }
     }
 
     @FXML
@@ -225,13 +274,15 @@ public class VoyageController {
     }
 
     private void rechercherVolsPourDestination(Destination dest) {
-
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RechercheVols.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/RechercheVols.fxml")
+            );
             Parent root = loader.load();
 
-            VolsController controller = loader.getController();
-            controller.preRemplirDestination(dest.getCodeIATA());
+            // ⬅️ CORRECTION : Utilisez le bon nom
+            RechercheVolsAmelioreController controller = loader.getController();
+            controller.preRemplirDestination(dest.getCodeIata());
 
             Stage stage = new Stage();
             stage.setTitle("Vols vers " + dest.getNom());
@@ -239,12 +290,15 @@ public class VoyageController {
             stage.show();
 
         } catch (IOException e) {
+            System.err.println("❌ Erreur ouverture recherche vols: " + e.getMessage());
             e.printStackTrace();
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setContentText("Impossible d'ouvrir la recherche de vols");
+            alert.showAndWait();
         }
     }
-
-
-
 
     @FXML
     private void ouvrirRecherchePersonnalisee(ActionEvent event) {

@@ -255,7 +255,7 @@ public class RechercheVolsAmelioreController {
             @Override
             protected List<Map<String, String>> call() throws Exception {
                 Thread.sleep(DELAI_RECHERCHE_MS);
-                return AmadeusService.rechercherAeroports(keyword);
+                return amadeusService.rechercherAeroports(keyword);
             }
         };
 

@@ -18,8 +18,11 @@ public class HelloApplication extends Application {
 //                        getClass().getResource("/fxml/gestion-reclamation.fxml"),
 //                        "home.fxml introuvable"
 
-                                                getClass().getResource("/fxml/home.fxml"),
-                        "home.fxml introuvable"
+//                                                getClass().getResource("/fxml/home.fxml"),
+//                        "home.fxml introuvable"
+
+                   getClass().getResource("/fxml/destination.fxml"),
+                        "destination.fxml introuvable"
                 )
         );
 

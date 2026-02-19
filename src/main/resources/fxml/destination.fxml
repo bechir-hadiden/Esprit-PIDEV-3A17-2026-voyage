@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.demo1.controller.DestinationController"
+      spacing="0"
+      style="-fx-background-color: #f5f6fa;">
+
+    <!-- ===== HEADER ===== -->
+    <HBox style="-fx-background-color: #667eea; -fx-padding: 20;"
+          alignment="CENTER_LEFT" spacing="15">
+        <VBox HBox.hgrow="ALWAYS">
+            <Label text="🌍 Destinations"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold;
+                          -fx-text-fill: white;"/>
+            <Label fx:id="lblCount"
+                   text="0 destinations"
+                   style="-fx-font-size: 13px;
+                          -fx-text-fill: rgba(255,255,255,0.8);"/>
+        </VBox>
+        <Button text="➕ Ajouter"
+                onAction="#handleAjouter"
+                style="-fx-background-color: white;
+                       -fx-text-fill: #667eea;
+                       -fx-font-weight: bold;
+                       -fx-padding: 10 20;
+                       -fx-background-radius: 20;
+                       -fx-cursor: hand;"/>
+    </HBox>
+
+    <!-- ===== BARRE DE RECHERCHE ===== -->
+    <HBox style="-fx-background-color: white; -fx-padding: 15;"
+          alignment="CENTER_LEFT" spacing="10">
+        <TextField fx:id="tfRecherche"
+                   promptText="🔍 Rechercher une destination..."
+                   prefWidth="300"
+                   onKeyReleased="#handleRecherche"
+                   style="-fx-padding: 8 15;
+                          -fx-border-color: #ddd;
+                          -fx-border-radius: 20;
+                          -fx-background-radius: 20;"/>
+        <Button text="🔄 Actualiser"
+                onAction="#handleActualiser"
+                style="-fx-background-color: #f0f4ff;
+                       -fx-text-fill: #667eea;
+                       -fx-padding: 8 15;
+                       -fx-background-radius: 20;
+                       -fx-cursor: hand;"/>
+    </HBox>
+
+    <!-- ===== GRILLE DES DESTINATIONS ===== -->
+    <ScrollPane fitToWidth="true"
+                VBox.vgrow="ALWAYS"
+                style="-fx-background-color: transparent;
+                       -fx-background: transparent;">
+        <GridPane fx:id="gridDestinations"
+                  hgap="20" vgap="20"
+                  style="-fx-padding: 25;
+                         -fx-background-color: #f5f6fa;"/>
+    </ScrollPane>
+
+    <!-- ===== LOADING ===== -->
+    <HBox fx:id="hboxLoading"
+          alignment="CENTER"
+          spacing="10"
+          style="-fx-padding: 20;"
+          visible="false">
+        <ProgressIndicator prefWidth="30" prefHeight="30"/>
+        <Label text="Chargement..."
+               style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+    </HBox>
+
+</VBox>

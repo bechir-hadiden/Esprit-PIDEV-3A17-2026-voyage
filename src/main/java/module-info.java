@@ -6,6 +6,8 @@ module com.example.demo1 {
     requires java.sql;
     requires java.net.http; // <-- pour HttpClient
     requires com.google.gson;  // ← Ajoute cette ligne
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
 
     opens com.example.demo1.entity to javafx.base; // Pour les TableView
     requires okhttp3;              // ← Ajoute cette ligne
