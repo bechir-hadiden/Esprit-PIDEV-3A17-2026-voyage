@@ -1,0 +1,404 @@
+/* =====================================================
+   🌍 VOYAGE APP - JavaFX Stylesheet (Fixed)
+   ===================================================== */
+
+/* =====================================================
+   🎨 VARIABLES (uniquement celles supportées par JavaFX)
+   ===================================================== */
+.root {
+    -primary:        #5C6BC0;
+    -primary-dark:   #3949AB;
+    -primary-light:  #7986CB;
+    -warning:        #FFA726;
+    -danger:         #EF5350;
+    -fx-font-family: "Segoe UI";
+}
+
+/* =====================================================
+   📦 CARTE VOYAGE
+   ===================================================== */
+.carte-voyage {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(92,107,192,0.10), 14, 0, 0, 4);
+    -fx-cursor: hand;
+    -fx-clip: true;                          /* ✅ empêche le débordement */
+}
+
+.carte-voyage:hover {
+    -fx-effect: dropshadow(gaussian, rgba(92,107,192,0.22), 20, 0, 0, 6);
+    -fx-background-color: #FAFBFF;
+    -fx-translate-y: -2;
+}
+
+.image-placeholder {
+    -fx-background-color: linear-gradient(to bottom right, #5C6BC0, #3949AB);
+    -fx-background-radius: 14 14 0 0;
+    -fx-max-height: 180;                     /* ✅ hauteur fixe */
+}
+
+/* =====================================================
+   🖼️ IMAGE PLACEHOLDER
+   ===================================================== */
+.image-placeholder {
+    -fx-background-color: linear-gradient(to bottom right, #5C6BC0, #3949AB);
+    -fx-background-radius: 14 14 0 0;
+}
+
+.image-placeholder-label {
+    -fx-font-size: 48;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-opacity: 0.85;
+}
+
+/* =====================================================
+   🏷️ LABELS DESTINATION
+   ===================================================== */
+.lbl-destination {
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-text-fill: #212121;
+}
+
+.lbl-pays {
+    -fx-font-size: 12;
+    -fx-text-fill: #999999;
+}
+
+.lbl-dates {
+    -fx-font-size: 12;
+    -fx-text-fill: #555555;
+}
+
+.lbl-depart {
+    -fx-font-size: 12;
+    -fx-text-fill: #7986CB;
+    -fx-font-style: italic;
+}
+
+.lbl-description {
+    -fx-font-size: 11;
+    -fx-text-fill: #999999;
+    -fx-wrap-text: true;
+}
+
+/* =====================================================
+   💰 PRIX
+   ===================================================== */
+.lbl-prix {
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5C6BC0;
+}
+
+.lbl-prix-sub {
+    -fx-font-size: 10;
+    -fx-text-fill: #999999;
+}
+
+/* =====================================================
+   🔢 COMPTEUR
+   ===================================================== */
+.lbl-count {
+    -fx-font-size: 13;
+    -fx-text-fill: #999999;
+    -fx-font-style: italic;
+}
+
+.lbl-chargement {
+    -fx-font-size: 16;
+    -fx-text-fill: #999999;
+    -fx-padding: 40;
+}
+
+.lbl-erreur {
+    -fx-font-size: 16;
+    -fx-text-fill: #EF5350;
+    -fx-padding: 40;
+}
+
+.lbl-vide {
+    -fx-font-size: 18;
+    -fx-text-fill: #999999;
+    -fx-padding: 50;
+}
+
+/* =====================================================
+   🔘 BOUTONS
+   ===================================================== */
+.btn-modifier {
+    -fx-background-color: #FFA726;
+    -fx-text-fill: white;
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+    -fx-padding: 7 14;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255,167,38,0.35), 6, 0, 0, 2);
+}
+
+.btn-modifier:hover {
+    -fx-background-color: #FB8C00;
+    -fx-translate-y: -1;
+}
+
+.btn-modifier:pressed {
+    -fx-translate-y: 0;
+    -fx-effect: none;
+}
+
+.btn-supprimer {
+    -fx-background-color: #EF5350;
+    -fx-text-fill: white;
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+    -fx-padding: 7 14;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(239,83,80,0.35), 6, 0, 0, 2);
+}
+
+.btn-supprimer:hover {
+    -fx-background-color: #E53935;
+    -fx-translate-y: -1;
+}
+
+.btn-supprimer:pressed {
+    -fx-translate-y: 0;
+    -fx-effect: none;
+}
+
+/* Bouton Détails */
+.btn-details {
+    -fx-background-color: #5C6BC0;
+    -fx-text-fill: white;
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+    -fx-padding: 7 14;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(92,107,192,0.35), 6, 0, 0, 2);
+    -fx-border-color: transparent;
+}
+
+.btn-details:hover {
+    -fx-background-color: #3949AB;
+    -fx-translate-y: -1;
+    -fx-effect: dropshadow(gaussian, rgba(57,73,171,0.5), 8, 0, 0, 3);
+}
+
+.btn-details:pressed {
+    -fx-translate-y: 0;
+    -fx-effect: none;
+}
+
+.btn-ajouter {
+    -fx-background-color: #5C6BC0;
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+    -fx-padding: 10 22;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(92,107,192,0.40), 8, 0, 0, 3);
+}
+
+.btn-ajouter:hover {
+    -fx-background-color: #3949AB;
+    -fx-translate-y: -1;
+}
+
+.btn-actualiser {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5C6BC0;
+    -fx-font-size: 13;
+    -fx-border-color: #5C6BC0;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 9 20;
+    -fx-cursor: hand;
+}
+
+.btn-actualiser:hover {
+    -fx-background-color: #5C6BC0;
+    -fx-text-fill: white;
+}
+
+/* =====================================================
+   🔍 BARRE DE RECHERCHE
+   ===================================================== */
+.search-field {
+    -fx-background-color: white;
+    -fx-border-color: #E8ECF4;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 9 14;
+    -fx-font-size: 13;
+    -fx-text-fill: #212121;
+    -fx-prompt-text-fill: #999999;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 1);
+}
+
+.search-field:focused {
+    -fx-border-color: #5C6BC0;
+    -fx-effect: dropshadow(gaussian, rgba(92,107,192,0.20), 8, 0, 0, 2);
+}
+
+/* =====================================================
+   📋 COMBOBOX FILTRE - ✅ valeurs directes (plus de variables)
+   ===================================================== */
+.filtre-combo {
+    -fx-background-color: white;
+    -fx-border-color: #E8ECF4;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 4 10;
+    -fx-font-size: 13;
+    -fx-cursor: hand;
+}
+
+.filtre-combo:focused {
+    -fx-border-color: #5C6BC0;
+}
+
+.filtre-combo .list-cell {
+    -fx-padding: 6 12;
+    -fx-text-fill: #212121;       /* ✅ valeur directe */
+    -fx-font-size: 13;
+    -fx-background-color: white;
+}
+
+.filtre-combo .list-cell:hover {
+    -fx-background-color: #EEF0FB;
+    -fx-text-fill: #3949AB;       /* ✅ valeur directe */
+}
+
+.filtre-combo .list-cell:selected {
+    -fx-background-color: #5C6BC0;
+    -fx-text-fill: white;
+}
+
+/* =====================================================
+   📜 SCROLL PANE - ✅ valeurs directes
+   ===================================================== */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #E8ECF4;   /* ✅ valeur directe */
+    -fx-background-radius: 4;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #7986CB;   /* ✅ valeur directe */
+}
+
+.scroll-bar:vertical .increment-button,
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-pref-height: 0;
+}
+
+.scroll-bar:horizontal {
+    -fx-pref-height: 8;
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #E8ECF4;
+    -fx-background-radius: 4;
+}
+
+/* =====================================================
+   📊 TOOLBAR
+   ===================================================== */
+.toolbar {
+    -fx-background-color: white;
+    -fx-padding: 14 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);
+}
+
+.toolbar-title {
+    -fx-font-size: 22;
+    -fx-font-weight: bold;
+    -fx-text-fill: #212121;         /* ✅ valeur directe */
+}
+
+/* =====================================================
+   ➕ FORMULAIRE
+   ===================================================== */
+.form-field {
+    -fx-background-color: white;
+    -fx-border-color: #E8ECF4;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+    -fx-font-size: 13;
+    -fx-text-fill: #212121;         /* ✅ valeur directe */
+}
+
+.form-field:focused {
+    -fx-border-color: #5C6BC0;
+    -fx-effect: dropshadow(gaussian, rgba(92,107,192,0.15), 6, 0, 0, 2);
+}
+
+.form-label {
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+    -fx-text-fill: #555555;         /* ✅ valeur directe */
+}
+
+/* =====================================================
+   🔔 ALERTES
+   ===================================================== */
+.dialog-pane {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: #5C6BC0;
+    -fx-background-radius: 12 12 0 0;
+}
+
+.dialog-pane .header-panel .label {
+    -fx-text-fill: white;
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+}
+
+.dialog-pane .button-bar .button {
+    -fx-background-color: #5C6BC0;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.dialog-pane .button-bar .button:hover {
+    -fx-background-color: #3949AB;
+}
+
+/* =====================================================
+   🔗 SÉPARATEUR
+   ===================================================== */
+.separator *.line {
+    -fx-border-color: #E8ECF4;      /* ✅ valeur directe */
+    -fx-border-width: 1;
+}

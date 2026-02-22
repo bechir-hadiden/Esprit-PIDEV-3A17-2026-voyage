@@ -7,41 +7,64 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.demo1.controller.VoyageController"
-      spacing="20"
-      stylesheets="@../css/style.css">
+      spacing="0"
+      stylesheets="@../css/voyage.css">
 
-    <!-- En-tête -->
-    <HBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 15;">
-        <Label text="🌍 Nos Destinations Populaires"
-               style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
-        <Region HBox.hgrow="ALWAYS"/>
-    </HBox>
+    <!-- BARRE ACTIONS -->
+    <HBox spacing="12" alignment="CENTER_LEFT"
+          style="-fx-padding: 15; -fx-background-color: white;
+                 -fx-border-color: #eee; -fx-border-width: 0 0 1 0;">
 
-    <!-- Barre de filtres -->
-    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 15; -fx-background-color: white;">
-        <Label text="Filtrer par:"/>
-        <ComboBox fx:id="cbFiltre" promptText="Toutes les destinations" prefWidth="200"/>
+        <Button text="➕ Ajouter un voyage"
+                onAction="#handleAjouter"
+                style="-fx-background-color: #667eea;
+                       -fx-text-fill: white;
+                       -fx-font-weight: bold;
+                       -fx-padding: 10 20;
+                       -fx-background-radius: 8;
+                       -fx-cursor: hand;"/>
 
-        <Button text="🔄 Actualiser les prix"
-                onAction="#actualiserPrix"
-                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 8 15;"/>
+        <Button text="🔄 Actualiser"
+                onAction="#handleActualiser"
+                style="-fx-background-color: #f0f0f0;
+                       -fx-text-fill: #555;
+                       -fx-padding: 10 20;
+                       -fx-background-radius: 8;
+                       -fx-cursor: hand;"/>
 
-        <Button text="🔍 Recherche personnalisée"
+        <Button text="🔍 Recherche vols"
                 onAction="#ouvrirRecherchePersonnalisee"
-                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-padding: 8 15;"/>
+                style="-fx-background-color: #27ae60;
+                       -fx-text-fill: white;
+                       -fx-padding: 10 20;
+                       -fx-background-radius: 8;
+                       -fx-cursor: hand;"/>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <TextField fx:id="tfRecherche"
+                   promptText="🔍 Rechercher..."
+                   onKeyReleased="#handleRecherche"
+                   prefWidth="220"
+                   style="-fx-padding: 8 12;
+                          -fx-border-color: #ddd;
+                          -fx-border-radius: 8;
+                          -fx-background-radius: 8;"/>
+
+        <ComboBox fx:id="cbFiltre"
+                  promptText="Filtrer..."
+                  prefWidth="160"
+                  onAction="#appliquerFiltre"/>
+
+        <Label fx:id="lblCount"
+               style="-fx-font-size: 13px; -fx-text-fill: #999;"/>
     </HBox>
 
-    <!-- Grille de destinations -->
-    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
-        <FlowPane fx:id="destinationsGrid"
-                  hgap="20"
-                  vgap="20"
-                  alignment="CENTER"
-                  style="-fx-background-color: #ecf0f1;">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
-        </FlowPane>
+    <!-- LISTE VOYAGES -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                style="-fx-background-color: #f8f9ff;">
+        <VBox fx:id="vboxVoyages" spacing="15"
+              style="-fx-background-color: #f8f9ff; -fx-padding: 20;"/>
     </ScrollPane>
 
 </VBox>

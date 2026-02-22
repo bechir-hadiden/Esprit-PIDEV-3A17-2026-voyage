@@ -10,7 +10,13 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.collections.FXCollections;
-
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -588,5 +594,24 @@ public class RechercheVolsAmelioreController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void retourArriere(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/Home.fxml")
+            );
+            Parent root = loader.load();
+
+            // Récupère la fenêtre actuelle
+            Stage stage = (Stage) vboxResultats.getScene().getWindow();
+            stage.setScene(new Scene(root, 1200, 750));
+            stage.setTitle("🏠 Accueil - Smart Trip");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

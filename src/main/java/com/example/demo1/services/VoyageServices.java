@@ -1,14 +1,10 @@
 package com.example.demo1.services;
 
 import com.example.demo1.Utils.Database;
+import com.example.demo1.entity.Destination;
 import com.example.demo1.entity.Voyage;
 
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.ResultSet;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Date;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +16,16 @@ public class VoyageServices {
         connection = Database.getInstance().getConnection();
     }
 
-    // Récupérer tous les voyages
+    // ============================================
+    // 📋 RÉCUPÉRER TOUS LES VOYAGES
+    // ============================================
     public List<Voyage> getAllVoyages() {
         List<Voyage> voyages = new ArrayList<>();
-        String query = "SELECT * FROM voyages ORDER BY dateDebut";
+        String query = "SELECT v.*, d.nom as dest_nom, d.pays as dest_pays, " +
+                "d.image_url as dest_image, d.code_iata as dest_iata " +
+                "FROM voyages v " +
+                "LEFT JOIN destination d ON v.destination_id = d.id " +
+                "ORDER BY v.dateDebut";
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
@@ -37,25 +39,40 @@ public class VoyageServices {
                 voyage.setPrix(rs.getDouble("prix"));
                 voyage.setImagePath(rs.getString("imagePath"));
                 voyage.setDescription(rs.getString("description"));
+                voyage.setDestinationId(rs.getInt("destination_id"));
+
+                // ✅ Pays de départ
+                voyage.setPaysDepart(rs.getString("pays_depart"));
+
+                // ✅ Charger l'objet Destination lié
+                int destId = rs.getInt("destination_id");
+                if (destId > 0) {
+                    Destination dest = new Destination();
+                    dest.setId(destId);
+                    dest.setNom(rs.getString("dest_nom"));
+                    dest.setPays(rs.getString("dest_pays"));
+                    dest.setImageUrl(rs.getString("dest_image"));
+                    dest.setCodeIata(rs.getString("dest_iata"));
+                    voyage.setDestinationObj(dest);
+                }
 
                 voyages.add(voyage);
-                System.out.println("✅ Voyage chargé: " + voyage.getDestination());
             }
-
-            System.out.println("✅ Total voyages chargés: " + voyages.size());
+            System.out.println("✅ Total voyages: " + voyages.size());
 
         } catch (SQLException e) {
-            System.err.println("❌ Erreur lors de la récupération des voyages");
-            System.err.println("Message SQL: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("❌ Erreur getAllVoyages: " + e.getMessage());
         }
         return voyages;
     }
 
-    // Ajouter un voyage
+    // ============================================
+    // ➕ AJOUTER UN VOYAGE
+    // ============================================
     public boolean addVoyage(Voyage voyage) {
-        String query = "INSERT INTO voyages (destination, dateDebut, dateFin, prix, imagePath, description) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO voyages (destination, dateDebut, dateFin, " +
+                "prix, imagePath, description, destination_id, pays_depart) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, voyage.getDestination());
@@ -65,70 +82,73 @@ public class VoyageServices {
             pstmt.setString(5, voyage.getImagePath());
             pstmt.setString(6, voyage.getDescription());
 
-            int rows = pstmt.executeUpdate();
-
-            if (rows > 0) {
-                System.out.println("✅ Voyage ajouté avec succès: " + voyage.getDestination());
+            if (voyage.getDestinationId() > 0) {
+                pstmt.setInt(7, voyage.getDestinationId());
+            } else {
+                pstmt.setNull(7, Types.INTEGER);
             }
 
+            // ✅ Pays de départ
+            pstmt.setString(8, voyage.getPaysDepart());
+
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) System.out.println("✅ Voyage ajouté: " + voyage.getDestination());
             return rows > 0;
 
         } catch (SQLException e) {
-            System.err.println("❌ Erreur lors de l'ajout du voyage");
-            System.err.println("Message SQL: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("❌ Erreur addVoyage: " + e.getMessage());
             return false;
         }
     }
 
-    // Supprimer un voyage
+    // ============================================
+    // ✏️ MODIFIER UN VOYAGE
+    // ============================================
+    public boolean updateVoyage(Voyage voyage) {
+        String query = "UPDATE voyages SET destination=?, dateDebut=?, dateFin=?, " +
+                "prix=?, imagePath=?, description=?, destination_id=?, " +
+                "pays_depart=? WHERE id=?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, voyage.getDestination());
+            pstmt.setDate(2, Date.valueOf(voyage.getDateDebut()));
+            pstmt.setDate(3, Date.valueOf(voyage.getDateFin()));
+            pstmt.setDouble(4, voyage.getPrix());
+            pstmt.setString(5, voyage.getImagePath());
+            pstmt.setString(6, voyage.getDescription());
+
+            if (voyage.getDestinationId() > 0) {
+                pstmt.setInt(7, voyage.getDestinationId());
+            } else {
+                pstmt.setNull(7, Types.INTEGER);
+            }
+
+            // ✅ Pays de départ
+            pstmt.setString(8, voyage.getPaysDepart());
+            pstmt.setInt(9, voyage.getId());
+
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) System.out.println("✅ Voyage modifié: " + voyage.getDestination());
+            return rows > 0;
+
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur updateVoyage: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // ============================================
+    // 🗑️ SUPPRIMER UN VOYAGE
+    // ============================================
     public boolean deleteVoyage(int id) {
         String query = "DELETE FROM voyages WHERE id = ?";
-
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, id);
             int rows = pstmt.executeUpdate();
-
-            if (rows > 0) {
-                System.out.println("✅ Voyage supprimé: ID " + id);
-            }
-
+            if (rows > 0) System.out.println("✅ Voyage supprimé: ID " + id);
             return rows > 0;
-
         } catch (SQLException e) {
-            System.err.println("❌ Erreur lors de la suppression du voyage");
-            System.err.println("Message SQL: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    // Modifier un voyage
-    public boolean updateVoyage(Voyage voyage) {
-        String query = "UPDATE voyages SET destination=?, dateDebut=?, dateFin=?, " +
-                "prix=?, imagePath=?, description=? WHERE id=?";
-
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, voyage.getDestination());
-            pstmt.setDate(2, Date.valueOf(voyage.getDateDebut()));
-            pstmt.setDate(3, Date.valueOf(voyage.getDateFin()));
-            pstmt.setDouble(4, voyage.getPrix());
-            pstmt.setString(5, voyage.getImagePath());
-            pstmt.setString(6, voyage.getDescription());
-            pstmt.setInt(7, voyage.getId());
-
-            int rows = pstmt.executeUpdate();
-
-            if (rows > 0) {
-                System.out.println("✅ Voyage modifié: " + voyage.getDestination());
-            }
-
-            return rows > 0;
-
-        } catch (SQLException e) {
-            System.err.println("❌ Erreur lors de la modification du voyage");
-            System.err.println("Message SQL: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("❌ Erreur deleteVoyage: " + e.getMessage());
             return false;
         }
     }

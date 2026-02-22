@@ -13,8 +13,9 @@ public class Voyage {
     private String description;
     private int destinationId;       // ← nouveau champ
     private Destination destinationObj; // ← objet destination complet
+    private String paysDepart;
 
-    // ============ Constructeur vide ============
+        // ============ Constructeur vide ============
     public Voyage() {}
 
     // ============ Constructeur complet ============
@@ -41,6 +42,7 @@ public class Voyage {
     public String getDescription() { return description; }
     public int getDestinationId() { return destinationId; }
     public Destination getDestinationObj() { return destinationObj; }
+    public String getPaysDepart() { return paysDepart; }
 
     // ============ Setters ============
     public void setId(int id) { this.id = id; }
@@ -54,7 +56,9 @@ public class Voyage {
     public void setDestinationObj(Destination destinationObj) {
         this.destinationObj = destinationObj;
     }
-
+    public void setPaysDepart(String paysDepart) {
+        this.paysDepart = paysDepart;
+    }
     @Override
     public String toString() {
         return "Voyage{id=" + id + ", destination='" + destination +

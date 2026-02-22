@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.demo1.controller.DestinationDetailController"
+      spacing="0"
+      prefWidth="600"
+      style="-fx-background-color: #f4f6fb;">
+
+    <!-- HEADER -->
+    <HBox style="-fx-background-color: linear-gradient(to right, #5C6BC0, #3949AB);
+                 -fx-padding: 20;" alignment="CENTER_LEFT" spacing="15">
+        <Label fx:id="lblTitreDestination"
+               text="🌍 Destination"
+               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="✕ Fermer"
+                onAction="#fermer"
+                style="-fx-background-color: rgba(255,255,255,0.2);
+                       -fx-text-fill: white;
+                       -fx-background-radius: 8;
+                       -fx-padding: 6 14;
+                       -fx-cursor: hand;"/>
+    </HBox>
+
+    <!-- CONTENU SCROLLABLE -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                style="-fx-background-color: transparent; -fx-background: transparent;">
+        <VBox spacing="15" style="-fx-padding: 20;">
+
+            <!-- 🌤️ MÉTÉO -->
+            <VBox style="-fx-background-color: white;
+                         -fx-background-radius: 12;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                <HBox style="-fx-background-color: #E3F2FD;
+                             -fx-background-radius: 12 12 0 0;
+                             -fx-padding: 12 15;" alignment="CENTER_LEFT">
+                    <Label text="🌤️ Météo actuelle"
+                           style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1565C0;"/>
+                </HBox>
+
+                <VBox spacing="10" style="-fx-padding: 15;">
+                    <!-- Chargement météo -->
+                    <Label fx:id="lblMeteoChargement"
+                           text="⏳ Chargement de la météo..."
+                           style="-fx-font-size: 13px; -fx-text-fill: #999;"/>
+
+                    <!-- Données météo (cachées au début) -->
+                    <HBox fx:id="hboxMeteo" spacing="20" alignment="CENTER_LEFT" visible="false" managed="false">
+                        <VBox alignment="CENTER" spacing="4">
+                            <Label fx:id="lblMeteoEmoji" text="☀️"
+                                   style="-fx-font-size: 48px;"/>
+                            <Label fx:id="lblMeteoDesc" text=""
+                                   style="-fx-font-size: 13px; -fx-text-fill: #555;"/>
+                        </VBox>
+                        <VBox spacing="8">
+                            <Label fx:id="lblMeteoTemp" text=""
+                                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #1565C0;"/>
+                            <Label fx:id="lblMeteoMinMax" text=""
+                                   style="-fx-font-size: 12px; -fx-text-fill: #888;"/>
+                            <Label fx:id="lblMeteoHumidite" text=""
+                                   style="-fx-font-size: 12px; -fx-text-fill: #888;"/>
+                            <Label fx:id="lblMeteoVent" text=""
+                                   style="-fx-font-size: 12px; -fx-text-fill: #888;"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Erreur météo -->
+                    <Label fx:id="lblMeteoErreur" text=""
+                           style="-fx-font-size: 13px; -fx-text-fill: #EF5350;"
+                           visible="false" managed="false"/>
+                </VBox>
+            </VBox>
+
+            <!-- 🏛️ POINTS D'INTÉRÊT -->
+            <VBox style="-fx-background-color: white;
+                         -fx-background-radius: 12;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                <HBox style="-fx-background-color: #E8F5E9;
+                             -fx-background-radius: 12 12 0 0;
+                             -fx-padding: 12 15;" alignment="CENTER_LEFT">
+                    <Label text="🏛️ À visiter"
+                           style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;"/>
+                </HBox>
+
+                <VBox fx:id="vboxPointsInteret" spacing="8" style="-fx-padding: 15;">
+                    <Label text="⏳ Chargement des points d'intérêt..."
+                           style="-fx-font-size: 13px; -fx-text-fill: #999;"/>
+                </VBox>
+            </VBox>
+
+            <!-- ℹ️ INFOS VOYAGE -->
+            <VBox style="-fx-background-color: white;
+                         -fx-background-radius: 12;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                <HBox style="-fx-background-color: #FFF3E0;
+                             -fx-background-radius: 12 12 0 0;
+                             -fx-padding: 12 15;" alignment="CENTER_LEFT">
+                    <Label text="✈️ Infos du voyage"
+                           style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #E65100;"/>
+                </HBox>
+
+                <VBox fx:id="vboxInfosVoyage" spacing="10" style="-fx-padding: 15;">
+                    <Label fx:id="lblInfoDates"  text="" style="-fx-font-size: 13px; -fx-text-fill: #555;"/>
+                    <Label fx:id="lblInfoPrix"   text="" style="-fx-font-size: 13px; -fx-text-fill: #555;"/>
+                    <Label fx:id="lblInfoDepart" text="" style="-fx-font-size: 13px; -fx-text-fill: #555;"/>
+                    <Label fx:id="lblInfoDesc"   text="" style="-fx-font-size: 13px; -fx-text-fill: #777;"
+                           wrapText="true"/>
+                </VBox>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+</VBox>

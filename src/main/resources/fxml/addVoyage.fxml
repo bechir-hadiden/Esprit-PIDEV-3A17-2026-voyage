@@ -2,92 +2,164 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.Insets?>
 
 <ScrollPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.demo1.controller.AddVoyageController"
             fitToWidth="true"
-            style="-fx-background-color: white;">
+            stylesheets="@../css/voyage.css">
 
-    <VBox spacing="15" style="-fx-background-color: white;">
+    <VBox spacing="0" style="-fx-background-color: #f8f9ff;">
 
-        <padding>
-            <Insets top="20" right="20" bottom="20" left="20"/>
-        </padding>
-
-        <Label text="Ajouter un nouveau voyage"
-               style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
-
-        <Separator/>
-
-        <!-- Destination -->
-        <VBox spacing="5">
-            <Label text="Destination *" style="-fx-font-weight: bold;"/>
-            <TextField fx:id="txtDestination" promptText="Ex: Paris, Rome, Istanbul..."/>
+        <!-- ===== HEADER ===== -->
+        <VBox spacing="5" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-padding: 25;">
+            <Label text="✈️ Nouveau Voyage"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <Label text="Remplissez les informations pour ajouter un voyage"
+                   style="-fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.8);"/>
         </VBox>
 
-        <!-- Date de début -->
-        <VBox spacing="5">
-            <Label text="Date de début *" style="-fx-font-weight: bold;"/>
-            <DatePicker fx:id="dateDebut" promptText="Sélectionnez la date de début"/>
-        </VBox>
-
-        <!-- Date de fin -->
-        <VBox spacing="5">
-            <Label text="Date de fin *" style="-fx-font-weight: bold;"/>
-            <DatePicker fx:id="dateFin" promptText="Sélectionnez la date de fin"/>
-        </VBox>
-
-        <!-- Prix -->
-        <VBox spacing="5">
-            <Label text="Prix (€) *" style="-fx-font-weight: bold;"/>
-            <TextField fx:id="txtPrix" promptText="Ex: 850.00"/>
-        </VBox>
-
-        <!-- Image avec aperçu -->
-        <VBox spacing="5">
-            <Label text="Image du voyage" style="-fx-font-weight: bold;"/>
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <TextField fx:id="txtImagePath"
-                           promptText="Aucune image sélectionnée"
-                           editable="false"
-                           HBox.hgrow="ALWAYS"/>
-                <Button text="📁 Parcourir"
-                        onAction="#handleBrowseImage"
-                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 8 15;"/>
-            </HBox>
-            <!-- Aperçu de l'image -->
-            <VBox fx:id="imagePreviewContainer" alignment="CENTER"
-                  style="-fx-border-color: #ddd; -fx-border-width: 1; -fx-background-color: #f5f5f5;"
-                  prefHeight="200" maxHeight="200">
-                <Label fx:id="lblNoImage" text="Aucun aperçu disponible"
-                       style="-fx-text-fill: #999;"/>
+        <!-- ===== FORMULAIRE ===== -->
+        <VBox spacing="18" style="-fx-background-color: #f8f9ff; -fx-padding: 25;">
+            <!-- PAYS DE DÉPART -->
+            <VBox spacing="6">
+                <Label text="🛫  Pays de départ *"
+                       style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
+                <TextField fx:id="tfPaysDepart"
+                           promptText="Ex: Tunis, Paris, London..."
+                           style="-fx-background-color: white;
+                      -fx-border-color: #e0e0e0;
+                      -fx-border-radius: 8;
+                      -fx-background-radius: 8;
+                      -fx-padding: 10 12;
+                      -fx-font-size: 13px;"/>
             </VBox>
+            <!-- DESTINATION (ComboBox) -->
+            <VBox spacing="6">
+                <Label text="🌍  Destination *"
+                       style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
+                <ComboBox fx:id="cbDestination"
+                          promptText="Choisissez une destination..."
+                          maxWidth="Infinity"
+                          style="-fx-background-color: white;
+                                 -fx-border-color: #e0e0e0;
+                                 -fx-border-radius: 8;
+                                 -fx-background-radius: 8;
+                                 -fx-padding: 5;
+                                 -fx-font-size: 13px;"/>
+            </VBox>
+
+            <!-- DATES -->
+            <HBox spacing="15">
+                <!-- Date début -->
+                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                    <Label text="📅  Date de début *"
+                           style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
+                    <DatePicker fx:id="dateDebut"
+                                promptText="jj/mm/aaaa"
+                                maxWidth="Infinity"
+                                style="-fx-background-color: white;
+                                       -fx-border-color: #e0e0e0;
+                                       -fx-border-radius: 8;
+                                       -fx-background-radius: 8;
+                                       -fx-font-size: 13px;"/>
+                </VBox>
+
+                <!-- Date fin -->
+                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                    <Label text="📅  Date de fin *"
+                           style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
+                    <DatePicker fx:id="dateFin"
+                                promptText="jj/mm/aaaa"
+                                maxWidth="Infinity"
+                                style="-fx-background-color: white;
+                                       -fx-border-color: #e0e0e0;
+                                       -fx-border-radius: 8;
+                                       -fx-background-radius: 8;
+                                       -fx-font-size: 13px;"/>
+                </VBox>
+            </HBox>
+
+            <!-- PRIX -->
+            <VBox spacing="6">
+                <Label text="💰  Prix (TND) *"
+                       style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
+                <TextField fx:id="txtPrix"
+                           promptText="Ex: 1500.00"
+                           style="-fx-background-color: white;
+                                  -fx-border-color: #e0e0e0;
+                                  -fx-border-radius: 8;
+                                  -fx-background-radius: 8;
+                                  -fx-padding: 10 12;
+                                  -fx-font-size: 13px;"/>
+            </VBox>
+
+            <!-- IMAGE APERCU (automatique depuis destination) -->
+            <VBox spacing="6">
+                <Label text="🖼️  Aperçu de la destination"
+                       style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
+                <VBox fx:id="imagePreviewContainer"
+                      alignment="CENTER"
+                      prefHeight="180"
+                      style="-fx-background-color: #f0f0f0;
+                             -fx-border-color: #ddd;
+                             -fx-border-radius: 10;
+                             -fx-background-radius: 10;">
+                    <Label fx:id="lblNoImage"
+                           text="📷 L'aperçu apparaît après sélection de la destination"
+                           style="-fx-text-fill: #aaa; -fx-font-size: 12px;"/>
+                </VBox>
+            </VBox>
+
+            <!-- DESCRIPTION -->
+            <VBox spacing="6">
+                <Label text="📝  Description"
+                       style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
+                <TextArea fx:id="txtDescription"
+                          promptText="Décrivez ce voyage..."
+                          prefRowCount="4"
+                          wrapText="true"
+                          style="-fx-background-color: white;
+                                 -fx-border-color: #e0e0e0;
+                                 -fx-border-radius: 8;
+                                 -fx-background-radius: 8;
+                                 -fx-padding: 10;
+                                 -fx-font-size: 13px;"/>
+            </VBox>
+
+            <!-- MESSAGE ERREUR -->
+            <Label fx:id="lblMessage"
+                   style="-fx-text-fill: #e53935;
+                          -fx-font-size: 13px;
+                          -fx-padding: 5 10;
+                          -fx-background-color: #ffebee;
+                          -fx-background-radius: 8;"
+                   visible="false"
+                   managed="false"/>
+
+            <!-- BOUTONS -->
+            <HBox spacing="12" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
+                <Button text="Annuler"
+                        onAction="#handleCancel"
+                        style="-fx-background-color: #f0f0f0;
+                               -fx-text-fill: #666;
+                               -fx-padding: 12 25;
+                               -fx-background-radius: 8;
+                               -fx-font-size: 13px;
+                               -fx-cursor: hand;"/>
+                <Button text="💾 Enregistrer"
+                        onAction="#handleSave"
+                        style="-fx-background-color: #667eea;
+                               -fx-text-fill: white;
+                               -fx-padding: 12 25;
+                               -fx-background-radius: 8;
+                               -fx-font-size: 13px;
+                               -fx-font-weight: bold;
+                               -fx-cursor: hand;"/>
+            </HBox>
+
         </VBox>
-
-        <!-- Description -->
-        <VBox spacing="5">
-            <Label text="Description" style="-fx-font-weight: bold;"/>
-            <TextArea fx:id="txtDescription"
-                      promptText="Décrivez le voyage..."
-                      prefRowCount="4"
-                      maxHeight="100"/>
-        </VBox>
-
-        <!-- Message d'erreur -->
-        <Label fx:id="lblMessage" style="-fx-text-fill: red;"/>
-
-        <!-- Boutons -->
-        <HBox spacing="10" alignment="CENTER_RIGHT">
-            <Button text="Annuler"
-                    onAction="#handleCancel"
-                    style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-padding: 10 20;"/>
-            <Button text="Enregistrer"
-                    onAction="#handleSave"
-                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-padding: 10 20;"/>
-        </HBox>
-
     </VBox>
-
 </ScrollPane>
