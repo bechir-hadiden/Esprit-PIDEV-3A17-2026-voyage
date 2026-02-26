@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<ScrollPane fitToWidth="true" styleClass="content-scroll" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.demo1.controller.client.HotelDetailsController">
+    <VBox spacing="24" styleClass="animate-fade">
+        <padding>
+            <Insets bottom="24" left="24" right="24" top="24"/>
+        </padding>
+
+        <!-- Header with Back Button -->
+        <HBox alignment="CENTER_LEFT" spacing="16">
+            <Button onAction="#goBack" styleClass="outline-button" text="❮ Back"/>
+            <VBox>
+                <Label fx:id="hotelNameLabel" styleClass="page-header-title" text="Hotel Name">
+                    <font>
+                        <Font name="System Bold" size="24"/>
+                    </font>
+                </Label>
+                <Label fx:id="hotelLocationLabel" text="Location" textFill="#64748B"/>
+            </VBox>
+        </HBox>
+
+        <!-- Image Gallery -->
+        <HBox spacing="12">
+            <StackPane fx:id="mainImagePane" HBox.hgrow="ALWAYS" styleClass="gallery-main" minHeight="280" prefHeight="400"/>
+            <VBox fx:id="thumbnailsBox" spacing="12" prefWidth="150"/>
+        </HBox>
+
+        <!-- Summary (always visible: rating, description, price) -->
+        <VBox fx:id="summarySection" spacing="12" minHeight="100" style="-fx-background-color: #E2E8F0; -fx-background-radius: 12;">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20"/>
+            </padding>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label fx:id="summaryRatingLabel" styleClass="rating-stars-large"/>
+                <Label fx:id="summaryPriceLabel" styleClass="room-price" text="—"/>
+            </HBox>
+            <Label fx:id="summaryDescriptionLabel" wrapText="true" style="-fx-font-size: 14; -fx-text-fill: #475569;" maxWidth="Infinity"/>
+        </VBox>
+
+        <!-- Content Tabs -->
+        <TabPane styleClass="content-tabs" VBox.vgrow="ALWAYS">
+            <Tab text="Overview" closable="false">
+                <VBox spacing="16" styleClass="tab-content">
+                    <padding>
+                        <Insets bottom="24" left="24" right="24" top="24"/>
+                    </padding>
+
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <Label fx:id="ratingStarsLabel" styleClass="rating-stars-large"/>
+                        <Label fx:id="ratingValueLabel" styleClass="rating-value-large"/>
+                        <Label fx:id="reviewCountLabel" styleClass="text-muted"/>
+                    </HBox>
+
+                    <Label fx:id="descriptionLabel" wrapText="true" styleClass="hotel-description"/>
+
+                    <!-- Info Grid -->
+                    <GridPane hgap="24" vgap="16">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+
+                        <!-- Check-in -->
+                        <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="4">
+                            <StackPane styleClass="info-icon-bg">
+                                <Label text="🕒" styleClass="info-icon"/>
+                            </StackPane>
+                            <Label text="Check-in" styleClass="info-label"/>
+                            <Label fx:id="checkInLabel" text="15:00" styleClass="info-value"/>
+                        </VBox>
+
+                        <!-- Check-out -->
+                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="4">
+                            <StackPane styleClass="info-icon-bg">
+                                <Label text="🕒" styleClass="info-icon"/>
+                            </StackPane>
+                            <Label text="Check-out" styleClass="info-label"/>
+                            <Label fx:id="checkOutLabel" text="11:00" styleClass="info-value"/>
+                        </VBox>
+
+                        <!-- Phone -->
+                        <VBox GridPane.columnIndex="2" GridPane.rowIndex="0" spacing="4">
+                            <StackPane styleClass="info-icon-bg, accent">
+                                <Label text="📞" styleClass="info-icon"/>
+                            </StackPane>
+                            <Label text="Phone" styleClass="info-label"/>
+                            <Label fx:id="phoneLabel" text="+1 555-0100" styleClass="info-value"/>
+                        </VBox>
+
+                        <!-- Email -->
+                        <VBox GridPane.columnIndex="3" GridPane.rowIndex="0" spacing="4">
+                            <StackPane styleClass="info-icon-bg, accent">
+                                <Label text="✉" styleClass="info-icon"/>
+                            </StackPane>
+                            <Label text="Email" styleClass="info-label"/>
+                            <Label fx:id="emailLabel" text="hotel@email.com" styleClass="info-value"/>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+            </Tab>
+
+            <Tab text="Rooms" closable="false">
+                <VBox fx:id="roomsContainer" spacing="16" styleClass="tab-content">
+                    <padding>
+                        <Insets bottom="24" left="24" right="24" top="24"/>
+                    </padding>
+                </VBox>
+            </Tab>
+
+            <Tab text="Amenities" closable="false">
+                <FlowPane fx:id="amenitiesContainer" hgap="16" vgap="16" styleClass="tab-content">
+                    <padding>
+                        <Insets bottom="24" left="24" right="24" top="24"/>
+                    </padding>
+                </FlowPane>
+            </Tab>
+
+            <Tab text="Policies" closable="false">
+                <VBox fx:id="policiesContainer" spacing="12" styleClass="tab-content">
+                    <padding>
+                        <Insets bottom="24" left="24" right="24" top="24"/>
+                    </padding>
+                </VBox>
+            </Tab>
+        </TabPane>
+    </VBox>
+</ScrollPane>

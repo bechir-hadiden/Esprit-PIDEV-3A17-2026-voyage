@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox styleClass="admin-content,coming-soon-container" alignment="CENTER" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.controller.admin.AdminComingSoonController">
+
+    <Label styleClass="coming-soon-icon" text="🚧"/>
+    <Label fx:id="titleLabel" styleClass="coming-soon-title" text="Coming Soon"/>
+    <Label fx:id="messageLabel" styleClass="coming-soon-message"
+           text="This feature is under development and will be available in a future update."/>
+
+</VBox>

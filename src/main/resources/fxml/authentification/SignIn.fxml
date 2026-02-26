@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane styleClass="auth-container" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.example.demo1.controller.authentification.SignInController">
+    <HBox alignment="CENTER" maxHeight="800" maxWidth="1200" styleClass="auth-card">
+        <!-- Left Side - Form -->
+        <VBox styleClass="auth-form-section" HBox.hgrow="ALWAYS">
+            <padding>
+                <Insets bottom="40" left="60" right="60" top="40"/>
+            </padding>
+
+            <!-- Logo -->
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <StackPane styleClass="logo-icon">
+                    <Region prefHeight="48" prefWidth="48" styleClass="logo-bg"/>
+                    <Label styleClass="logo-text" text="S"/>
+                </StackPane>
+                <Label styleClass="logo-brand" text="SmartTrip"/>
+            </HBox>
+
+            <VBox spacing="8" VBox.vgrow="ALWAYS">
+                <VBox.margin>
+                    <Insets top="40"/>
+                </VBox.margin>
+
+                <Label styleClass="auth-title" text="Welcome back!"/>
+                <Label styleClass="auth-subtitle" text="Sign in to access your bookings and explore new destinations"/>
+
+                <!-- Error Message -->
+                <Label fx:id="errorLabel" styleClass="error-message" visible="false" wrapText="true"/>
+
+                <!-- Form -->
+                <VBox spacing="20" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets top="30"/>
+                    </VBox.margin>
+
+                    <!-- Username -->
+                    <VBox spacing="8">
+                        <Label styleClass="field-label" text="Username"/>
+                        <TextField fx:id="emailField" promptText="Enter your username" styleClass="auth-input"/>
+                    </VBox>
+
+                    <!-- Password -->
+                    <VBox spacing="8">
+                        <Label styleClass="field-label" text="Password"/>
+                        <PasswordField fx:id="passwordField" promptText="Enter your password" styleClass="auth-input"/>
+                    </VBox>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <CheckBox fx:id="rememberMeCheck" styleClass="remember-checkbox" text="Remember me"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Hyperlink onAction="#handleForgotPassword" styleClass="forgot-link" text="Forgot password?"/>
+                    </HBox>
+
+                    <!-- Sign In Button -->
+                    <Button fx:id="signInButton" maxWidth="Infinity" onAction="#handleSignIn" styleClass="primary-button" text="Sign In">
+                        <VBox.margin>
+                            <Insets top="10"/>
+                        </VBox.margin>
+                    </Button>
+
+                    <!-- Sign Up Link -->
+                    <HBox alignment="CENTER" spacing="5">
+                        <Label styleClass="text-muted" text="Don't have an account?"/>
+                        <Hyperlink onAction="#handleSignUp" styleClass="auth-link" text="Sign up"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Demo Credentials -->
+                <VBox alignment="CENTER" styleClass="demo-section">
+                    <VBox.margin>
+                        <Insets top="20"/>
+                    </VBox.margin>
+                    <Label styleClass="demo-text" text="Demo - Admin: admin / admin | Client: john.doe / admin"/>
+                </VBox>
+            </VBox>
+        </VBox>
+
+        <!-- Right Side - Features -->
+        <VBox styleClass="auth-features-section" HBox.hgrow="ALWAYS">
+            <padding>
+                <Insets bottom="60" left="60" right="60" top="60"/>
+            </padding>
+
+            <VBox spacing="10" VBox.vgrow="ALWAYS">
+                <Label styleClass="features-title" text="Your Journey" wrapText="true"/>
+                <Label styleClass="features-highlight" text="Starts Here" wrapText="true"/>
+
+                <Label styleClass="features-description" text="Join millions of travelers who trust SmartTrip for their adventures around the world." wrapText="true">
+                    <VBox.margin>
+                        <Insets top="20"/>
+                    </VBox.margin>
+                </Label>
+
+                <!-- Feature List -->
+                <VBox spacing="20" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets top="40"/>
+                    </VBox.margin>
+
+                    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="feature-item">
+                        <StackPane styleClass="feature-icon-bg">
+                            <Region prefHeight="48" prefWidth="48"/>
+                            <Label styleClass="feature-icon" text="🏨"/> <!-- Hotel icon -->
+                        </StackPane>
+                        <Label styleClass="feature-text" text="Book luxury hotels at the best prices"/>
+                    </HBox>
+
+                    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="feature-item">
+                        <StackPane styleClass="feature-icon-bg">
+                            <Region prefHeight="48" prefWidth="48"/>
+                            <Label styleClass="feature-icon" text="✈"/> <!-- Plane icon -->
+                        </StackPane>
+                        <Label styleClass="feature-text" text="Find flights to over 10,000 destinations"/>
+                    </HBox>
+
+                    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="feature-item">
+                        <StackPane styleClass="feature-icon-bg">
+                            <Region prefHeight="48" prefWidth="48"/>
+                            <Label styleClass="feature-icon" text="⭐"/> <!-- Star icon -->
+                        </StackPane>
+                        <Label styleClass="feature-text" text="Exclusive member deals and rewards"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </VBox>
+    </HBox>
+</StackPane>

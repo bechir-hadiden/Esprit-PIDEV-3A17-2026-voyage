@@ -1,5 +1,7 @@
 package com.example.demo1.controller;
 
+import com.example.demo1.HelloApplication;
+import com.example.demo1.services.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,13 +9,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.control.ScrollPane;  // ← Ajoutez cet import
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+
 public class HomeController {
 
     @FXML
@@ -109,6 +111,18 @@ public class HomeController {
     public void showAdmin() {
         System.out.println("📍 Mode Admin - Voyages");
         showVoyages();
+    }
+
+    @FXML
+    public void showSignIn() {
+        System.out.println("📍 Navigation vers Sign In");
+        HelloApplication.showView(SessionManager.View.SIGN_IN);
+    }
+
+    @FXML
+    public void showSignUp() {
+        System.out.println("📍 Navigation vers Sign Up");
+        HelloApplication.showView(SessionManager.View.SIGN_UP);
     }
 
 //    @FXML

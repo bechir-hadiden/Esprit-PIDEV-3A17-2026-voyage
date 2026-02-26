@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<HBox spacing="24" styleClass="animate-fade" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.demo1.controller.authentification.SettingsController">
+    <padding>
+        <Insets bottom="32" left="32" right="32" top="32"/>
+    </padding>
+
+    <!-- Sidebar Navigation -->
+    <TabPane styleClass="settings-tabs" side="LEFT" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
+
+        <!-- Profile Tab -->
+        <Tab>
+            <graphic>
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label text="👤" style="-fx-font-size: 16;"/>
+                    <Label text="Profile" styleClass="tab-label"/>
+                </HBox>
+            </graphic>
+            <ScrollPane fitToWidth="true" styleClass="content-scroll">
+                <VBox spacing="24">
+                    <padding>
+                        <Insets left="32" right="16" top="8" bottom="32"/>
+                    </padding>
+
+                    <Label text="Profile Settings" styleClass="section-title"/>
+
+                    <!-- Personal Info Card -->
+                    <VBox styleClass="card" spacing="20">
+                        <Label text="Personal Information" styleClass="card-title"/>
+
+                        <GridPane hgap="24" vgap="20">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
+
+                            <!-- Full Name -->
+                            <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="8">
+                                <Label text="Full Name" styleClass="field-label"/>
+                                <VBox styleClass="form-group">
+                                    <TextField fx:id="fullNameField" styleClass="form-input" promptText="Enter your name"/>
+                                </VBox>
+                            </VBox>
+
+                            <!-- Email -->
+                            <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="8">
+                                <Label text="Email Address" styleClass="field-label"/>
+                                <VBox styleClass="form-group">
+                                    <TextField fx:id="emailField" styleClass="form-input" promptText="name@example.com"/>
+                                </VBox>
+                            </VBox>
+
+                            <!-- Phone -->
+                            <VBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="8" GridPane.columnSpan="2">
+                                <Label text="Phone Number" styleClass="field-label"/>
+                                <VBox styleClass="form-group">
+                                    <TextField fx:id="phoneField" styleClass="form-input" promptText="+1 (555) 000-0000"/>
+                                </VBox>
+                            </VBox>
+                        </GridPane>
+
+                        <HBox alignment="CENTER_RIGHT">
+                            <Button onAction="#saveProfile" styleClass="primary-button" text="Save Changes"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Security Card -->
+                    <VBox styleClass="card" spacing="20">
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <StackPane styleClass="stat-icon-bg, orange">
+                                <Label text="🔒" styleClass="stat-icon" style="-fx-text-fill: #F97316;"/>
+                            </StackPane>
+                            <VBox>
+                                <Label text="Security" styleClass="card-title"/>
+                                <Label text="Update your password and security codes" styleClass="text-muted"/>
+                            </VBox>
+                        </HBox>
+
+                        <Separator/>
+
+                        <VBox spacing="16">
+                            <VBox spacing="8">
+                                <Label text="Current Password" styleClass="field-label"/>
+                                <VBox styleClass="form-group">
+                                    <PasswordField fx:id="currentPasswordField" styleClass="form-input"/>
+                                </VBox>
+                            </VBox>
+
+                            <GridPane hgap="24">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                </columnConstraints>
+
+                                <VBox GridPane.columnIndex="0" spacing="8">
+                                    <Label text="New Password" styleClass="field-label"/>
+                                    <VBox styleClass="form-group">
+                                        <PasswordField fx:id="newPasswordField" styleClass="form-input"/>
+                                    </VBox>
+                                </VBox>
+
+                                <VBox GridPane.columnIndex="1" spacing="8">
+                                    <Label text="Confirm Password" styleClass="field-label"/>
+                                    <VBox styleClass="form-group">
+                                        <PasswordField fx:id="confirmPasswordField" styleClass="form-input"/>
+                                    </VBox>
+                                </VBox>
+                            </GridPane>
+                        </VBox>
+
+                        <HBox alignment="CENTER_RIGHT">
+                            <Button onAction="#changePassword" styleClass="outline-button" text="Update Password"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+        </Tab>
+
+        <!-- Notifications Tab -->
+        <Tab>
+            <graphic>
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label text="🔔" style="-fx-font-size: 16;"/>
+                    <Label text="Notifications" styleClass="tab-label"/>
+                </HBox>
+            </graphic>
+            <ScrollPane fitToWidth="true" styleClass="content-scroll">
+                <VBox spacing="24">
+                    <padding>
+                        <Insets left="32" right="16" top="8" bottom="32"/>
+                    </padding>
+
+                    <Label text="Notification Preferences" styleClass="section-title"/>
+
+                    <VBox styleClass="card" spacing="24">
+                        <Label text="Receive alerts via..." styleClass="card-subtitle"/>
+
+                        <VBox spacing="20">
+                            <!-- Email -->
+                            <HBox alignment="CENTER_LEFT" spacing="16">
+                                <StackPane styleClass="feature-icon-bg" style="-fx-background-color: #EFF6FF;">
+                                    <Label text="✉" style="-fx-text-fill: #2563EB; -fx-font-size: 20;"/>
+                                </StackPane>
+                                <VBox HBox.hgrow="ALWAYS" spacing="4">
+                                    <Label text="Email Notifications" styleClass="notification-title" style="-fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
+                                    <Label text="Booking confirmations and receipts" styleClass="text-muted"/>
+                                </VBox>
+                                <CheckBox fx:id="emailNotificationsCheck" selected="true" styleClass="toggle-switch"/>
+                            </HBox>
+
+                            <Separator/>
+
+                            <!-- Push -->
+                            <HBox alignment="CENTER_LEFT" spacing="16">
+                                <StackPane styleClass="feature-icon-bg" style="-fx-background-color: #F0FDF4;">
+                                    <Label text="📱" style="-fx-text-fill: #16A34A; -fx-font-size: 20;"/>
+                                </StackPane>
+                                <VBox HBox.hgrow="ALWAYS" spacing="4">
+                                    <Label text="Push Notifications" styleClass="notification-title" style="-fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
+                                    <Label text="Real-time updates on your trip status" styleClass="text-muted"/>
+                                </VBox>
+                                <CheckBox fx:id="pushNotificationsCheck" styleClass="toggle-switch"/>
+                            </HBox>
+
+                            <Separator/>
+
+                            <!-- SMS -->
+                            <HBox alignment="CENTER_LEFT" spacing="16">
+                                <StackPane styleClass="feature-icon-bg" style="-fx-background-color: #FFF7ED;">
+                                    <Label text="💬" style="-fx-text-fill: #EA580C; -fx-font-size: 20;"/>
+                                </StackPane>
+                                <VBox HBox.hgrow="ALWAYS" spacing="4">
+                                    <Label text="SMS Alerts" styleClass="notification-title" style="-fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
+                                    <Label text="Urgent reminders and check-in codes" styleClass="text-muted"/>
+                                </VBox>
+                                <CheckBox fx:id="smsNotificationsCheck" selected="true" styleClass="toggle-switch"/>
+                            </HBox>
+
+                            <Separator/>
+
+                            <!-- Marketing -->
+                            <HBox alignment="CENTER_LEFT" spacing="16">
+                                <StackPane styleClass="feature-icon-bg" style="-fx-background-color: #FAF5FF;">
+                                    <Label text="🎁" style="-fx-text-fill: #9333EA; -fx-font-size: 20;"/>
+                                </StackPane>
+                                <VBox HBox.hgrow="ALWAYS" spacing="4">
+                                    <Label text="Special Offers" styleClass="notification-title" style="-fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
+                                    <Label text="Discounts and travel inspiration" styleClass="text-muted"/>
+                                </VBox>
+                                <CheckBox fx:id="marketingEmailsCheck" styleClass="toggle-switch"/>
+                            </HBox>
+                        </VBox>
+
+                        <HBox alignment="CENTER_RIGHT" style="-fx-padding: 16 0 0 0;">
+                            <Button onAction="#saveNotifications" styleClass="primary-button" text="Save Preferences"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+        </Tab>
+
+    </TabPane>
+</HBox>

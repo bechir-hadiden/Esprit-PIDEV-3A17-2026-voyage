@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.demo1.controller.admin.HotelFormDialogController"
+      styleClass="admin-card" prefWidth="950" prefHeight="750">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="12" styleClass="dialog-header">
+        <padding>
+            <Insets top="24" right="24" bottom="16" left="24"/>
+        </padding>
+        <Label fx:id="dialogTitle" styleClass="admin-title" text="Add New Hotel"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="✕" styleClass="close-button" onAction="#handleCancel"/>
+    </HBox>
+
+    <Separator/>
+
+    <!-- Tabs Content -->
+    <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
+
+        <!-- Tab 1: Basic Information -->
+        <Tab text="Basic Info">
+            <ScrollPane fitToWidth="true" styleClass="dialog-content-scroll">
+                <VBox spacing="20">
+                    <padding>
+                        <Insets top="24" right="24" bottom="24" left="24"/>
+                    </padding>
+
+                    <!-- Basic Information Section -->
+                    <VBox spacing="16" styleClass="form-section">
+                        <Label styleClass="section-title" text="Hotel Information"/>
+
+                        <GridPane hgap="16" vgap="12">
+                            <!-- Hotel Name -->
+                            <Label GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="admin-form-label" text="Hotel Name *"/>
+                            <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="admin-text-field" promptText="Enter hotel name"/>
+
+                            <!-- Location -->
+                            <Label GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="admin-form-label" text="Location *"/>
+                            <TextField fx:id="locationField" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="admin-text-field" promptText="Enter address/location"/>
+
+                            <!-- City -->
+                            <Label GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="admin-form-label" text="City *"/>
+                            <TextField fx:id="cityField" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="admin-text-field" promptText="Enter city"/>
+
+                            <!-- Country -->
+                            <Label GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="admin-form-label" text="Country *"/>
+                            <TextField fx:id="countryField" GridPane.columnIndex="1" GridPane.rowIndex="3" styleClass="admin-text-field" promptText="Enter country"/>
+
+                            <!-- Price Range -->
+                            <Label GridPane.columnIndex="0" GridPane.rowIndex="4" styleClass="admin-form-label" text="Price (per night) *"/>
+                            <TextField fx:id="priceField" GridPane.columnIndex="1" GridPane.rowIndex="4" styleClass="admin-text-field" promptText="e.g., 150"/>
+
+                            <!-- Rating -->
+                            <Label GridPane.columnIndex="0" GridPane.rowIndex="5" styleClass="admin-form-label" text="Rating *"/>
+                            <TextField fx:id="ratingField" GridPane.columnIndex="1" GridPane.rowIndex="5" styleClass="admin-text-field" promptText="e.g., 4.5"/>
+
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="150"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
+                        </GridPane>
+
+                        <!-- Description -->
+                        <VBox spacing="8">
+                            <Label styleClass="admin-form-label" text="Description *"/>
+                            <TextArea fx:id="descriptionArea" styleClass="admin-text-area" promptText="Enter hotel description" prefRowCount="4" wrapText="true"/>
+                        </VBox>
+                    </VBox>
+
+                    <Separator/>
+
+                    <!-- Contact Information Section -->
+                    <VBox spacing="16" styleClass="form-section">
+                        <Label styleClass="section-title" text="Contact Information"/>
+
+                        <GridPane hgap="16" vgap="12">
+                            <!-- Phone -->
+                            <Label GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="admin-form-label" text="Phone"/>
+                            <TextField fx:id="phoneField" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="admin-text-field" promptText="Enter phone number"/>
+
+                            <!-- Email -->
+                            <Label GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="admin-form-label" text="Email"/>
+                            <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="admin-text-field" promptText="Enter email address"/>
+
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="150"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
+                        </GridPane>
+                    </VBox>
+
+                    <Separator/>
+
+                    <!-- Policies Section -->
+                    <VBox spacing="16" styleClass="form-section">
+                        <Label styleClass="section-title" text="Policies &amp; Times"/>
+
+                        <GridPane hgap="16" vgap="12">
+                            <!-- Check-in Time -->
+                            <Label GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="admin-form-label" text="Check-in Time"/>
+                            <TextField fx:id="checkinField" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="admin-text-field" promptText="e.g., 2:00 PM"/>
+
+                            <!-- Check-out Time -->
+                            <Label GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="admin-form-label" text="Check-out Time"/>
+                            <TextField fx:id="checkoutField" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="admin-text-field" promptText="e.g., 12:00 PM"/>
+
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="150"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
+                        </GridPane>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+        </Tab>
+
+        <!-- Tab 2: Rooms -->
+        <Tab text="Rooms">
+            <VBox spacing="16">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label styleClass="section-title" text="Room Types"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="➕ Add Room" styleClass="admin-button-primary" onAction="#handleAddRoom"/>
+                </HBox>
+
+                <TableView fx:id="roomsTable" VBox.vgrow="ALWAYS" styleClass="admin-table">
+                    <columns>
+                        <TableColumn fx:id="roomNameColumn" text="Room Name" prefWidth="200"/>
+                        <TableColumn fx:id="roomDescColumn" text="Description" prefWidth="300"/>
+                        <TableColumn fx:id="roomGuestsColumn" text="Max Guests" prefWidth="100"/>
+                        <TableColumn fx:id="roomPriceColumn" text="Price/Night" prefWidth="120"/>
+                        <TableColumn fx:id="roomActionsColumn" text="Actions" prefWidth="150"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="No rooms added. Click 'Add Room' to create room types."/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <!-- Tab 3: Amenities -->
+        <Tab text="Amenities">
+            <ScrollPane fitToWidth="true">
+                <VBox spacing="20">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+
+                    <Label styleClass="section-title" text="Select Hotel Amenities"/>
+
+                    <GridPane fx:id="amenitiesGrid" hgap="20" vgap="12">
+                        <!-- Amenities will be added programmatically -->
+                        <CheckBox fx:id="wifiCheckbox" text="WiFi" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <CheckBox fx:id="parkingCheckbox" text="Parking" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <CheckBox fx:id="poolCheckbox" text="Swimming Pool" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+
+                        <CheckBox fx:id="gymCheckbox" text="Fitness Center" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <CheckBox fx:id="restaurantCheckbox" text="Restaurant" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <CheckBox fx:id="roomServiceCheckbox" text="Room Service" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+                        <CheckBox fx:id="spaCheckbox" text="Spa &amp; Wellness" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <CheckBox fx:id="barCheckbox" text="Bar/Lounge" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <CheckBox fx:id="laundryCheckbox" text="Laundry Service" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+
+                        <CheckBox fx:id="petFriendlyCheckbox" text="Pet Friendly" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <CheckBox fx:id="airConditioningCheckbox" text="Air Conditioning" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <CheckBox fx:id="frontDeskCheckbox" text="24-Hour Front Desk" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+
+                        <CheckBox fx:id="airportShuttleCheckbox" text="Airport Shuttle" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <CheckBox fx:id="businessCenterCheckbox" text="Business Center" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <CheckBox fx:id="conferenceRoomsCheckbox" text="Conference Rooms" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                    </GridPane>
+                </VBox>
+            </ScrollPane>
+        </Tab>
+
+        <!-- Tab 4: Photos -->
+        <Tab text="Photos">
+            <VBox spacing="16">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label styleClass="section-title" text="Hotel Photos"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="➕ Add Photo URL" styleClass="admin-button-primary" onAction="#handleAddImage"/>
+                </HBox>
+
+                <ListView fx:id="imagesListView" VBox.vgrow="ALWAYS" styleClass="admin-list-view">
+                    <placeholder>
+                        <Label text="No photos added. Click 'Add Photo URL' to add image URLs."/>
+                    </placeholder>
+                </ListView>
+
+                <HBox alignment="CENTER_RIGHT" spacing="8">
+                    <Button text="🗑 Remove Selected" styleClass="admin-button-secondary" onAction="#handleRemoveImage"/>
+                </HBox>
+            </VBox>
+        </Tab>
+
+    </TabPane>
+
+    <Separator/>
+
+    <!-- Footer Buttons -->
+    <HBox alignment="CENTER_RIGHT" spacing="12" styleClass="dialog-footer">
+        <padding>
+            <Insets top="16" right="24" bottom="16" left="24"/>
+        </padding>
+        <Button text="Cancel" styleClass="admin-button-secondary" onAction="#handleCancel"/>
+        <Button fx:id="saveButton" text="Save Hotel" styleClass="admin-button-primary" onAction="#handleSave"/>
+    </HBox>
+
+</VBox>

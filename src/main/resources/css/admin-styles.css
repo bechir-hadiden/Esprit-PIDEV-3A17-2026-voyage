@@ -1,0 +1,281 @@
+/* Admin Panel Styles for SmartTrip */
+
+/* Admin Sidebar */
+.admin-sidebar {
+    -fx-background-color: linear-gradient(to bottom, #1e293b, #0f172a);
+    -fx-pref-width: 280px;
+    -fx-min-width: 280px;
+    -fx-max-width: 280px;
+}
+
+.admin-sidebar-header {
+    -fx-padding: 30 20 20 20;
+    -fx-spacing: 15;
+}
+
+.admin-logo {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.admin-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #94a3b8;
+}
+
+.admin-nav-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #cbd5e1;
+    -fx-padding: 14 20;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+    -fx-spacing: 12;
+    -fx-font-size: 14px;
+}
+
+.admin-nav-item:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: white;
+}
+
+.admin-nav-item.active {
+    -fx-background-color: linear-gradient(90deg, #3b82f6, #2563eb);
+    -fx-text-fill: white;
+}
+
+/* Admin Content Area */
+.admin-content {
+    -fx-background-color: #f1f5f9;
+}
+
+.admin-header {
+    -fx-background-color: white;
+    -fx-padding: 20 30;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 4, 0, 0, 2);
+}
+
+.admin-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+}
+
+.admin-subtitle-header {
+    -fx-font-size: 14px;
+    -fx-text-fill: #64748b;
+}
+
+/* Admin Cards */
+.admin-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-padding: 24px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 8, 0, 0, 2);
+}
+
+.stat-card {
+    -fx-background-color: linear-gradient(135deg, #3b82f6, #2563eb);
+    -fx-background-radius: 16px;
+    -fx-padding: 24px;
+    -fx-spacing: 12;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.3), 12, 0, 0, 4);
+}
+
+.stat-value {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.stat-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+}
+
+/* Admin Buttons */
+.admin-button-primary {
+    -fx-background-color: linear-gradient(to right, #3b82f6, #2563eb);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 12 24;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.admin-button-primary:hover {
+    -fx-background-color: linear-gradient(to right, #2563eb, #1d4ed8);
+}
+
+.admin-button-secondary {
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #475569;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 12 24;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.admin-button-secondary:hover {
+    -fx-background-color: #cbd5e1;
+}
+
+.admin-button-danger {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 12 24;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.admin-button-danger:hover {
+    -fx-background-color: #dc2626;
+}
+
+/* Admin Table */
+.admin-table {
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.admin-table .column-header-background {
+    -fx-background-color: #f8fafc;
+}
+
+.admin-table .column-header {
+    -fx-background-color: transparent;
+    -fx-font-weight: 600;
+    -fx-text-fill: #475569;
+    -fx-padding: 12 16;
+}
+
+.admin-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-table-cell-border-color: transparent;
+}
+
+.admin-table .table-row-cell:hover {
+    -fx-background-color: #f8fafc;
+}
+
+.admin-table .table-cell {
+    -fx-padding: 12 16;
+    -fx-text-fill: #1e293b;
+}
+
+/* Form Elements */
+.admin-form-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #334155;
+}
+
+.admin-text-field {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12 16;
+    -fx-font-size: 14px;
+}
+
+.admin-text-field:focused {
+    -fx-border-color: #3b82f6;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.2), 4, 0, 0, 0);
+}
+
+.admin-text-area {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12 16;
+    -fx-font-size: 14px;
+}
+
+.admin-text-area:focused {
+    -fx-border-color: #3b82f6;
+}
+
+/* Coming Soon */
+.coming-soon-container {
+    -fx-alignment: center;
+    -fx-spacing: 20;
+    -fx-padding: 100;
+}
+
+.coming-soon-icon {
+    -fx-font-size: 80px;
+}
+
+.coming-soon-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+}
+
+.coming-soon-message {
+    -fx-font-size: 16px;
+    -fx-text-fill: #64748b;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+/* Badge */
+.badge {
+    -fx-background-radius: 12px;
+    -fx-padding: 4 12;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
+.badge-success {
+    -fx-background-color: #d1fae5;
+    -fx-text-fill: #065f46;
+}
+
+.badge-warning {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #92400e;
+}
+
+.badge-danger {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #991b1b;
+}
+
+/* Admin Top Bar */
+.admin-top-bar {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.admin-page-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+}
+
+/* Logout Section */
+.admin-sidebar .logout-section {
+    -fx-padding: 0;
+}
+
+.admin-sidebar .logout-section .separator {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Logout Button - Updated */
+.admin-sidebar .logout-button {
+    -fx-background-color: transparent;
+}
+
+.admin-sidebar .logout-button:hover {
+    -fx-background-color: rgba(220, 38, 38, 0.15);
+    -fx-text-fill: #f87171;
+}

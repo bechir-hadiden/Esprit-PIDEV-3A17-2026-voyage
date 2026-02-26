@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox styleClass="admin-content" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.demo1.controller.admin.AdminSettingsController" spacing="20">
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <!-- Header -->
+    <HBox styleClass="admin-header" alignment="CENTER_LEFT">
+        <VBox>
+            <Label styleClass="admin-title" text="Settings"/>
+            <Label styleClass="admin-subtitle-header" text="Manage your admin profile"/>
+        </VBox>
+    </HBox>
+
+    <!-- Profile Form -->
+    <VBox styleClass="admin-card" spacing="20" maxWidth="600">
+        <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Profile Information"/>
+
+        <VBox spacing="8">
+            <Label styleClass="admin-form-label" text="Full Name"/>
+            <TextField fx:id="fullNameField" styleClass="admin-text-field"/>
+        </VBox>
+
+        <VBox spacing="8">
+            <Label styleClass="admin-form-label" text="Email"/>
+            <TextField fx:id="emailField" styleClass="admin-text-field"/>
+        </VBox>
+
+        <VBox spacing="8">
+            <Label styleClass="admin-form-label" text="Phone"/>
+            <TextField fx:id="phoneField" styleClass="admin-text-field"/>
+        </VBox>
+
+        <VBox spacing="8">
+            <Label styleClass="admin-form-label" text="Avatar URL"/>
+            <TextField fx:id="avatarField" styleClass="admin-text-field"/>
+        </VBox>
+
+        <HBox spacing="10">
+            <Button styleClass="admin-button-primary" text="💾 Save Changes" onAction="#handleSaveProfile"/>
+            <Button styleClass="admin-button-secondary" text="↶ Reset" onAction="#handleReset"/>
+        </HBox>
+
+        <Label fx:id="statusLabel" style="-fx-text-fill: green; -fx-font-weight: bold;" visible="false"/>
+    </VBox>
+
+    <!-- Change Password -->
+    <VBox styleClass="admin-card" spacing="20" maxWidth="600">
+        <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Change Password"/>
+
+        <VBox spacing="8">
+            <Label styleClass="admin-form-label" text="New Password"/>
+            <PasswordField fx:id="newPasswordField" styleClass="admin-text-field"/>
+        </VBox>
+
+        <VBox spacing="8">
+            <Label styleClass="admin-form-label" text="Confirm New Password"/>
+            <PasswordField fx:id="confirmPasswordField" styleClass="admin-text-field"/>
+        </VBox>
+
+        <Button styleClass="admin-button-primary" text="🔒 Update Password" onAction="#handleChangePassword"/>
+
+        <Label fx:id="passwordStatusLabel" style="-fx-text-fill: green; -fx-font-weight: bold;" visible="false"/>
+    </VBox>
+
+</VBox>
