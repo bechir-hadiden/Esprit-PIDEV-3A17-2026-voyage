@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox styleClass="admin-content" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.demo1.controller.admin.AdminHotelsController" spacing="20">
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <!-- Header -->
+    <HBox styleClass="admin-header" alignment="CENTER_LEFT" spacing="20">
+        <VBox HBox.hgrow="ALWAYS">
+            <Label styleClass="admin-title" text="Hotels Management"/>
+            <Label styleClass="admin-subtitle-header" text="Manage your hotel listings"/>
+        </VBox>
+        <Button styleClass="admin-button-primary" text="➕ Add Hotel" onAction="#handleAddHotel"/>
+    </HBox>
+
+    <!-- Hotels Table -->
+    <VBox styleClass="admin-card" VBox.vgrow="ALWAYS">
+        <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 15 0;" text="All Hotels"/>
+
+        <TableView fx:id="hotelsTable" styleClass="admin-table" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="idColumn" text="ID" prefWidth="60"/>
+                <TableColumn fx:id="nameColumn" text="Hotel Name" prefWidth="200"/>
+                <TableColumn fx:id="cityColumn" text="City" prefWidth="150"/>
+                <TableColumn fx:id="countryColumn" text="Country" prefWidth="150"/>
+                <TableColumn fx:id="priceColumn" text="Price/Night" prefWidth="120"/>
+                <TableColumn fx:id="ratingColumn" text="Rating" prefWidth="100"/>
+                <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
+            </columns>
+            <placeholder>
+                <Label text="No hotels found. Please connect to database."/>
+            </placeholder>
+        </TableView>
+    </VBox>
+
+</VBox>

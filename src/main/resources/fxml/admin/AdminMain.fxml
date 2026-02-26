@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.demo1.controller.admin.AdminMainController"
+            stylesheets="@../../css/main.css,@../../css/admin-styles.css">
+
+    <!-- Sidebar -->
+    <left>
+        <VBox styleClass="admin-sidebar">
+            <!-- Header -->
+            <VBox styleClass="admin-sidebar-header">
+                <Label styleClass="admin-logo" text="SmartTrip Admin"/>
+                <Label fx:id="adminNameLabel" styleClass="admin-subtitle" text="Administrator"/>
+            </VBox>
+
+            <!-- Navigation -->
+            <VBox spacing="4" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets top="20" bottom="20"/>
+                </padding>
+
+                <Button fx:id="dashboardButton" maxWidth="Infinity" styleClass="admin-nav-item"
+                        text="📊  Dashboard" onAction="#showDashboard"/>
+                <Button fx:id="hotelsButton" maxWidth="Infinity" styleClass="admin-nav-item"
+                        text="🏨  Hotels" onAction="#showHotels"/>
+                <Button fx:id="transportButton" maxWidth="Infinity" styleClass="admin-nav-item"
+                        text="🚗  Transport" onAction="#showTransport"/>
+                <Button fx:id="offersButton" maxWidth="Infinity" styleClass="admin-nav-item"
+                        text="🎁  Offers" onAction="#showOffers"/>
+                <Button fx:id="plansButton" maxWidth="Infinity" styleClass="admin-nav-item"
+                        text="📋  Plans" onAction="#showPlans"/>
+
+                <!-- Spacer -->
+                <Region VBox.vgrow="ALWAYS"/>
+            </VBox>
+
+            <!-- Logout Section - Redesigned -->
+            <VBox styleClass="logout-section">
+                <padding>
+                    <Insets bottom="16"/>
+                </padding>
+                <Separator/>
+                <Button maxWidth="Infinity" styleClass="admin-nav-item logout-button"
+                        text="🚪  Logout" onAction="#handleLogout">
+                    <VBox.margin>
+                        <Insets top="8"/>
+                    </VBox.margin>
+                </Button>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Main Content -->
+    <center>
+        <VBox>
+            <!-- Top Header Bar -->
+            <HBox alignment="CENTER_LEFT" styleClass="admin-top-bar">
+                <padding>
+                    <Insets top="16" right="24" bottom="16" left="24"/>
+                </padding>
+
+                <Label fx:id="contentTitle" styleClass="admin-page-title" text="Dashboard"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Profile Button -->
+                <Button onAction="#showSettings" styleClass=" top-bar-button">
+                    <graphic>
+                        <HBox alignment="CENTER" spacing="8">
+                            <Label styleClass="top-bar-icon" text="👤"/> <!-- Profile -->
+                            <Label text="Profile"/>
+                        </HBox>
+                    </graphic>
+                </Button>
+            </HBox>
+
+            <!-- Content Area -->
+            <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </center>
+
+</BorderPane>

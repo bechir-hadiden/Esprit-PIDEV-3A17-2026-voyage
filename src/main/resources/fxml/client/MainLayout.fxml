@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane fx:id="rootPane" styleClass="main-container" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.demo1.controller.client.MainLayoutController">
+
+    <!-- Sidebar -->
+    <left>
+        <VBox fx:id="sidebar" styleClass="sidebar">
+            <padding>
+                <Insets bottom="16" left="16" right="16" top="16"/>
+            </padding>
+
+            <!-- Logo -->
+            <HBox alignment="CENTER" styleClass="sidebar-logo">
+                <StackPane styleClass="logo-icon-small">
+                    <Region prefHeight="40" prefWidth="40" styleClass="logo-bg"/>
+                    <Label styleClass="logo-text-small" text="S"/>
+                </StackPane>
+                <Label fx:id="logoLabel" styleClass="sidebar-brand" text="SmartTrip">
+                    <HBox.margin>
+                        <Insets left="12"/>
+                    </HBox.margin>
+                </Label>
+            </HBox>
+
+            <!-- User Profile -->
+            <VBox fx:id="userProfileSection" styleClass="user-profile">
+                <VBox.margin>
+                    <Insets top="24"/>
+                </VBox.margin>
+                <padding>
+                    <Insets bottom="16" left="12" right="12" top="16"/>
+                </padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <StackPane styleClass="avatar-container">
+                        <Circle fx:id="avatarCircle" radius="24" styleClass="avatar-circle"/>
+                        <Label fx:id="avatarInitials" styleClass="avatar-initials"/>
+                    </StackPane>
+                    <VBox fx:id="userInfoSection">
+                        <Label fx:id="userNameLabel" styleClass="user-name" text="User Name"/>
+                        <Label fx:id="userEmailLabel" styleClass="user-email" text="user@email.com"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Navigation -->
+            <VBox fx:id="navContainer" spacing="4" VBox.vgrow="ALWAYS">
+                <VBox.margin>
+                    <Insets top="16"/>
+                </VBox.margin>
+
+                <Button fx:id="dashboardBtn" onAction="#showDashboard" styleClass="nav-button">
+                    <graphic>
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label styleClass="nav-icon" text="🏠"/> <!-- Home -->
+                            <Label fx:id="dashboardLabel" styleClass="nav-text" text="Dashboard"/>
+                        </HBox>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="hotelsBtn" onAction="#showHotels" styleClass="nav-button">
+                    <graphic>
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label styleClass="nav-icon" text="🏨"/> <!-- Hotel -->
+                            <Label fx:id="hotelsLabel" styleClass="nav-text" text="Hotels"/>
+                        </HBox>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="transportBtn" onAction="#showTransport" styleClass="nav-button">
+                    <graphic>
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label styleClass="nav-icon" text="🚌"/> <!-- Bus -->
+                            <Label fx:id="transportLabel" styleClass="nav-text" text="Transport"/>
+                        </HBox>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="plansBtn" onAction="#showPlans" styleClass="nav-button">
+                    <graphic>
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label styleClass="nav-icon" text="🎟"/> <!-- Ticket -->
+                            <Label fx:id="plansLabel" styleClass="nav-text" text="Ticket Plans"/>
+                        </HBox>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="bookingsBtn" onAction="#showBookings" styleClass="nav-button">
+                    <graphic>
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label styleClass="nav-icon" text="📅"/> <!-- Calendar Check -->
+                            <Label fx:id="bookingsLabel" styleClass="nav-text" text="My Bookings"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="bookingCountBadge" styleClass="nav-badge" text="0"/>
+                        </HBox>
+                    </graphic>
+                </Button>
+            </VBox>
+
+            <!-- Spacer -->
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- Logout Button - Redesigned -->
+            <VBox styleClass="logout-section">
+                <VBox.margin>
+                    <Insets top="8"/>
+                </VBox.margin>
+                <Separator/>
+                <Button onAction="#handleLogout" styleClass="nav-button logout-button">
+                    <VBox.margin>
+                        <Insets top="8"/>
+                    </VBox.margin>
+                    <graphic>
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label styleClass="nav-icon logout-icon" text="🚪"/> <!-- Sign Out -->
+                            <Label fx:id="logoutLabel" styleClass="nav-text" text="Log Out"/>
+                        </HBox>
+                    </graphic>
+                </Button>
+            </VBox>
+
+            <!-- Collapse Toggle -->
+            <Button fx:id="collapseBtn" onAction="#toggleSidebar" styleClass="collapse-button">
+                <graphic>
+                    <Label fx:id="collapseIcon" styleClass="collapse-icon" text="❮"/> <!-- Chevron Left -->
+                </graphic>
+            </Button>
+        </VBox>
+    </left>
+
+    <!-- Main Content -->
+    <center>
+        <VBox styleClass="content-area">
+            <!-- Top Bar -->
+            <HBox alignment="CENTER_LEFT" styleClass="top-bar">
+                <padding>
+                    <Insets bottom="16" left="24" right="24" top="16"/>
+                </padding>
+
+                <Label fx:id="pageTitle" styleClass="page-title" text="Dashboard"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Top Bar Actions -->
+                <HBox spacing="12" alignment="CENTER">
+                    <Button onAction="#showNotifications" styleClass="top-bar-button">
+                        <graphic>
+                            <HBox alignment="CENTER" spacing="8">
+                                <Label styleClass="top-bar-icon" text="🔔"/> <!-- Notifications -->
+                                <Label text="Notifications"/>
+                            </HBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#showProfile" styleClass="top-bar-button">
+                        <graphic>
+                            <HBox alignment="CENTER" spacing="8">
+                                <Label styleClass="top-bar-icon" text="👤"/> <!-- Profile -->
+                                <Label text="Profile"/>
+                            </HBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#showBookings" styleClass="top-bar-button">
+                        <graphic>
+                            <HBox alignment="CENTER" spacing="8">
+                                <Label styleClass="top-bar-icon" text="📅"/> <!-- Calendar -->
+                                <Label text="My Bookings"/>
+                                <Label fx:id="topBarBookingCount" styleClass="top-bar-badge" text="0"/>
+                            </HBox>
+                        </graphic>
+                    </Button>
+                </HBox>
+            </HBox>
+
+            <!-- Content ScrollPane -->
+            <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="content-scroll" VBox.vgrow="ALWAYS">
+                <VBox fx:id="contentContainer" styleClass="content-container">
+                    <padding>
+                        <Insets bottom="32" left="32" right="32" top="24"/>
+                    </padding>
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>

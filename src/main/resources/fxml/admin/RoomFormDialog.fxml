@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.demo1.controller.admin.RoomFormDialogController"
+      styleClass="admin-card" prefWidth="600" prefHeight="450">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="12" styleClass="dialog-header">
+        <padding>
+            <Insets top="20" right="20" bottom="12" left="20"/>
+        </padding>
+        <Label fx:id="dialogTitle" styleClass="admin-title" text="Add Room Type"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="✕" styleClass="close-button" onAction="#handleCancel"/>
+    </HBox>
+
+    <Separator/>
+
+    <!-- Content -->
+    <VBox spacing="20" VBox.vgrow="ALWAYS">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <GridPane hgap="16" vgap="16">
+            <!-- Room Name -->
+            <Label GridPane.columnIndex="0" GridPane.rowIndex="0"
+                   styleClass="admin-form-label" text="Room Name *"/>
+            <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                       styleClass="admin-text-field" promptText="e.g., Deluxe Suite"/>
+
+            <!-- Max Guests -->
+            <Label GridPane.columnIndex="0" GridPane.rowIndex="1"
+                   styleClass="admin-form-label" text="Max Guests *"/>
+            <Spinner fx:id="maxGuestsSpinner" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                     styleClass="admin-text-field" editable="true"
+                     min="1" max="10" initialValue="2"/>
+
+            <!-- Price Per Night -->
+            <Label GridPane.columnIndex="0" GridPane.rowIndex="2"
+                   styleClass="admin-form-label" text="Price Per Night *"/>
+            <TextField fx:id="priceField" GridPane.columnIndex="1" GridPane.rowIndex="2"
+                       styleClass="admin-text-field" promptText="e.g., 150"/>
+
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" minWidth="130" prefWidth="130"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+        </GridPane>
+
+        <!-- Description -->
+        <VBox spacing="8">
+            <Label styleClass="admin-form-label" text="Description *"/>
+            <TextArea fx:id="descriptionArea" styleClass="admin-text-area"
+                      promptText="Enter room description, amenities, etc."
+                      prefRowCount="4" wrapText="true"/>
+        </VBox>
+
+        <!-- Room Photos Section -->
+        <VBox spacing="12">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label styleClass="admin-form-label" text="Room Photos"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="➕ Add Photo" styleClass="admin-button-primary-small" onAction="#handleAddImage"/>
+            </HBox>
+
+            <ListView fx:id="imagesListView" prefHeight="100" styleClass="admin-list-view">
+                <placeholder>
+                    <Label text="No photos added. Click 'Add Photo' to add room images."/>
+                </placeholder>
+            </ListView>
+
+            <HBox alignment="CENTER_RIGHT">
+                <Button text="🗑 Remove Selected" styleClass="admin-button-secondary-small" onAction="#handleRemoveImage"/>
+            </HBox>
+        </VBox>
+
+        <!-- Available Checkbox -->
+        <CheckBox fx:id="availableCheckbox" text="Room is available for booking" selected="true"/>
+
+    </VBox>
+
+    <Separator/>
+
+    <!-- Footer Buttons -->
+    <HBox alignment="CENTER_RIGHT" spacing="12" styleClass="dialog-footer">
+        <padding>
+            <Insets top="12" right="20" bottom="12" left="20"/>
+        </padding>
+        <Button text="Cancel" styleClass="admin-button-secondary" onAction="#handleCancel"/>
+        <Button fx:id="saveButton" text="Save Room" styleClass="admin-button-primary" onAction="#handleSave"/>
+    </HBox>
+
+</VBox>

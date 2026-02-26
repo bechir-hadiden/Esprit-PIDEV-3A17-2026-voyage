@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox spacing="24" styleClass="animate-fade" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.demo1.controller.client.MyBookingsController">
+
+    <!-- Header -->
+    <VBox spacing="4">
+        <Label text="My Bookings" styleClass="page-header-title">
+            <font>
+                <Font name="System Bold" size="28"/>
+            </font>
+        </Label>
+        <Label text="Manage all your reservations in one place" textFill="#64748B"/>
+    </VBox>
+
+    <!-- Stats -->
+    <HBox spacing="16">
+        <VBox HBox.hgrow="ALWAYS" styleClass="stat-card">
+            <Label fx:id="totalBookingsLabel" text="0" styleClass="stat-value" textFill="#2563EB"/>
+            <Label text="Active Bookings" styleClass="stat-label"/>
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS" styleClass="stat-card">
+            <Label fx:id="hotelBookingsLabel" text="0" styleClass="stat-value" textFill="#22C55E"/>
+            <Label text="Hotel Stays" styleClass="stat-label"/>
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS" styleClass="stat-card">
+            <Label fx:id="planBookingsLabel" text="0" styleClass="stat-value" textFill="#9333EA"/>
+            <Label text="Active Plans" styleClass="stat-label"/>
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS" styleClass="stat-card">
+            <Label fx:id="totalSpentLabel" text="\$0" styleClass="stat-value" textFill="#F97316"/>
+            <Label text="Total Spent" styleClass="stat-label"/>
+        </VBox>
+    </HBox>
+
+    <!-- Bookings Tabs -->
+    <TabPane fx:id="bookingsTabPane" styleClass="bookings-tabs" VBox.vgrow="ALWAYS">
+        <Tab text="Hotel Bookings" closable="false">
+            <VBox fx:id="hotelBookingsContainer" spacing="12" styleClass="tab-content">
+                <padding>
+                    <Insets bottom="24" left="24" right="24" top="24"/>
+                </padding>
+            </VBox>
+        </Tab>
+
+        <Tab text="Transport Bookings" closable="false">
+            <VBox fx:id="transportBookingsContainer" spacing="12" styleClass="tab-content">
+                <padding>
+                    <Insets bottom="24" left="24" right="24" top="24"/>
+                </padding>
+            </VBox>
+        </Tab>
+
+        <Tab text="Plan Bookings" closable="false">
+            <VBox fx:id="planBookingsContainer" spacing="12" styleClass="tab-content">
+                <padding>
+                    <Insets bottom="24" left="24" right="24" top="24"/>
+                </padding>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>

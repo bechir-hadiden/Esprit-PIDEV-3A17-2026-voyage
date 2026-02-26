@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Database {
-    private static final String URL = "jdbc:mysql://localhost:3306/smart-trip";
+    private static final String URL = "jdbc:mysql://localhost:3306/smarttrip_db";
     private static final String USER = "root";  // Changez selon votre config
     private static final String PASSWORD = "";  // Changez selon votre config
 
@@ -39,8 +39,19 @@ public class Database {
                 connection = DriverManager.getConnection(URL, USER, PASSWORD);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("❌ Impossible de se connecter à la base de données. Vérifiez que MySQL est démarré.");
+            System.err.println("   URL: " + URL);
+            System.err.println("   Pour continuer sans base de données, utilisez le mode démo.");
+            return null; // Retourne null si la connexion échoue
         }
         return connection;
+    }
+
+    public boolean isConnected() {
+        try {
+            return connection != null && !connection.isClosed();
+        } catch (SQLException e) {
+            return false;
+        }
     }
 }

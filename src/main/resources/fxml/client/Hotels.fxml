@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox spacing="24" styleClass="animate-fade" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.demo1.controller.client.HotelsController">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT">
+        <VBox>
+            <Label styleClass="page-header-title" text="Find Your Perfect Stay">
+                <font>
+                    <Font name="System Bold" size="28"/>
+                </font>
+            </Label>
+            <Label styleClass="page-header-subtitle" text="Discover luxury hotels around the world" textFill="#64748B"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="filterButton" onAction="#toggleFilters" styleClass="outline-button" text="⚙ Filters">
+            <graphic>
+                <Label text="0" styleClass="filter-badge" fx:id="filterBadge" visible="false"/>
+            </graphic>
+        </Button>
+    </HBox>
+
+    <!-- Search Card -->
+    <VBox styleClass="card, search-card">
+        <!-- Main Search Row -->
+        <HBox spacing="12">
+            <!-- Search Query -->
+            <VBox HBox.hgrow="ALWAYS" spacing="8">
+                <Label styleClass="field-label" text="Search Hotels"/>
+                <TextField fx:id="searchField" promptText="Hotel name, city, or country..." styleClass="search-field"/>
+            </VBox>
+
+            <!-- Check-in Date -->
+            <VBox styleClass="search-input-group">
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="📅" styleClass="search-label-small"/>
+                    <Label text="CHECK-IN" styleClass="search-label-small"/>
+                </HBox>
+                <DatePicker fx:id="checkInPicker" promptText="Select date" styleClass="date-picker"/>
+            </VBox>
+
+            <!-- Check-out Date -->
+            <VBox styleClass="search-input-group">
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="📅" styleClass="search-label-small"/>
+                    <Label text="CHECK-OUT" styleClass="search-label-small"/>
+                </HBox>
+                <DatePicker fx:id="checkOutPicker" promptText="Select date" styleClass="date-picker"/>
+            </VBox>
+
+            <!-- Guests -->
+            <VBox styleClass="search-input-group">
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="👥" styleClass="search-label-small"/>
+                    <Label text="GUESTS" styleClass="search-label-small"/>
+                </HBox>
+                <HBox spacing="4" alignment="CENTER_LEFT">
+                    <Button fx:id="guestMinusBtn" onAction="#decreaseGuests" styleClass="guest-button" text="-"/>
+                    <Label fx:id="guestCountLabel" styleClass="guest-count" text="1"/>
+                    <Button fx:id="guestPlusBtn" onAction="#increaseGuests" styleClass="guest-button" text="+"/>
+                </HBox>
+            </VBox>
+        </HBox>
+
+        <!-- Advanced Filters (Collapsible) -->
+        <VBox fx:id="advancedFiltersBox" visible="false" managed="false" spacing="16">
+            <VBox.margin>
+                <Insets top="16"/>
+            </VBox.margin>
+            <padding>
+                <Insets top="16"/>
+            </padding>
+            <style>
+                -fx-border-color: -light-gray;
+                -fx-border-width: 1 0 0 0;
+            </style>
+
+            <HBox spacing="12">
+                <!-- Room Type -->
+                <VBox HBox.hgrow="ALWAYS" spacing="8">
+                    <Label styleClass="field-label" text="Room Type"/>
+                    <ComboBox fx:id="roomTypeCombo" promptText="All Room Types" styleClass="combo-box"/>
+                </VBox>
+
+                <!-- Guest Type -->
+                <VBox HBox.hgrow="ALWAYS" spacing="8">
+                    <Label styleClass="field-label" text="Guest Type"/>
+                    <ComboBox fx:id="guestTypeCombo" promptText="All Guests" styleClass="combo-box"/>
+                </VBox>
+
+                <!-- Max Price -->
+                <VBox HBox.hgrow="ALWAYS" spacing="8">
+                    <Label fx:id="maxPriceLabel" styleClass="field-label" text="Max Price: $5000"/>
+                    <Slider fx:id="priceSlider" min="100" max="5000" value="5000" showTickLabels="false" showTickMarks="false"/>
+                </VBox>
+
+                <!-- Min Rating -->
+                <VBox HBox.hgrow="ALWAYS" spacing="8">
+                    <Label styleClass="field-label" text="Min Rating"/>
+                    <ComboBox fx:id="ratingCombo" promptText="Any rating" styleClass="combo-box"/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- Amadeus API search -->
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <VBox.margin>
+                <Insets top="12"/>
+            </VBox.margin>
+            <Label styleClass="field-label" text="Search via Amadeus (3-letter IATA city code):"/>
+            <TextField fx:id="amadeusCityField" promptText="PAR, LON, NYC" styleClass="search-field" maxWidth="120"/>
+            <Button fx:id="searchAmadeusButton" onAction="#searchAmadeus" styleClass="outline-button" text="Search Amadeus"/>
+            <Button fx:id="showDbHotelsButton" onAction="#showDatabaseHotels" styleClass="outline-button" text="Show database hotels"/>
+        </HBox>
+
+        <!-- Search Button -->
+        <Button fx:id="searchButton" onAction="#searchHotels" styleClass="primary-button" text="🔍 Search Hotels" maxWidth="Infinity">
+            <VBox.margin>
+                <Insets top="16"/>
+            </VBox.margin>
+        </Button>
+    </VBox>
+
+    <!-- Active Filters -->
+    <HBox fx:id="activeFiltersBox" spacing="8" visible="false" managed="false">
+        <Label styleClass="text-muted" text="Active filters:"/>
+        <!-- Filter badges will be added dynamically -->
+    </HBox>
+
+    <!-- Results Count -->
+    <HBox alignment="CENTER_LEFT">
+        <Label fx:id="resultsLabel" text="Showing 0 of 0 properties"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <HBox spacing="8" alignment="CENTER">
+            <Label text="📍" styleClass="location-icon"/> <!-- Map marker -->
+            <Label text="Worldwide" styleClass="text-muted"/>
+        </HBox>
+    </HBox>
+
+    <!-- Hotel Grid -->
+    <FlowPane fx:id="hotelGrid" hgap="24" vgap="24" VBox.vgrow="ALWAYS">
+        <!-- Hotel cards will be added dynamically -->
+    </FlowPane>
+
+    <!-- No Results -->
+    <VBox fx:id="noResultsBox" alignment="CENTER" spacing="16" visible="false" managed="false" VBox.vgrow="ALWAYS">
+        <StackPane styleClass="no-results-icon-bg">
+            <Region prefHeight="80" prefWidth="80"/>
+            <Label text="🔍" styleClass="no-results-icon"/>
+        </StackPane>
+        <Label text="No hotels found" styleClass="no-results-title"/>
+        <Label text="Try adjusting your search criteria" styleClass="no-results-subtitle"/>
+        <Button onAction="#clearFilters" styleClass="outline-button" text="Clear all filters"/>
+    </VBox>
+</VBox>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<VBox spacing="32" styleClass="animate-fade" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.demo1.controller.client.DashboardController">
+
+    <!-- Welcome Header -->
+    <HBox alignment="CENTER_LEFT">
+        <VBox>
+            <Label styleClass="welcome-title" text="Welcome back! &#x1f44b;" wrapText="true">
+                <font>
+                    <Font name="System Bold" size="28"/>
+                </font>
+            </Label>
+            <Label styleClass="welcome-subtitle" text="Ready to plan your next adventure?" textFill="#64748B"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button onAction="#exploreHotels" styleClass="primary-button" text="Explore Hotels"/>
+    </HBox>
+
+    <!-- Stats Grid -->
+    <HBox spacing="16">
+        <VBox HBox.hgrow="ALWAYS" styleClass="stat-card">
+            <StackPane styleClass="stat-icon-bg, blue">
+                <Region prefHeight="48" prefWidth="48"/>
+                <Label styleClass="stat-icon" text="✈" textFill="#2563EB"/> <!-- Plane -->
+            </StackPane>
+            <Label fx:id="totalTripsLabel" styleClass="stat-value" text="0" textFill="#2563EB"/>
+            <Label styleClass="stat-label" text="Total Trips"/>
+        </VBox>
+
+        <VBox HBox.hgrow="ALWAYS" styleClass="stat-card">
+            <StackPane styleClass="stat-icon-bg, green">
+                <Region prefHeight="48" prefWidth="48"/>
+                <Label styleClass="stat-icon" text="🏨" textFill="#22C55E"/> <!-- Hotel -->
+            </StackPane>
+            <Label fx:id="hotelBookingsLabel" styleClass="stat-value" text="0" textFill="#22C55E"/>
+            <Label styleClass="stat-label" text="Hotel Bookings"/>
+        </VBox>
+
+        <VBox HBox.hgrow="ALWAYS" styleClass="stat-card">
+            <StackPane styleClass="stat-icon-bg, orange">
+                <Region prefHeight="48" prefWidth="48"/>
+                <Label styleClass="stat-icon" text="📅" textFill="#F97316"/> <!-- Calendar -->
+            </StackPane>
+            <Label fx:id="upcomingLabel" styleClass="stat-value" text="0" textFill="#F97316"/>
+            <Label styleClass="stat-label" text="Upcoming"/>
+        </VBox>
+
+        <VBox HBox.hgrow="ALWAYS" styleClass="stat-card">
+            <StackPane styleClass="stat-icon-bg, purple">
+                <Region prefHeight="48" prefWidth="48"/>
+                <Label styleClass="stat-icon" text="⭐" textFill="#9333EA"/> <!-- Star -->
+            </StackPane>
+            <Label fx:id="savedLabel" styleClass="stat-value" text="0" textFill="#9333EA"/>
+            <Label styleClass="stat-label" text="Saved"/>
+        </VBox>
+    </HBox>
+
+    <!-- Quick Actions -->
+    <HBox spacing="16">
+        <!-- Find Hotels Card -->
+        <VBox onMouseClicked="#exploreHotels" HBox.hgrow="ALWAYS" styleClass="quick-action-card, blue-gradient">
+            <padding>
+                <Insets bottom="24" left="24" right="24" top="24"/>
+            </padding>
+            <StackPane styleClass="quick-action-icon-bg">
+                <Region prefHeight="56" prefWidth="56"/>
+                <Label styleClass="quick-action-icon" text="🏨"/>
+            </StackPane>
+            <Label styleClass="quick-action-title" text="Find Hotels"/>
+            <Label styleClass="quick-action-desc" text="Search and book luxury accommodations worldwide"/>
+            <HBox alignment="CENTER_LEFT" spacing="8" styleClass="quick-action-link">
+                <Label text="Search Now"/>
+                <Label text="→"/> <!-- Arrow Right -->
+            </HBox>
+        </VBox>
+
+        <!-- Book Transport Card -->
+        <VBox onMouseClicked="#bookTransport" HBox.hgrow="ALWAYS" styleClass="quick-action-card, orange-gradient">
+            <padding>
+                <Insets bottom="24" left="24" right="24" top="24"/>
+            </padding>
+            <StackPane styleClass="quick-action-icon-bg">
+                <Region prefHeight="56" prefWidth="56"/>
+                <Label styleClass="quick-action-icon" text="🚌"/>
+            </StackPane>
+            <Label styleClass="quick-action-title" text="Book Transport"/>
+            <Label styleClass="quick-action-desc" text="Flights, trains, and car rentals at best prices"/>
+            <HBox alignment="CENTER_LEFT" spacing="8" styleClass="quick-action-link">
+                <Label text="Explore"/>
+                <Label text="→"/>
+            </HBox>
+        </VBox>
+
+        <!-- Premium Plans Card -->
+        <VBox onMouseClicked="#viewPlans" HBox.hgrow="ALWAYS" styleClass="quick-action-card, purple-gradient">
+            <padding>
+                <Insets bottom="24" left="24" right="24" top="24"/>
+            </padding>
+            <StackPane styleClass="quick-action-icon-bg">
+                <Region prefHeight="56" prefWidth="56"/>
+                <Label styleClass="quick-action-icon" text="⭐"/>
+            </StackPane>
+            <Label styleClass="quick-action-title" text="Premium Plans"/>
+            <Label styleClass="quick-action-desc" text="Unlock exclusive deals and member benefits"/>
+            <HBox alignment="CENTER_LEFT" spacing="8" styleClass="quick-action-link">
+                <Label text="View Plans"/>
+                <Label text="→"/>
+            </HBox>
+        </VBox>
+    </HBox>
+
+    <!-- Featured Hotels & Recent Searches -->
+    <HBox spacing="24" VBox.vgrow="ALWAYS">
+        <!-- Featured Hotels -->
+        <VBox HBox.hgrow="ALWAYS" spacing="16">
+            <HBox alignment="CENTER_LEFT">
+                <Label styleClass="section-title" text="Featured Hotels"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button onAction="#viewAllHotels" styleClass="text-button" text="View All →"/>
+            </HBox>
+
+            <HBox fx:id="featuredHotelsContainer" spacing="16">
+                <!-- Hotel cards will be added dynamically -->
+            </HBox>
+        </VBox>
+
+        <!-- Recent Searches & Travel Tip -->
+        <VBox prefWidth="350" spacing="16">
+            <!-- Recent Searches -->
+            <VBox styleClass="card">
+                <Label styleClass="card-title" text="Recent Searches"/>
+                <VBox fx:id="recentSearchesContainer" spacing="12">
+                    <VBox.margin>
+                        <Insets top="16"/>
+                    </VBox.margin>
+                    <!-- Recent searches will be added dynamically -->
+                </VBox>
+            </VBox>
+
+            <!-- Travel Tip -->
+            <VBox styleClass="tip-card, green-gradient">
+                <StackPane styleClass="tip-icon-bg">
+                    <Region prefHeight="48" prefWidth="48"/>
+                    <Label styleClass="tip-icon" text="💡"/>
+                </StackPane>
+                <Label styleClass="tip-title" text="Travel Tip"/>
+                <Label styleClass="tip-text" text="Book your hotels at least 2 weeks in advance to get the best rates and availability." wrapText="true"/>
+            </VBox>
+        </VBox>
+    </HBox>
+</VBox>

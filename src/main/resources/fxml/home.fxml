@@ -45,6 +45,8 @@
                         onAction="#showOmra"/>
                 <Button text="👤 Admin" styleClass="nav-button-admin"
                         onAction="#showAdmin"/>
+                <Button text="🔑 Sign In" styleClass="nav-button"
+                        onAction="#showSignIn"/>
             </HBox>
         </HBox>
     </top>

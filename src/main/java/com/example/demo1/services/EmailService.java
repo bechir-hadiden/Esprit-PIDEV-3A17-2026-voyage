@@ -11,6 +11,12 @@ public class EmailService {
     private static final String SMTP_PORT = "587";
     private static final String ADMIN_EMAIL = "bechirhadidan8@gmail.com";
     private static final String ADMIN_PASSWORD = "pdul stke pohv xege";
+    
+    // Instance fields for dynamic configuration
+    private String user = ADMIN_EMAIL;
+    private String password = ADMIN_PASSWORD;
+    private String host = SMTP_HOST;
+    private int port = Integer.parseInt(SMTP_PORT);
 
     /**
      * Envoie une nouvelle déclaration/réclamation
@@ -167,6 +173,48 @@ public class EmailService {
 
         } catch (Exception e) {
             System.err.println("❌ Configuration invalide : " + e.getMessage());
+            return false;
+        }
+    }
+
+
+    public boolean isConfigured() {
+        return user != null && !user.isEmpty() && password != null && !password.isEmpty();
+    }
+
+    /**
+     * Send a 6-digit code to the given email address.
+     */
+    public boolean sendResetCode(String toEmail, String code) {
+        if (!isConfigured()) {
+            System.err.println("SMTP not configured. Add smtp.properties with smtp.user and smtp.password.");
+            return false;
+        }
+        try {
+            Properties props = new Properties();
+            props.put("mail.smtp.host", host);
+            props.put("mail.smtp.port", String.valueOf(port));
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+
+            Session session = Session.getInstance(props, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(user, password);
+                }
+            });
+
+            MimeMessage msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(user, "SmartTrip"));
+            msg.setRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
+            msg.setSubject("SmartTrip - Password Reset Code");
+            msg.setText("Your password reset code is: " + code + "\n\nThis code expires in 10 minutes.\n\nIf you didn't request this, please ignore this email.", "UTF-8");
+
+            Transport.send(msg);
+            return true;
+        } catch (Exception e) {
+            System.err.println("Failed to send reset email: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
