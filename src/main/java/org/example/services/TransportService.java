@@ -10,7 +10,7 @@ import java.util.List;
 public class TransportService {
 
     public void ajouter(Transport t) {
-        String sql = "INSERT INTO transport(type, compagnie, numero, capacite, imageUrl, description, prix) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO transport_catalog(type, compagnie, numero, capacite, imageUrl, description, prix) VALUES (?,?,?,?,?,?,?)";
         try (Connection con = DatabaseConnection.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -28,7 +28,7 @@ public class TransportService {
     }
 
     public void modifier(Transport t) {
-        String sql = "UPDATE transport SET type=?, compagnie=?, numero=?, capacite=?, imageUrl=?, description=?, prix=? WHERE idTransport=?";
+        String sql = "UPDATE transport_catalog SET type=?, compagnie=?, numero=?, capacite=?, imageUrl=?, description=?, prix=? WHERE idTransport=?";
         try (Connection con = DatabaseConnection.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -47,7 +47,7 @@ public class TransportService {
     }
 
     public void supprimer(int id) {
-        String sql = "DELETE FROM transport WHERE idTransport=?";
+        String sql = "DELETE FROM transport_catalog WHERE idTransport=?";
         try (Connection con = DatabaseConnection.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -60,7 +60,7 @@ public class TransportService {
 
     public List<Transport> lister() {
         List<Transport> list = new ArrayList<>();
-        String sql = "SELECT * FROM transport";
+        String sql = "SELECT * FROM transport_catalog";
 
         try (Connection con = DatabaseConnection.getConnection();
                 Statement st = con.createStatement();
@@ -93,7 +93,7 @@ public class TransportService {
 
     public List<Transport> listerParType(String type) {
         List<Transport> list = new ArrayList<>();
-        String sql = "SELECT * FROM transport WHERE type=?";
+        String sql = "SELECT * FROM transport_catalog WHERE type=?";
 
         try (Connection con = DatabaseConnection.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql)) {

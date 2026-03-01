@@ -33,7 +33,7 @@
         </VBox>
 
         <VBox styleClass="stat-card" GridPane.columnIndex="1">
-            <Label styleClass="stat-value" text="Coming Soon"/>
+            <Label fx:id="transportCountLabel" styleClass="stat-value" text="0"/>
             <Label styleClass="stat-label" text="Transport Options"/>
         </VBox>
 

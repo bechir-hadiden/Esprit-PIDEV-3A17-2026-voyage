@@ -10,21 +10,21 @@
       style="-fx-background-color: #f8fafc;">
 
     <stylesheets>
-        <java.net.URL value="@../css/style.css" />
+        <URL value="@../css/style.css" />
+        <URL value="@../css/admin-styles.css" />
     </stylesheets>
 
     <!-- Header -->
-    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
-        <Button onAction="#handleBack" styleClass="button-secondary, button-icon">
-            <graphic>
-                <Region styleClass="icon, icon-back"/>
-            </graphic>
-        </Button>
-        <Label fx:id="formTitle" text="Nouvelle Catégorie" styleClass="header-title"/>
+    <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 30 40 10 40;">
+        <Button text="← Retour" onAction="#handleBack" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;"/>
+        <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+            <Label fx:id="formTitle" text="Nouvelle Catégorie" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #1e293b;"/>
+        </VBox>
     </HBox>
 
-    <VBox alignment="CENTER" VBox.vgrow="ALWAYS" style="-fx-padding: 50;">
-        <VBox spacing="30" maxWidth="500" styleClass="card">
+    <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
+        <VBox alignment="CENTER" style="-fx-padding: 50;">
+            <VBox spacing="30" maxWidth="500" styleClass="admin-card">
             <VBox spacing="25">
                 <GridPane hgap="20" vgap="25">
                     <Label text="Nom" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
@@ -35,20 +35,17 @@
 
                     <Label text="Photo illustrative" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
                     <HBox spacing="15" alignment="CENTER_LEFT" GridPane.rowIndex="2" GridPane.columnIndex="1">
-                        <Button text="Choisir une image" onAction="#handleChooseImage" styleClass="button-secondary" prefWidth="180"/>
+                        <Button text="Choisir une image" onAction="#handleChooseImage" styleClass="admin-button-secondary" prefWidth="180"/>
                         <javafx.scene.image.ImageView fx:id="imagePreview" fitWidth="120" fitHeight="70" preserveRatio="true" style="-fx-border-color: #cbd5e1; -fx-border-width: 1; -fx-background-color: #f1f5f9;"/>
                     </HBox>
                 </GridPane>
 
                 <HBox spacing="15" alignment="CENTER_RIGHT">
-                    <Button text="Annuler" onAction="#handleBack" styleClass="button-secondary" prefWidth="120"/>
-                    <Button fx:id="saveBtn" text="Enregistrer" onAction="#handleSave" styleClass="button-success" prefWidth="150">
-                        <graphic>
-                            <Region styleClass="icon, icon-add" style="-fx-background-color: white;"/>
-                        </graphic>
-                    </Button>
+                    <Button text="Annuler" onAction="#handleBack" styleClass="admin-button-secondary" prefWidth="120"/>
+                    <Button fx:id="saveBtn" text="💾 Enregistrer" onAction="#handleSave" styleClass="admin-button-primary" prefWidth="150"/>
                 </HBox>
             </VBox>
         </VBox>
-    </VBox>
+        </VBox>
+    </ScrollPane>
 </VBox>

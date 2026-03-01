@@ -126,7 +126,7 @@ public class MyReservationsController {
                 pdfBtn.setGraphic(pdfIcon);
                 pdfBtn.setTooltip(new Tooltip("Télécharger mon ticket"));
                 pdfBtn.getStyleClass().addAll("action-button", "button-primary");
-                pdfBtn.setStyle("-fx-background-color: #ef4444;"); // Modern Danger Red for Tickets
+                pdfBtn.setStyle("-fx-background-color: #0ea5e9;");
 
                 // Cancel (Delete)
                 Region deleteIcon = new Region();
@@ -134,9 +134,10 @@ public class MyReservationsController {
                 deleteBtn.setGraphic(deleteIcon);
                 deleteBtn.setTooltip(new Tooltip("Annuler la réservation"));
                 deleteBtn.getStyleClass().addAll("action-button", "button-danger");
+                deleteBtn.setStyle("-fx-background-color: #ef4444;");
 
                 container.setAlignment(Pos.CENTER);
-                container.setPadding(new javafx.geometry.Insets(0, 0, 0, 0));
+                container.setPadding(new javafx.geometry.Insets(4));
 
                 editBtn.setOnAction(event -> handleEdit(getTableView().getItems().get(getIndex())));
                 deleteBtn.setOnAction(event -> handleDelete(getTableView().getItems().get(getIndex())));
@@ -245,9 +246,23 @@ public class MyReservationsController {
 
     @FXML
     private void goBack() {
+        try {
+            javafx.scene.Scene scene = reservationTable.getScene();
+            javafx.scene.layout.Pane contentArea = (javafx.scene.layout.Pane) scene.lookup("#contentArea");
+            if (contentArea == null)
+                contentArea = (javafx.scene.layout.Pane) scene.lookup("#contentContainer");
+
+            if (contentArea != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/user_menu.fxml"));
+                contentArea.getChildren().setAll((javafx.scene.Node) loader.load());
+                return;
+            }
+        } catch (Exception e) {
+        }
+
         MainShellController shell = MainShellController.getInstance();
         if (shell != null) {
-            shell.loadView("/fxml/user_menu.fxml", shell.getBtnDashboard());
+            shell.loadView("/fxml/user_menu.fxml");
         }
     }
 

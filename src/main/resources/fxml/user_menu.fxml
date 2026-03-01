@@ -1,39 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:id="rootPane"
             fx:controller="org.example.controllers.UserMenuController"
             style="-fx-background-color: #f8fafc;">
 
     <stylesheets>
-        <URL value="@../css/style.css" />
+        <URL value="@../css/main.css" />
+        <URL value="@../css/admin-styles.css" />
     </stylesheets>
 
-
-    <!-- Main Content -->
     <center>
         <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
-            <VBox alignment="CENTER" spacing="50" style="-fx-padding: 80 50;">
+            <VBox fx:id="hubRoot" spacing="40" alignment="TOP_CENTER" style="-fx-padding: 60 40;">
                 
-                <VBox alignment="CENTER" spacing="10">
-                    <Label text="Bienvenue dans votre Espace Voyage" styleClass="title-label"/>
-                    <Label text="Sélectionnez un mode de transport pour commencer votre réservation" styleClass="subtitle-label" style="-fx-font-size: 16px;"/>
+                <!-- Welcome Section -->
+                <VBox alignment="CENTER" spacing="15">
+                    <Label text="Votre Espace Transport" style="-fx-font-size: 36px; -fx-font-weight: 900; -fx-text-fill: #1e293b;"/>
+                    <Label text="Optimisez vos déplacements avec nos solutions intelligentes" style="-fx-font-size: 16px; -fx-text-fill: #64748b;"/>
                 </VBox>
 
-                <!-- Dynamic container for transport type cards -->
-                <FlowPane fx:id="cardsContainer" hgap="40" vgap="40" alignment="CENTER">
-                    <!-- Cards injected dynamically -->
+                <!-- Feature Cards -->
+                <FlowPane hgap="35" vgap="35" alignment="CENTER">
+                    
+                    <!-- Transport Types Card -->
+                    <VBox onMouseClicked="#showTransportTypes" styleClass="admin-stat-card" prefWidth="320" prefHeight="200" spacing="15" style="-fx-cursor: hand;">
+                         <HBox alignment="CENTER_LEFT" spacing="15">
+                            <StackPane styleClass="stat-icon-container" style="-fx-background-color: rgba(59, 130, 246, 0.1);">
+                                <Label style="-fx-font-size: 32px; -fx-text-fill: #1e293b;" text="🚌" />
+                            </StackPane>
+                            <VBox>
+                                <Label styleClass="stat-label" text="RÉSERVATION" style="-fx-text-fill: #94a3b8; -fx-font-weight: 800;"/>
+                                <Label styleClass="stat-value" text="Catalogue Véhicules" style="-fx-font-size: 20px; -fx-text-fill: #1e293b; -fx-font-weight: 800;"/>
+                            </VBox>
+                        </HBox>
+                        <Label wrapText="true" text="Explorez nos bus, taxis et voitures. Réservez celui qui vous convient." style="-fx-text-fill: #64748b; -fx-font-size: 14px;" />
+                    </VBox>
+
+                    <!-- Reservations Card -->
+                    <VBox onMouseClicked="#showMyReservations" styleClass="admin-stat-card" prefWidth="320" prefHeight="200" spacing="15" style="-fx-cursor: hand;">
+                         <HBox alignment="CENTER_LEFT" spacing="15">
+                            <StackPane styleClass="stat-icon-container" style="-fx-background-color: rgba(16, 185, 129, 0.1);">
+                                <Label style="-fx-font-size: 32px; -fx-text-fill: #1e293b;" text="📅" />
+                            </StackPane>
+                            <VBox>
+                                <Label styleClass="stat-label" text="VOS TRAJETS" style="-fx-text-fill: #94a3b8; -fx-font-weight: 800;"/>
+                                <Label styleClass="stat-value" text="Historique" style="-fx-font-size: 22px; -fx-text-fill: #1e293b; -fx-font-weight: 800;"/>
+                            </VBox>
+                        </HBox>
+                        <Label wrapText="true" text="Consultez et gérez vos réservations passées et à venir." style="-fx-text-fill: #64748b; -fx-font-size: 14px;" />
+                    </VBox>
+
+                    <!-- AI Guide Card -->
+                    <VBox onMouseClicked="#showAIGuide" styleClass="admin-stat-card" prefWidth="320" prefHeight="200" spacing="15" style="-fx-cursor: hand;">
+                         <HBox alignment="CENTER_LEFT" spacing="15">
+                            <StackPane styleClass="stat-icon-container" style="-fx-background-color: rgba(139, 92, 246, 0.1);">
+                                <Label style="-fx-font-size: 32px; -fx-text-fill: #1e293b;" text="✨" />
+                            </StackPane>
+                            <VBox>
+                                <Label styleClass="stat-label" text="ASSISTANCE AI" style="-fx-text-fill: #94a3b8; -fx-font-weight: 800;"/>
+                                <Label styleClass="stat-value" text="Recommandations" style="-fx-font-size: 20px; -fx-text-fill: #1e293b; -fx-font-weight: 800;"/>
+                            </VBox>
+                        </HBox>
+                        <Label wrapText="true" text="Obtenez des conseils personnalisés pour vos trajets grâce à notre IA." style="-fx-text-fill: #64748b; -fx-font-size: 14px;" />
+                    </VBox>
+
                 </FlowPane>
                 
             </VBox>
         </ScrollPane>
     </center>
-
 
 </BorderPane>

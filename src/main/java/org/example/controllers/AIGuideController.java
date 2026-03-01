@@ -1,6 +1,7 @@
 package org.example.controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -143,9 +144,23 @@ public class AIGuideController {
 
     @FXML
     private void goBack() {
+        try {
+            javafx.scene.Scene scene = departureField.getScene();
+            javafx.scene.layout.Pane contentArea = (javafx.scene.layout.Pane) scene.lookup("#contentArea");
+            if (contentArea == null)
+                contentArea = (javafx.scene.layout.Pane) scene.lookup("#contentContainer");
+
+            if (contentArea != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/user_menu.fxml"));
+                contentArea.getChildren().setAll((javafx.scene.Node) loader.load());
+                return;
+            }
+        } catch (Exception e) {
+        }
+
         MainShellController shell = MainShellController.getInstance();
         if (shell != null) {
-            shell.loadView("/fxml/user_menu.fxml", shell.getBtnDashboard());
+            shell.loadView("/fxml/user_menu.fxml");
         }
     }
 }

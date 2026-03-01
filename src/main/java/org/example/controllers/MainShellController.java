@@ -141,6 +141,10 @@ public class MainShellController {
         stage.show();
     }
 
+    public void loadView(String fxmlPath) {
+        loadView(fxmlPath, null);
+    }
+
     public void loadView(String fxmlPath, Button navBtn) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));

@@ -1,7 +1,9 @@
 package org.example.controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import org.example.entities.TransportType;
 import org.example.services.TransportTypeService;
 
@@ -143,9 +145,19 @@ public class TransportTypeFormController {
 
     @FXML
     private void handleBack() {
-        MainShellController shell = MainShellController.getInstance();
-        if (shell != null) {
-            shell.loadView("/fxml/type_table_view.fxml", shell.getBtnCategories());
+        try {
+            StackPane contentArea = (StackPane) nomField.getScene().lookup("#contentArea");
+            if (contentArea != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/type_table_view.fxml"));
+                contentArea.getChildren().setAll((javafx.scene.Node) loader.load());
+            } else {
+                MainShellController shell = MainShellController.getInstance();
+                if (shell != null) {
+                    shell.loadView("/fxml/type_table_view.fxml", shell.getBtnCategories());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -2,8 +2,10 @@ package org.example.controllers;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import org.example.entities.Notification;
 import org.example.services.NotificationService;
 
@@ -67,10 +69,9 @@ public class SmartNotifyMonitorController {
         colActions.setCellFactory(param -> new TableCell<>() {
             private final Button deleteBtn = new Button();
             {
-                Region deleteIcon = new Region();
-                deleteIcon.getStyleClass().addAll("icon", "icon-delete");
-                deleteBtn.setGraphic(deleteIcon);
+                deleteBtn.setText("🗑️ Annuler");
                 deleteBtn.getStyleClass().addAll("action-button", "button-danger");
+                deleteBtn.setStyle("-fx-background-color: #ef4444; -fx-font-size: 11px; -fx-padding: 4 8;");
                 deleteBtn.setTooltip(new Tooltip("Supprimer l'alerte"));
 
                 deleteBtn.setOnAction(event -> {
@@ -106,9 +107,19 @@ public class SmartNotifyMonitorController {
 
     @FXML
     private void goBack() {
-        MainShellController shell = MainShellController.getInstance();
-        if (shell != null) {
-            shell.loadView("/fxml/admin.fxml", shell.getBtnDashboard());
+        try {
+            StackPane contentArea = (StackPane) notificationTable.getScene().lookup("#contentArea");
+            if (contentArea != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/admin/AdminTransport.fxml"));
+                contentArea.getChildren().setAll((javafx.scene.Node) loader.load());
+            } else {
+                MainShellController shell = MainShellController.getInstance();
+                if (shell != null) {
+                    shell.loadView("/fxml/admin.fxml", shell.getBtnDashboard());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

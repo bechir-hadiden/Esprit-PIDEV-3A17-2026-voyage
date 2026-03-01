@@ -61,7 +61,7 @@ public class VehiculeService {
 
     public List<BaseVehicule> listerParVille(String type, String ville) {
         List<BaseVehicule> list = new ArrayList<>();
-        String sql = "SELECT * FROM vehicule WHERE (type = ? OR ? = '') AND (LOWER(ville) LIKE ? OR ? = '')";
+        String sql = "SELECT * FROM vehicule WHERE (LOWER(type) = LOWER(?) OR ? = '') AND (LOWER(ville) LIKE ? OR ? = '')";
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, type);

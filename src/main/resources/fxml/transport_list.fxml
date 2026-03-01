@@ -12,28 +12,29 @@
 
     <stylesheets>
         <URL value="@../css/style.css" />
+        <URL value="@../css/admin-styles.css" />
     </stylesheets>
 
     <!-- Header -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
-            <Button text="←" onAction="#goBack" styleClass="button-secondary" style="-fx-padding: 8 15; -fx-font-size: 16px;"/>
-            <Label fx:id="titleLabel" text="Nos Transports" styleClass="header-title"/>
-            <Region HBox.hgrow="ALWAYS"/>
+        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 30 40 10 40;">
+            <Button text="← Retour" onAction="#goBack" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;"/>
+            <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+                <Label fx:id="titleLabel" text="Nos Transports" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #1e293b;"/>
+            </VBox>
             <HBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 2 15; -fx-border-color: #e2e8f0; -fx-border-radius: 20;">
-                <TextField fx:id="searchField" promptText="Rechercher une ville..." style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-pref-width: 200;"/>
-                <Button onAction="#handleSearch" styleClass="button-icon" style="-fx-background-color: transparent;">
-                    <graphic><Region styleClass="icon, icon-search" style="-fx-background-color: #64748b; -fx-pref-width: 16; -fx-pref-height: 16;"/></graphic>
+                <TextField fx:id="searchField" onAction="#handleSearch" promptText="Rechercher une ville..." style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-pref-width: 200;"/>
+                <Button onAction="#handleSearch" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 5;">
+                    <graphic><Label text="🔍" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/></graphic>
                 </Button>
                 <Separator orientation="VERTICAL" prefHeight="20" style="-fx-padding: 0 5;"/>
-                <Button onAction="#handleDetectLocation" styleClass="button-icon" style="-fx-background-color: transparent;">
+                <Button onAction="#handleDetectLocation" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 5;">
                     <tooltip><Tooltip text="Détecter ma position"/></tooltip>
-                    <graphic><Region styleClass="icon, icon-location" style="-fx-background-color: #3b82f6; -fx-pref-width: 16; -fx-pref-height: 16;"/></graphic>
+                    <graphic><Label text="📍" style="-fx-font-size: 14px; -fx-text-fill: #3b82f6;"/></graphic>
                 </Button>
             </HBox>
-            <Button onAction="#rafraichir" styleClass="button-primary, button-icon" style="-fx-background-color: #2563eb;">
+            <Button onAction="#rafraichir" styleClass="admin-button-secondary" text="🔄 Rafraîchir" style="-fx-padding: 8 16;">
                 <tooltip><Tooltip text="Rafraîchir la disponibilité"/></tooltip>
-                <graphic><Region styleClass="icon, icon-refresh" style="-fx-background-color: white; -fx-pref-width: 20; -fx-pref-height: 20;"/></graphic>
             </Button>
         </HBox>
     </top>

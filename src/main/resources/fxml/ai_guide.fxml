@@ -15,12 +15,8 @@
     </padding>
 
     <HBox alignment="CENTER_LEFT" spacing="15">
-        <Button onAction="#goBack" styleClass="button-icon">
-            <graphic>
-                <Region styleClass="icon, icon-back" />
-            </graphic>
-        </Button>
-        <Label text="Assistant Voyage Intelligent AI" styleClass="header-title"/>
+        <Button text="← Retour" onAction="#goBack" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;"/>
+        <Label text="Assistant Voyage Intelligent AI" style="-fx-font-size: 24px; -fx-font-weight: 900; -fx-text-fill: #1e293b;"/>
     </HBox>
 
     <VBox spacing="25" styleClass="card" maxWidth="600" alignment="CENTER">
