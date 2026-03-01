@@ -72,10 +72,10 @@ public class HomeController {
     public void ouvrirWhatsApp() {
         try {
             // DEBUG — affiche tous les chemins possibles
-            System.out.println("whatsapp path: " + getClass().getResource("/fxml/whatsapp.fxml"));
+            System.out.println("whatsapp path: " + getClass().getResource("/fxml/sms.fxml"));
 
             // Essayer les 3 chemins dans l'ordre
-            java.net.URL url = getClass().getResource("/fxml/whatsapp.fxml");
+            java.net.URL url = getClass().getResource("/fxml/sms.fxml");
             if (url == null) url = getClass().getResource("/com/example/demo1/fxml/whatsapp.fxml");
             if (url == null) url = getClass().getResource("whatsapp.fxml");
 
