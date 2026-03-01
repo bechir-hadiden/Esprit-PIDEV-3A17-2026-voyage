@@ -2,7 +2,9 @@ package org.example.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -214,9 +216,23 @@ public class VehiculeFormController {
 
     @FXML
     private void handleBack() {
-        MainShellController shell = MainShellController.getInstance();
-        if (shell != null) {
-            shell.loadView("/fxml/vehicule_table_view.fxml", shell.getBtnFleet());
+        try {
+            javafx.scene.layout.Pane contentArea = (javafx.scene.layout.Pane) prixField.getScene()
+                    .lookup("#contentContainer");
+            if (contentArea == null)
+                contentArea = (javafx.scene.layout.Pane) prixField.getScene().lookup("#contentArea");
+
+            if (contentArea != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vehicule_table_view.fxml"));
+                contentArea.getChildren().setAll((javafx.scene.Node) loader.load());
+            } else {
+                MainShellController shell = MainShellController.getInstance();
+                if (shell != null) {
+                    shell.loadView("/fxml/vehicule_table_view.fxml");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

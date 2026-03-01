@@ -14,7 +14,7 @@ public class ReservationService {
         // Try with new columns first. If idTransport fails due to FK, we still have a
         // problem,
         // so we must ensure idTransport is handled as NULL if not applicable.
-        String sql = "INSERT INTO reservation(idUser, idTransport, typeTransport, idVehicule, dateReservation, statut) VALUES (?,?,?,?,?,?)";
+        String sql = "INSERT INTO transport_reservation(idUser, idTransport, typeTransport, idVehicule, dateReservation, statut) VALUES (?,?,?,?,?,?)";
         try (Connection con = DatabaseConnection.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -57,7 +57,7 @@ public class ReservationService {
         VehiculeService vehiculeService = new VehiculeService();
 
         // Query reservations for the user
-        String sql = "SELECT * FROM reservation WHERE idUser = ? ORDER BY dateReservation DESC";
+        String sql = "SELECT * FROM transport_reservation WHERE idUser = ? ORDER BY dateReservation DESC";
 
         try (Connection con = DatabaseConnection.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql)) {
@@ -101,7 +101,7 @@ public class ReservationService {
     }
 
     public void modifier(Reservation r) {
-        String sql = "UPDATE reservation SET dateReservation = ?, statut = ? WHERE idReservation = ?";
+        String sql = "UPDATE transport_reservation SET dateReservation = ?, statut = ? WHERE idReservation = ?";
         try (Connection con = DatabaseConnection.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -115,8 +115,8 @@ public class ReservationService {
     }
 
     public void supprimer(int idReservation) {
-        String selectSql = "SELECT idVehicule FROM reservation WHERE idReservation = ?";
-        String deleteSql = "DELETE FROM reservation WHERE idReservation = ?";
+        String selectSql = "SELECT idVehicule FROM transport_reservation WHERE idReservation = ?";
+        String deleteSql = "DELETE FROM transport_reservation WHERE idReservation = ?";
         try (Connection con = DatabaseConnection.getConnection()) {
             int idVehicule = -1;
             try (PreparedStatement psSel = con.prepareStatement(selectSql)) {
@@ -138,7 +138,7 @@ public class ReservationService {
 
     public List<Reservation> listerToutes() {
         List<Reservation> list = new ArrayList<>();
-        String sql = "SELECT * FROM reservation ORDER BY dateReservation DESC";
+        String sql = "SELECT * FROM transport_reservation ORDER BY dateReservation DESC";
         try (Connection con = DatabaseConnection.getConnection();
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)) {

@@ -99,11 +99,7 @@ public class UserController {
     private VBox createTransportCard(Transport transport) {
         VBox card = new VBox(10);
         card.setAlignment(Pos.CENTER);
-        card.setStyle("-fx-background-color: white; " +
-                "-fx-background-radius: 15; " +
-                "-fx-padding: 20; " +
-                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 15, 0, 0, 5); " +
-                "-fx-cursor: hand;");
+        card.getStyleClass().add("admin-card");
         card.setPrefWidth(220);
         card.setPrefHeight(250);
 
@@ -114,24 +110,22 @@ public class UserController {
 
         // Transport details
         Label typeLabel = new Label(transport.getType());
-        typeLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        typeLabel.getStyleClass().add("stats-section-title");
 
         Label compagnieLabel = new Label(transport.getCompagnie());
-        compagnieLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d;");
+        compagnieLabel.getStyleClass().add("stats-section-sub");
 
         Label numeroLabel = new Label("N° " + transport.getNumero());
-        numeroLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #95a5a6;");
+        numeroLabel.getStyleClass().add("stats-section-sub");
+        numeroLabel.setStyle("-fx-font-size: 11px;");
 
         Label capaciteLabel = new Label("Capacité: " + transport.getCapacite() + " places");
-        capaciteLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #27ae60;");
+        capaciteLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #10b981; -fx-font-weight: 700;");
 
         // Reserve button
         Button reserveBtn = new Button("Réserver");
-        reserveBtn.setStyle("-fx-background-color: #667eea; " +
-                "-fx-text-fill: white; " +
-                "-fx-font-weight: bold; " +
-                "-fx-padding: 10 30; " +
-                "-fx-background-radius: 20;");
+        reserveBtn.getStyleClass().add("admin-button-primary");
+        reserveBtn.setMaxWidth(Double.MAX_VALUE);
         reserveBtn.setOnAction(e -> handleReservation(transport));
 
         card.getChildren().addAll(iconLabel, typeLabel, compagnieLabel, numeroLabel, capaciteLabel, reserveBtn);

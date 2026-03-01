@@ -57,7 +57,7 @@ public class AdminMainController {
 
     @FXML
     private void showTransport() {
-        loadComingSoon("Transport");
+        loadContent("/fxml/admin/AdminTransport.fxml");
         setActiveButton(transportButton);
     }
 
@@ -132,4 +132,3 @@ public class AdminMainController {
         }
     }
 }
-

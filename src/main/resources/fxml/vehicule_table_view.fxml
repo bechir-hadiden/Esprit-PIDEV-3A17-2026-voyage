@@ -13,29 +13,23 @@
 
     <stylesheets>
         <URL value="@../css/style.css" />
+        <URL value="@../css/admin-styles.css" />
     </stylesheets>
     <!-- Header with Toolbar -->
-    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
-        <Button onAction="#goBack" styleClass="button-secondary, button-icon">
-            <graphic><Region styleClass="icon, icon-back" style="-fx-background-color: -slate-700;"/></graphic>
-        </Button>
-        <Label text="Gestion du Parc" styleClass="header-title"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        
-        <HBox spacing="10" alignment="CENTER_LEFT">
-            <Label text="Filtrer:" style="-fx-text-fill: -slate-500; -fx-font-weight: bold;"/>
-            <ComboBox fx:id="filterTypeComboBox" promptText="Tous les types" onAction="#filtrer" prefWidth="150" styleClass="combo-box-modern"/>
+    <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 30 40 10 40;">
+        <Button text="← Retour" onAction="#goBack" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;"/>
+        <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+            <Label text="Gestion du Parc" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #1e293b;"/>
+        </VBox>
+        <HBox spacing="12" alignment="CENTER_RIGHT">
+            <Label text="Filtrer:" styleClass="stats-section-sub"/>
+            <ComboBox fx:id="filterTypeComboBox" promptText="Tous les types" onAction="#filtrer" prefWidth="150"/>
             
-            <Label text="Trier par:" style="-fx-text-fill: -slate-500; -fx-font-weight: bold; -fx-margin-left: 10;"/>
-            <ComboBox fx:id="sortComboBox" promptText="Défaut" onAction="#rafraichir" prefWidth="150" styleClass="combo-box-modern"/>
+            <Label text="Trier par:" styleClass="stats-section-sub" style="-fx-padding: 0 0 0 10;"/>
+            <ComboBox fx:id="sortComboBox" promptText="Défaut" onAction="#rafraichir" prefWidth="150"/>
 
-            <Button onAction="#rafraichir" styleClass="button-primary, button-icon" style="-fx-background-color: #2563eb;">
-                <tooltip><Tooltip text="Rafraîchir la liste"/></tooltip>
-                <graphic><Region styleClass="icon, icon-refresh" style="-fx-background-color: white; -fx-pref-width: 20; -fx-pref-height: 20;"/></graphic>
-            </Button>
-            <Button onAction="#ajouterVehicule" styleClass="button-primary, button-icon">
-                <graphic><Region styleClass="icon, icon-add" style="-fx-background-color: white;"/></graphic>
-            </Button>
+            <Button onAction="#rafraichir" styleClass="admin-button-secondary" text="🔄 Rafraîchir" style="-fx-padding: 8 16;"/>
+            <Button onAction="#ajouterVehicule" styleClass="admin-button-primary" text="➕ Nouveau" style="-fx-padding: 8 16;"/>
         </HBox>
     </HBox>
 
