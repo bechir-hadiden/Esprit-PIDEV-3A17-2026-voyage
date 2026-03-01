@@ -112,6 +112,7 @@ public class HelloApplication extends Application {
             case HOTEL_DETAILS:
             case BOOKING:
             case TRANSPORT:
+            case OFFERS:
             case TICKET_PLANS:
             case MY_BOOKINGS:
             case SETTINGS:

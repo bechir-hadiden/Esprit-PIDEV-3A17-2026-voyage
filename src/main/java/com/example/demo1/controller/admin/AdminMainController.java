@@ -5,10 +5,13 @@ import com.example.demo1.services.AuthService;
 import com.example.demo1.services.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+
+import java.io.IOException;
 
 public class AdminMainController {
 
@@ -63,8 +66,23 @@ public class AdminMainController {
 
     @FXML
     private void showOffers() {
-        loadComingSoon("Offers");
-        setActiveButton(offersButton);
+        try {
+            // 1. Charger ton fichier FXML de gestion des offres
+            // Assure-toi que le fichier est bien dans ce dossier dans resources
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/admin/AfficherOffres.fxml"));
+            Node node = loader.load();
+
+            // 2. Mettre à jour le titre en haut de la page (si applicable)
+            // pageTitle.setText("Promotion Management");
+
+            // 3. Remplacer le contenu central par ton interface
+            // Remplace 'contentArea' par le nom exact du conteneur dans leur code
+            contentArea.getChildren().setAll(node);
+
+        } catch (IOException e) {
+            System.err.println("Erreur lors du chargement de la gestion des offres : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
