@@ -10,6 +10,7 @@ module com.example.demo1 {
     requires javafx.swing;
     requires javafx.media;
     requires jdk.jsobject;
+    requires jbcrypt;
 
     // ================================================
     // JAVA STANDARD
