@@ -3,6 +3,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.geometry.Insets?>
 
 <ScrollPane xmlns="http://javafx.com/javafx"
@@ -14,7 +15,9 @@
     <VBox spacing="0" style="-fx-background-color: #f8f9ff;">
 
         <!-- ===== HEADER ===== -->
-        <VBox spacing="5" style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-padding: 25;">
+        <VBox spacing="5"
+              style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+                     -fx-padding: 25;">
             <Label text="✈️ Nouveau Voyage"
                    style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
             <Label text="Remplissez les informations pour ajouter un voyage"
@@ -23,6 +26,7 @@
 
         <!-- ===== FORMULAIRE ===== -->
         <VBox spacing="18" style="-fx-background-color: #f8f9ff; -fx-padding: 25;">
+
             <!-- PAYS DE DÉPART -->
             <VBox spacing="6">
                 <Label text="🛫  Pays de départ *"
@@ -30,13 +34,14 @@
                 <TextField fx:id="tfPaysDepart"
                            promptText="Ex: Tunis, Paris, London..."
                            style="-fx-background-color: white;
-                      -fx-border-color: #e0e0e0;
-                      -fx-border-radius: 8;
-                      -fx-background-radius: 8;
-                      -fx-padding: 10 12;
-                      -fx-font-size: 13px;"/>
+                                  -fx-border-color: #e0e0e0;
+                                  -fx-border-radius: 8;
+                                  -fx-background-radius: 8;
+                                  -fx-padding: 10 12;
+                                  -fx-font-size: 13px;"/>
             </VBox>
-            <!-- DESTINATION (ComboBox) -->
+
+            <!-- DESTINATION -->
             <VBox spacing="6">
                 <Label text="🌍  Destination *"
                        style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
@@ -53,31 +58,20 @@
 
             <!-- DATES -->
             <HBox spacing="15">
-                <!-- Date début -->
                 <VBox spacing="6" HBox.hgrow="ALWAYS">
                     <Label text="📅  Date de début *"
                            style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
-                    <DatePicker fx:id="dateDebut"
-                                promptText="jj/mm/aaaa"
-                                maxWidth="Infinity"
-                                style="-fx-background-color: white;
-                                       -fx-border-color: #e0e0e0;
-                                       -fx-border-radius: 8;
-                                       -fx-background-radius: 8;
+                    <DatePicker fx:id="dateDebut" promptText="jj/mm/aaaa" maxWidth="Infinity"
+                                style="-fx-background-color: white; -fx-border-color: #e0e0e0;
+                                       -fx-border-radius: 8; -fx-background-radius: 8;
                                        -fx-font-size: 13px;"/>
                 </VBox>
-
-                <!-- Date fin -->
                 <VBox spacing="6" HBox.hgrow="ALWAYS">
                     <Label text="📅  Date de fin *"
                            style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
-                    <DatePicker fx:id="dateFin"
-                                promptText="jj/mm/aaaa"
-                                maxWidth="Infinity"
-                                style="-fx-background-color: white;
-                                       -fx-border-color: #e0e0e0;
-                                       -fx-border-radius: 8;
-                                       -fx-background-radius: 8;
+                    <DatePicker fx:id="dateFin" promptText="jj/mm/aaaa" maxWidth="Infinity"
+                                style="-fx-background-color: white; -fx-border-color: #e0e0e0;
+                                       -fx-border-radius: 8; -fx-background-radius: 8;
                                        -fx-font-size: 13px;"/>
                 </VBox>
             </HBox>
@@ -86,32 +80,108 @@
             <VBox spacing="6">
                 <Label text="💰  Prix (TND) *"
                        style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
-                <TextField fx:id="txtPrix"
-                           promptText="Ex: 1500.00"
-                           style="-fx-background-color: white;
-                                  -fx-border-color: #e0e0e0;
-                                  -fx-border-radius: 8;
-                                  -fx-background-radius: 8;
-                                  -fx-padding: 10 12;
-                                  -fx-font-size: 13px;"/>
+                <TextField fx:id="txtPrix" promptText="Ex: 1500.00"
+                           style="-fx-background-color: white; -fx-border-color: #e0e0e0;
+                                  -fx-border-radius: 8; -fx-background-radius: 8;
+                                  -fx-padding: 10 12; -fx-font-size: 13px;"/>
             </VBox>
 
-            <!-- IMAGE APERCU (automatique depuis destination) -->
-            <VBox spacing="6">
+            <!-- ===== CARROUSEL ===== -->
+            <VBox spacing="8">
                 <Label text="🖼️  Aperçu de la destination"
                        style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
-                <VBox fx:id="imagePreviewContainer"
-                      alignment="CENTER"
-                      prefHeight="180"
-                      style="-fx-background-color: #f0f0f0;
-                             -fx-border-color: #ddd;
-                             -fx-border-radius: 10;
-                             -fx-background-radius: 10;">
-                    <Label fx:id="lblNoImage"
-                           text="📷 L'aperçu apparaît après sélection de la destination"
-                           style="-fx-text-fill: #aaa; -fx-font-size: 12px;"/>
-                </VBox>
+
+                <!--
+                    AnchorPane = conteneur qui permet de superposer les boutons
+                    par-dessus l'image grâce aux ancres (top/bottom/left/right)
+                -->
+                <AnchorPane fx:id="carouselPane"
+                            prefHeight="210"
+                            minHeight="210"
+                            style="-fx-background-color: #f0f2f8;
+                                   -fx-border-color: #dde0ef;
+                                   -fx-border-width: 1.5;
+                                   -fx-border-radius: 12;
+                                   -fx-background-radius: 12;">
+
+                    <!-- ZONE IMAGE — occupe tout l'AnchorPane -->
+                    <VBox fx:id="imagePreviewContainer"
+                          alignment="CENTER"
+                          AnchorPane.topAnchor="0"
+                          AnchorPane.bottomAnchor="0"
+                          AnchorPane.leftAnchor="0"
+                          AnchorPane.rightAnchor="0"
+                          style="-fx-background-radius: 12;">
+                        <Label fx:id="lblNoImage"
+                               text="📷 Sélectionnez une destination pour voir l'aperçu"
+                               wrapText="true"
+                               alignment="CENTER"
+                               style="-fx-text-fill: #aaa; -fx-font-size: 12px; -fx-padding: 20;"/>
+                    </VBox>
+
+                    <!--
+                        BOUTON GAUCHE ◀
+                        topAnchor="86" = (210 - 38) / 2 = centré verticalement
+                    -->
+                    <Button fx:id="btnPrev"
+                            text="❮"
+                            onAction="#handlePrev"
+                            visible="false"
+                            AnchorPane.leftAnchor="10"
+                            AnchorPane.topAnchor="86"
+                            style="-fx-background-color: rgba(0,0,0,0.55);
+                                   -fx-text-fill: white;
+                                   -fx-font-size: 18px;
+                                   -fx-font-weight: bold;
+                                   -fx-background-radius: 50;
+                                   -fx-min-width: 38px;
+                                   -fx-min-height: 38px;
+                                   -fx-max-width: 38px;
+                                   -fx-max-height: 38px;
+                                   -fx-cursor: hand;
+                                   -fx-padding: 0;"/>
+
+                    <!--
+                        BOUTON DROIT ▶
+                        rightAnchor="10" = collé à droite avec 10px de marge
+                    -->
+                    <Button fx:id="btnNext"
+                            text="❯"
+                            onAction="#handleNext"
+                            visible="false"
+                            AnchorPane.rightAnchor="10"
+                            AnchorPane.topAnchor="86"
+                            style="-fx-background-color: rgba(0,0,0,0.55);
+                                   -fx-text-fill: white;
+                                   -fx-font-size: 18px;
+                                   -fx-font-weight: bold;
+                                   -fx-background-radius: 50;
+                                   -fx-min-width: 38px;
+                                   -fx-min-height: 38px;
+                                   -fx-max-width: 38px;
+                                   -fx-max-height: 38px;
+                                   -fx-cursor: hand;
+                                   -fx-padding: 0;"/>
+
+                    <!-- POINTS INDICATEURS — ancrés en bas -->
+                    <HBox fx:id="hboxIndicateurs"
+                          alignment="CENTER"
+                          spacing="7"
+                          AnchorPane.bottomAnchor="8"
+                          AnchorPane.leftAnchor="0"
+                          AnchorPane.rightAnchor="0"/>
+
+                </AnchorPane>
+
+                <!-- COMPTEUR  ex: 2 / 5 -->
+                <Label fx:id="lblCompteur"
+                       text=""
+                       alignment="CENTER"
+                       maxWidth="Infinity"
+                       style="-fx-text-fill: #999; -fx-font-size: 11px;"/>
+
             </VBox>
+            <!-- FIN CARROUSEL -->
 
             <!-- DESCRIPTION -->
             <VBox spacing="6">
@@ -121,20 +191,16 @@
                           promptText="Décrivez ce voyage..."
                           prefRowCount="4"
                           wrapText="true"
-                          style="-fx-background-color: white;
-                                 -fx-border-color: #e0e0e0;
-                                 -fx-border-radius: 8;
-                                 -fx-background-radius: 8;
-                                 -fx-padding: 10;
-                                 -fx-font-size: 13px;"/>
+                          style="-fx-background-color: white; -fx-border-color: #e0e0e0;
+                                 -fx-border-radius: 8; -fx-background-radius: 8;
+                                 -fx-padding: 10; -fx-font-size: 13px;"/>
             </VBox>
 
             <!-- MESSAGE ERREUR -->
             <Label fx:id="lblMessage"
-                   style="-fx-text-fill: #e53935;
-                          -fx-font-size: 13px;
-                          -fx-padding: 5 10;
-                          -fx-background-color: #ffebee;
+                   wrapText="true"
+                   style="-fx-text-fill: #e53935; -fx-font-size: 13px;
+                          -fx-padding: 5 10; -fx-background-color: #ffebee;
                           -fx-background-radius: 8;"
                    visible="false"
                    managed="false"/>
@@ -143,20 +209,14 @@
             <HBox spacing="12" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
                 <Button text="Annuler"
                         onAction="#handleCancel"
-                        style="-fx-background-color: #f0f0f0;
-                               -fx-text-fill: #666;
-                               -fx-padding: 12 25;
-                               -fx-background-radius: 8;
-                               -fx-font-size: 13px;
-                               -fx-cursor: hand;"/>
+                        style="-fx-background-color: #f0f0f0; -fx-text-fill: #666;
+                               -fx-padding: 12 25; -fx-background-radius: 8;
+                               -fx-font-size: 13px; -fx-cursor: hand;"/>
                 <Button text="💾 Enregistrer"
                         onAction="#handleSave"
-                        style="-fx-background-color: #667eea;
-                               -fx-text-fill: white;
-                               -fx-padding: 12 25;
-                               -fx-background-radius: 8;
-                               -fx-font-size: 13px;
-                               -fx-font-weight: bold;
+                        style="-fx-background-color: #667eea; -fx-text-fill: white;
+                               -fx-padding: 12 25; -fx-background-radius: 8;
+                               -fx-font-size: 13px; -fx-font-weight: bold;
                                -fx-cursor: hand;"/>
             </HBox>
 

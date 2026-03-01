@@ -11,9 +11,10 @@
       prefWidth="600"
       style="-fx-background-color: #f4f6fb;">
 
-    <!-- HEADER -->
+    <!-- ===== HEADER ===== -->
     <HBox style="-fx-background-color: linear-gradient(to right, #5C6BC0, #3949AB);
-                 -fx-padding: 20;" alignment="CENTER_LEFT" spacing="15">
+                 -fx-padding: 20;"
+          alignment="CENTER_LEFT" spacing="15">
         <Label fx:id="lblTitreDestination"
                text="🌍 Destination"
                style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;"/>
@@ -27,7 +28,80 @@
                        -fx-cursor: hand;"/>
     </HBox>
 
-    <!-- CONTENU SCROLLABLE -->
+    <!-- ===== 🎠 CARROUSEL IMAGES ===== -->
+    <AnchorPane fx:id="carouselPane"
+                prefHeight="260"
+                minHeight="260"
+                style="-fx-background-color: #1a1a2e;">
+
+        <!-- ZONE IMAGE -->
+        <VBox fx:id="imagePreviewContainer"
+              alignment="CENTER"
+              AnchorPane.topAnchor="0"
+              AnchorPane.bottomAnchor="0"
+              AnchorPane.leftAnchor="0"
+              AnchorPane.rightAnchor="0"/>
+
+        <!-- BOUTON ◀ -->
+        <Button fx:id="btnPrev"
+                text="❮"
+                onAction="#handlePrev"
+                visible="false"
+                AnchorPane.leftAnchor="14"
+                AnchorPane.topAnchor="111"
+                style="-fx-background-color: rgba(0,0,0,0.55);
+                       -fx-text-fill: white;
+                       -fx-font-size: 18px;
+                       -fx-font-weight: bold;
+                       -fx-background-radius: 50;
+                       -fx-min-width: 38px;
+                       -fx-min-height: 38px;
+                       -fx-max-width: 38px;
+                       -fx-max-height: 38px;
+                       -fx-cursor: hand;
+                       -fx-padding: 0;"/>
+
+        <!-- BOUTON ▶ -->
+        <Button fx:id="btnNext"
+                text="❯"
+                onAction="#handleNext"
+                visible="false"
+                AnchorPane.rightAnchor="14"
+                AnchorPane.topAnchor="111"
+                style="-fx-background-color: rgba(0,0,0,0.55);
+                       -fx-text-fill: white;
+                       -fx-font-size: 18px;
+                       -fx-font-weight: bold;
+                       -fx-background-radius: 50;
+                       -fx-min-width: 38px;
+                       -fx-min-height: 38px;
+                       -fx-max-width: 38px;
+                       -fx-max-height: 38px;
+                       -fx-cursor: hand;
+                       -fx-padding: 0;"/>
+
+        <!-- COMPTEUR 2/5 en haut à droite -->
+        <Label fx:id="lblCompteur"
+               text=""
+               AnchorPane.topAnchor="10"
+               AnchorPane.rightAnchor="12"
+               style="-fx-background-color: rgba(0,0,0,0.5);
+                      -fx-text-fill: white;
+                      -fx-font-size: 11px;
+                      -fx-padding: 3 8;
+                      -fx-background-radius: 10;"/>
+
+        <!-- POINTS INDICATEURS en bas au centre -->
+        <HBox fx:id="hboxIndicateurs"
+              alignment="CENTER"
+              spacing="7"
+              AnchorPane.bottomAnchor="10"
+              AnchorPane.leftAnchor="0"
+              AnchorPane.rightAnchor="0"/>
+
+    </AnchorPane>
+
+    <!-- ===== CONTENU SCROLLABLE ===== -->
     <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
                 style="-fx-background-color: transparent; -fx-background: transparent;">
         <VBox spacing="15" style="-fx-padding: 20;">
@@ -42,15 +116,12 @@
                     <Label text="🌤️ Météo actuelle"
                            style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1565C0;"/>
                 </HBox>
-
                 <VBox spacing="10" style="-fx-padding: 15;">
-                    <!-- Chargement météo -->
                     <Label fx:id="lblMeteoChargement"
                            text="⏳ Chargement de la météo..."
                            style="-fx-font-size: 13px; -fx-text-fill: #999;"/>
-
-                    <!-- Données météo (cachées au début) -->
-                    <HBox fx:id="hboxMeteo" spacing="20" alignment="CENTER_LEFT" visible="false" managed="false">
+                    <HBox fx:id="hboxMeteo" spacing="20" alignment="CENTER_LEFT"
+                          visible="false" managed="false">
                         <VBox alignment="CENTER" spacing="4">
                             <Label fx:id="lblMeteoEmoji" text="☀️"
                                    style="-fx-font-size: 48px;"/>
@@ -68,8 +139,6 @@
                                    style="-fx-font-size: 12px; -fx-text-fill: #888;"/>
                         </VBox>
                     </HBox>
-
-                    <!-- Erreur météo -->
                     <Label fx:id="lblMeteoErreur" text=""
                            style="-fx-font-size: 13px; -fx-text-fill: #EF5350;"
                            visible="false" managed="false"/>
@@ -86,14 +155,13 @@
                     <Label text="🏛️ À visiter"
                            style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;"/>
                 </HBox>
-
                 <VBox fx:id="vboxPointsInteret" spacing="8" style="-fx-padding: 15;">
                     <Label text="⏳ Chargement des points d'intérêt..."
                            style="-fx-font-size: 13px; -fx-text-fill: #999;"/>
                 </VBox>
             </VBox>
 
-            <!-- ℹ️ INFOS VOYAGE -->
+            <!-- ✈️ INFOS VOYAGE -->
             <VBox style="-fx-background-color: white;
                          -fx-background-radius: 12;
                          -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
@@ -103,12 +171,15 @@
                     <Label text="✈️ Infos du voyage"
                            style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #E65100;"/>
                 </HBox>
-
                 <VBox fx:id="vboxInfosVoyage" spacing="10" style="-fx-padding: 15;">
-                    <Label fx:id="lblInfoDates"  text="" style="-fx-font-size: 13px; -fx-text-fill: #555;"/>
-                    <Label fx:id="lblInfoPrix"   text="" style="-fx-font-size: 13px; -fx-text-fill: #555;"/>
-                    <Label fx:id="lblInfoDepart" text="" style="-fx-font-size: 13px; -fx-text-fill: #555;"/>
-                    <Label fx:id="lblInfoDesc"   text="" style="-fx-font-size: 13px; -fx-text-fill: #777;"
+                    <Label fx:id="lblInfoDates"  text=""
+                           style="-fx-font-size: 13px; -fx-text-fill: #555;"/>
+                    <Label fx:id="lblInfoPrix"   text=""
+                           style="-fx-font-size: 13px; -fx-text-fill: #555;"/>
+                    <Label fx:id="lblInfoDepart" text=""
+                           style="-fx-font-size: 13px; -fx-text-fill: #555;"/>
+                    <Label fx:id="lblInfoDesc"   text=""
+                           style="-fx-font-size: 13px; -fx-text-fill: #777;"
                            wrapText="true"/>
                 </VBox>
             </VBox>
