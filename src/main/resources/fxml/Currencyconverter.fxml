@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.demo1.controller.CurrencyConverterController"
+      spacing="0"
+      style="-fx-background-color: #EAF3FF; -fx-min-height: 500;">
+
+    <!-- ================================================
+         EN-TETE
+    ================================================ -->
+    <VBox spacing="4"
+          style="-fx-background-color: #083D77; -fx-padding: 28 30 24 30;">
+
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <VBox spacing="2">
+                <Label text="CONVERTISSEUR DE DEVISES"
+                       style="-fx-font-family: 'Georgia'; -fx-font-size: 9px;
+                              -fx-letter-spacing: 3px; -fx-text-fill: rgba(255,255,255,0.45);"/>
+                <Label text="Taux en temps reel"
+                       style="-fx-font-family: 'Georgia'; -fx-font-size: 18px;
+                              -fx-font-weight: bold; -fx-text-fill: white;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblStatut"
+                   text="En attente..."
+                   style="-fx-font-size: 10px; -fx-text-fill: #aab8cc;"/>
+        </HBox>
+
+        <Label text="Source : Banque Centrale Europeenne via Frankfurter API"
+               style="-fx-font-size: 9px; -fx-text-fill: rgba(255,255,255,0.25);
+                      -fx-padding: 4 0 0 0;"/>
+    </VBox>
+
+    <!-- ================================================
+         ZONE DE CONVERSION
+    ================================================ -->
+    <VBox spacing="20"
+          style="-fx-background-color: white; -fx-padding: 28 30 28 30;">
+
+        <!-- Montant -->
+        <VBox spacing="6">
+            <Label text="Montant a convertir"
+                   style="-fx-font-family: 'Georgia'; -fx-font-size: 11px;
+                          -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
+            <TextField fx:id="txtMontant"
+                       promptText="Ex: 1500"
+                       style="-fx-font-family: 'Georgia'; -fx-font-size: 22px;
+                              -fx-font-weight: bold; -fx-text-fill: #083D77;
+                              -fx-background-color: #EAF3FF; -fx-background-radius: 8;
+                              -fx-padding: 12 16; -fx-border-color: transparent;
+                              -fx-border-radius: 8;"/>
+        </VBox>
+
+        <!-- DE vers VERS -->
+        <HBox spacing="12" alignment="CENTER">
+
+            <!-- Devise source -->
+            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="De"
+                       style="-fx-font-family: 'Georgia'; -fx-font-size: 11px;
+                              -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
+                <ComboBox fx:id="cbDeviseSrc"
+                          onAction="#convertir"
+                          maxWidth="Infinity"
+                          style="-fx-font-family: 'Georgia'; -fx-font-size: 12px;
+                                 -fx-background-color: #EAF3FF; -fx-background-radius: 8;
+                                 -fx-border-color: transparent; -fx-cursor: hand;"/>
+            </VBox>
+
+            <!-- Bouton inverser -->
+            <VBox alignment="BOTTOM_CENTER" style="-fx-padding: 0 0 2 0;">
+                <Button text="&lt;-&gt;"
+                        onAction="#inverser"
+                        style="-fx-background-color: #0A6CF1; -fx-text-fill: white;
+                               -fx-font-family: 'Georgia'; -fx-font-size: 13px; -fx-font-weight: bold;
+                               -fx-padding: 10 14; -fx-background-radius: 8;
+                               -fx-cursor: hand;
+                               -fx-effect: dropshadow(gaussian, rgba(10,108,241,0.4), 10, 0, 0, 3);"/>
+            </VBox>
+
+            <!-- Devise cible -->
+            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="Vers"
+                       style="-fx-font-family: 'Georgia'; -fx-font-size: 11px;
+                              -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
+                <ComboBox fx:id="cbDeviseDst"
+                          onAction="#convertir"
+                          maxWidth="Infinity"
+                          style="-fx-font-family: 'Georgia'; -fx-font-size: 12px;
+                                 -fx-background-color: #EAF3FF; -fx-background-radius: 8;
+                                 -fx-border-color: transparent; -fx-cursor: hand;"/>
+            </VBox>
+        </HBox>
+
+        <!-- Bouton Convertir -->
+        <Button text="Convertir  ->"
+                onAction="#convertir"
+                maxWidth="Infinity"
+                style="-fx-background-color: #083D77; -fx-text-fill: white;
+                       -fx-font-family: 'Georgia'; -fx-font-size: 13px; -fx-font-weight: bold;
+                       -fx-padding: 13 0; -fx-background-radius: 8; -fx-cursor: hand;
+                       -fx-effect: dropshadow(gaussian, rgba(8,61,119,0.3), 12, 0, 0, 4);"/>
+
+    </VBox>
+
+    <!-- ================================================
+         RESULTAT
+    ================================================ -->
+    <VBox spacing="10"
+          style="-fx-background-color: #083D77; -fx-padding: 24 30 28 30;">
+
+        <!-- Grand resultat -->
+        <Label fx:id="lblResultat"
+               text="---"
+               style="-fx-font-family: 'Georgia'; -fx-font-size: 24px;
+                      -fx-font-weight: bold; -fx-text-fill: white;"
+               wrapText="true"/>
+
+        <!-- Taux detaille -->
+        <Label fx:id="lblTaux"
+               text="Selectionnez les devises et cliquez sur Convertir"
+               style="-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.45);"
+               wrapText="true"/>
+
+        <!-- Separateur -->
+        <Region prefHeight="1" maxWidth="Infinity"
+                style="-fx-background-color: rgba(255,255,255,0.1);"/>
+
+        <!-- Note BCE -->
+        <Label text="Taux indicatifs BCE - mis a jour quotidiennement"
+               style="-fx-font-size: 9px; -fx-letter-spacing: 1px;
+                      -fx-text-fill: rgba(255,255,255,0.28);"/>
+
+    </VBox>
+
+    <!-- ================================================
+         RACCOURCIS DEVISES POPULAIRES
+    ================================================ -->
+    <VBox spacing="12"
+          style="-fx-background-color: #EAF3FF; -fx-padding: 20 30 24 30;">
+
+        <Label text="DEVISES POPULAIRES"
+               style="-fx-font-family: 'Georgia'; -fx-font-size: 9px;
+                      -fx-letter-spacing: 3px; -fx-text-fill: #0A6CF1;"/>
+
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <Button fx:id="btnUSD" text="USD" onAction="#selectionnerDevise"
+                    style="-fx-background-color: white; -fx-text-fill: #083D77;
+                           -fx-font-family: 'Georgia'; -fx-font-size: 11px; -fx-font-weight: bold;
+                           -fx-padding: 7 14; -fx-background-radius: 20;
+                           -fx-border-color: #d0dff0; -fx-border-width: 1;
+                           -fx-border-radius: 20; -fx-cursor: hand;"/>
+            <Button fx:id="btnGBP" text="GBP" onAction="#selectionnerDevise"
+                    style="-fx-background-color: white; -fx-text-fill: #083D77;
+                           -fx-font-family: 'Georgia'; -fx-font-size: 11px; -fx-font-weight: bold;
+                           -fx-padding: 7 14; -fx-background-radius: 20;
+                           -fx-border-color: #d0dff0; -fx-border-width: 1;
+                           -fx-border-radius: 20; -fx-cursor: hand;"/>
+            <Button fx:id="btnJPY" text="JPY" onAction="#selectionnerDevise"
+                    style="-fx-background-color: white; -fx-text-fill: #083D77;
+                           -fx-font-family: 'Georgia'; -fx-font-size: 11px; -fx-font-weight: bold;
+                           -fx-padding: 7 14; -fx-background-radius: 20;
+                           -fx-border-color: #d0dff0; -fx-border-width: 1;
+                           -fx-border-radius: 20; -fx-cursor: hand;"/>
+            <Button fx:id="btnAED" text="AED" onAction="#selectionnerDevise"
+                    style="-fx-background-color: white; -fx-text-fill: #083D77;
+                           -fx-font-family: 'Georgia'; -fx-font-size: 11px; -fx-font-weight: bold;
+                           -fx-padding: 7 14; -fx-background-radius: 20;
+                           -fx-border-color: #d0dff0; -fx-border-width: 1;
+                           -fx-border-radius: 20; -fx-cursor: hand;"/>
+            <Button fx:id="btnSAR" text="SAR" onAction="#selectionnerDevise"
+                    style="-fx-background-color: white; -fx-text-fill: #083D77;
+                           -fx-font-family: 'Georgia'; -fx-font-size: 11px; -fx-font-weight: bold;
+                           -fx-padding: 7 14; -fx-background-radius: 20;
+                           -fx-border-color: #d0dff0; -fx-border-width: 1;
+                           -fx-border-radius: 20; -fx-cursor: hand;"/>
+            <Button fx:id="btnEUR" text="EUR" onAction="#selectionnerDevise"
+                    style="-fx-background-color: white; -fx-text-fill: #083D77;
+                           -fx-font-family: 'Georgia'; -fx-font-size: 11px; -fx-font-weight: bold;
+                           -fx-padding: 7 14; -fx-background-radius: 20;
+                           -fx-border-color: #d0dff0; -fx-border-width: 1;
+                           -fx-border-radius: 20; -fx-cursor: hand;"/>
+        </HBox>
+    </VBox>
+
+</VBox>
