@@ -64,6 +64,29 @@ public class HomeController {
         }).start();
     }
 
+    @FXML
+    public void ouvrirWhatsApp() {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/fxml/whatsapp.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle("WhatsApp Business - SmartTrip");
+        stage.setScene(new Scene(root, 520, 700));
+        stage.show();
+    }
+    @FXML
+    public void ouvrirConvertisseur() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/currencyConverter.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Convertisseur de Devises");
+            stage.setScene(new Scene(root, 480, 620));
+            stage.setResizable(false);
+            stage.show();
+        } catch (IOException e) { e.printStackTrace(); }
+    }
     // ============================================
     // 🃏 CRÉER UNE CARTE VOYAGE
     // ============================================

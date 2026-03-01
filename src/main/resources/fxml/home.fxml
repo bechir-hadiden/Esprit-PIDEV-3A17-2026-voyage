@@ -65,6 +65,10 @@
                             style="-fx-background-color: transparent; -fx-text-fill: #6b7f99;
                                    -fx-font-family: 'Georgia'; -fx-font-size: 13px;
                                    -fx-padding: 10 20; -fx-cursor: hand;"/>
+                    <Button text="💱 Devises" onAction="#ouvrirConvertisseur"
+                            style="-fx-background-color: transparent; -fx-text-fill: #6b7f99;
+                                   -fx-font-family: 'Georgia'; -fx-font-size: 13px;
+                                   -fx-padding: 10 20; -fx-cursor: hand;"/>
                     <Button fx:id="btnOmra" text="Omra" onAction="#showOmra"
                             style="-fx-background-color: transparent; -fx-text-fill: #6b7f99;
                                    -fx-font-family: 'Georgia'; -fx-font-size: 13px;
