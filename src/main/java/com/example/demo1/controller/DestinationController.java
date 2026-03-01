@@ -13,11 +13,14 @@ import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import javafx.stage.FileChooser;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,7 +41,6 @@ public class DestinationController {
     // ===== DONNÉES =====
     private List<Destination> toutesDestinations;
 
-    // ===== COLONNES DANS LA GRILLE =====
     private static final int COLONNES = 3;
 
     // ============================================
@@ -46,12 +48,9 @@ public class DestinationController {
     // ============================================
     @FXML
     public void initialize() {
-        System.out.println("🌍 Initialisation DestinationController");
-
         destinationService = new DestinationService();
-        youtubeService = new YouTubeService();
-        qrCodeService = new QRCodeService();
-
+        youtubeService     = new YouTubeService();
+        qrCodeService      = new QRCodeService();
         chargerDestinations();
     }
 
@@ -59,28 +58,23 @@ public class DestinationController {
     // 📋 CHARGER ET AFFICHER LES DESTINATIONS
     // ============================================
     private void chargerDestinations() {
-        if (hboxLoading != null) {
-            hboxLoading.setVisible(true);
-        }
+        if (hboxLoading != null) hboxLoading.setVisible(true);
         gridDestinations.getChildren().clear();
 
         new Thread(() -> {
             toutesDestinations = destinationService.getAll();
-
             Platform.runLater(() -> {
                 afficherDestinations(toutesDestinations);
-                if (lblCount != null) {
+                if (lblCount != null)
                     lblCount.setText(toutesDestinations.size() + " destinations");
-                }
-                if (hboxLoading != null) {
+                if (hboxLoading != null)
                     hboxLoading.setVisible(false);
-                }
             });
         }).start();
     }
 
     // ============================================
-    // 🗺️ AFFICHER LES CARTES DANS LA GRILLE
+    // 🗺️ AFFICHER LES CARTES
     // ============================================
     private void afficherDestinations(List<Destination> destinations) {
         gridDestinations.getChildren().clear();
@@ -92,23 +86,17 @@ public class DestinationController {
             return;
         }
 
-        int col = 0;
-        int row = 0;
-
+        int col = 0, row = 0;
         for (Destination destination : destinations) {
             VBox carte = creerCarte(destination);
             gridDestinations.add(carte, col, row);
-
             col++;
-            if (col >= COLONNES) {
-                col = 0;
-                row++;
-            }
+            if (col >= COLONNES) { col = 0; row++; }
         }
     }
 
     // ============================================
-    // 🃏 CRÉER UNE CARTE DESTINATION
+    // 🃏 CRÉER UNE CARTE
     // ============================================
     private VBox creerCarte(Destination destination) {
         VBox carte = new VBox(0);
@@ -120,91 +108,81 @@ public class DestinationController {
                         "-fx-cursor: hand;"
         );
 
-        // ---- IMAGE ----
         ImageView imgView = new ImageView();
         imgView.setFitWidth(280);
         imgView.setFitHeight(160);
         imgView.setPreserveRatio(false);
 
-        if (destination.getImageUrl() != null && !destination.getImageUrl().isEmpty()) {
-            try {
-                String imageUrl = destination.getImageUrl();
-                Image img;
+        List<String> images = destination.getImages();
+        String imageUrl = images.isEmpty() ? destination.getImageUrl() : images.get(0);
 
-                // Si c'est un chemin local (commence par /images/)
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            try {
+                Image img;
                 if (imageUrl.startsWith("/images/")) {
-                    // Chercher dans les resources
                     var resource = getClass().getResource(imageUrl);
                     if (resource != null) {
                         img = new Image(resource.toExternalForm(), true);
                     } else {
-                        // Chercher dans src/main/resources
                         File fichier = new File("src/main/resources" + imageUrl);
-                        if (fichier.exists()) {
-                            img = new Image(fichier.toURI().toString(), true);
-                        } else {
-                            img = null;
-                        }
+                        img = fichier.exists() ? new Image(fichier.toURI().toString(), true) : null;
                     }
                 } else {
-                    // URL externe (http://)
                     img = new Image(imageUrl, true);
                 }
-
-                if (img != null) {
-                    imgView.setImage(img);
-                }
-
+                if (img != null) imgView.setImage(img);
             } catch (Exception e) {
-                System.err.println("❌ Image non chargée: " + destination.getImageUrl());
+                System.err.println("❌ Image non chargée: " + imageUrl);
             }
         }
 
         StackPane imageContainer = new StackPane(imgView);
         imageContainer.setStyle("-fx-background-color: #667eea; -fx-background-radius: 15 15 0 0;");
 
-        // Badge code IATA
         if (destination.getCodeIata() != null && !destination.getCodeIata().isEmpty()) {
             Label badge = new Label(destination.getCodeIata());
             badge.setStyle(
-                    "-fx-background-color: rgba(0,0,0,0.6);" +
-                            "-fx-text-fill: white;" +
-                            "-fx-font-weight: bold;" +
-                            "-fx-padding: 4 8;" +
-                            "-fx-background-radius: 5;" +
-                            "-fx-font-size: 11px;"
+                    "-fx-background-color: rgba(0,0,0,0.6); -fx-text-fill: white;" +
+                            "-fx-font-weight: bold; -fx-padding: 4 8;" +
+                            "-fx-background-radius: 5; -fx-font-size: 11px;"
             );
             StackPane.setAlignment(badge, Pos.TOP_RIGHT);
             StackPane.setMargin(badge, new Insets(10));
             imageContainer.getChildren().add(badge);
         }
 
-        // ---- CONTENU ----
+        // ✅ Badge nombre d'images
+        if (images.size() > 1) {
+            Label badgeImages = new Label("📸 " + images.size());
+            badgeImages.setStyle(
+                    "-fx-background-color: rgba(0,0,0,0.6); -fx-text-fill: white;" +
+                            "-fx-font-size: 10px; -fx-padding: 3 7; -fx-background-radius: 5;"
+            );
+            StackPane.setAlignment(badgeImages, Pos.BOTTOM_RIGHT);
+            StackPane.setMargin(badgeImages, new Insets(0, 8, 8, 0));
+            imageContainer.getChildren().add(badgeImages);
+        }
+
         VBox contenu = new VBox(8);
         contenu.setPadding(new Insets(15));
 
-        // Nom
         Label lblNom = new Label(destination.getNom());
         lblNom.setFont(Font.font("Arial", FontWeight.BOLD, 17));
         lblNom.setTextFill(Color.valueOf("#333333"));
 
-        // Pays
         Label lblPays = new Label("🌍 " + (destination.getPays() != null ?
                 destination.getPays() : "Pays inconnu"));
         lblPays.setStyle("-fx-font-size: 13px; -fx-text-fill: #666;");
 
-        // Description
         Label lblDesc = new Label(destination.getDescription() != null ?
                 destination.getDescription() : "Aucune description");
         lblDesc.setStyle("-fx-font-size: 12px; -fx-text-fill: #999;");
         lblDesc.setWrapText(true);
         lblDesc.setMaxHeight(40);
 
-        // Indicateur vidéo
         Label lblVideo = new Label(
                 destination.getVideoUrl() != null && !destination.getVideoUrl().isEmpty()
-                        ? "🎬 Vidéo disponible"
-                        : "⏳ Vidéo non chargée"
+                        ? "🎬 Vidéo disponible" : "⏳ Vidéo non chargée"
         );
         lblVideo.setStyle(
                 destination.getVideoUrl() != null && !destination.getVideoUrl().isEmpty()
@@ -214,50 +192,27 @@ public class DestinationController {
 
         contenu.getChildren().addAll(lblNom, lblPays, lblDesc, lblVideo);
 
-        // ---- BOUTONS ----
         HBox boutons = new HBox(8);
         boutons.setPadding(new Insets(10, 15, 15, 15));
         boutons.setAlignment(Pos.CENTER);
 
-        // Bouton QR Code
         Button btnQR = new Button("📱 QR Code");
-        btnQR.setStyle(
-                "-fx-background-color: #667eea;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-size: 12px;" +
-                        "-fx-padding: 7 12;" +
-                        "-fx-background-radius: 15;" +
-                        "-fx-cursor: hand;"
-        );
+        btnQR.setStyle("-fx-background-color: #667eea; -fx-text-fill: white;" +
+                "-fx-font-size: 12px; -fx-padding: 7 12; -fx-background-radius: 15; -fx-cursor: hand;");
         btnQR.setOnAction(e -> handleQRCode(destination));
 
-        // Bouton Modifier
         Button btnModifier = new Button("✏️");
-        btnModifier.setStyle(
-                "-fx-background-color: #FFA726;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-size: 12px;" +
-                        "-fx-padding: 7 10;" +
-                        "-fx-background-radius: 15;" +
-                        "-fx-cursor: hand;"
-        );
+        btnModifier.setStyle("-fx-background-color: #FFA726; -fx-text-fill: white;" +
+                "-fx-font-size: 12px; -fx-padding: 7 10; -fx-background-radius: 15; -fx-cursor: hand;");
         btnModifier.setOnAction(e -> handleModifier(destination));
 
-        // Bouton Supprimer
         Button btnSupprimer = new Button("🗑️");
-        btnSupprimer.setStyle(
-                "-fx-background-color: #EF5350;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-size: 12px;" +
-                        "-fx-padding: 7 10;" +
-                        "-fx-background-radius: 15;" +
-                        "-fx-cursor: hand;"
-        );
+        btnSupprimer.setStyle("-fx-background-color: #EF5350; -fx-text-fill: white;" +
+                "-fx-font-size: 12px; -fx-padding: 7 10; -fx-background-radius: 15; -fx-cursor: hand;");
         btnSupprimer.setOnAction(e -> handleSupprimer(destination));
 
         Region espaceur = new Region();
         HBox.setHgrow(espaceur, Priority.ALWAYS);
-
         boutons.getChildren().addAll(btnQR, espaceur, btnModifier, btnSupprimer);
 
         carte.getChildren().addAll(imageContainer, contenu, boutons);
@@ -265,221 +220,89 @@ public class DestinationController {
     }
 
     // ============================================
-    // 📱 AFFICHER QR CODE
-    // ============================================
-    private void handleQRCode(Destination destination) {
-        System.out.println("📱 QR Code pour: " + destination.getNom());
-
-        QRCodeController.afficherPopupQRCode(
-                destination.getId(),      // int
-                destination.getNom()      // String
-        );
-
-        Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle("📱 QR Code - " + destination.getNom());
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        dialog.getDialogPane().lookupButton(ButtonType.CLOSE).setVisible(false);
-        dialog.getDialogPane().setStyle("-fx-background-color: white;");
-        dialog.getDialogPane().setPrefWidth(400);
-
-        // Afficher loading
-        VBox loading = new VBox(15);
-        loading.setAlignment(Pos.CENTER);
-        loading.setPadding(new Insets(40));
-        loading.getChildren().addAll(
-                new Label("✈️ " + destination.getNom()) {{
-                    setFont(Font.font("Arial", FontWeight.BOLD, 20));
-                }},
-                new ProgressIndicator() {{ setPrefSize(50, 50); }},
-                new Label("🔍 Recherche de la vidéo YouTube...") {{
-                    setStyle("-fx-text-fill: #666;");
-                }}
-        );
-        dialog.getDialogPane().setContent(loading);
-
-        // Générer QR Code dans un thread
-        new Thread(() -> {
-            String videoUrl = youtubeService.getVideoUrl(
-                    destination.getId(),
-                    destination.getNom()
-            );
-
-            Image qrImage = qrCodeService.genererQRCode(videoUrl, 260);
-
-            Platform.runLater(() -> {
-                if (qrImage != null) {
-                    // Contenu QR Code
-                    VBox contenu = new VBox(15);
-                    contenu.setAlignment(Pos.CENTER);
-                    contenu.setPadding(new Insets(25));
-
-                    Label titre = new Label("✈️ " + destination.getNom());
-                    titre.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-
-                    Label sousTitre = new Label("Scannez pour voir la vidéo !");
-                    sousTitre.setStyle("-fx-text-fill: #666; -fx-font-size: 13px;");
-
-                    // Image QR
-                    ImageView imgQR = new ImageView(qrImage);
-                    imgQR.setFitWidth(260);
-                    imgQR.setFitHeight(260);
-                    imgQR.setSmooth(false);
-
-                    VBox cadre = new VBox(imgQR);
-                    cadre.setAlignment(Pos.CENTER);
-                    cadre.setPadding(new Insets(15));
-                    cadre.setStyle(
-                            "-fx-border-color: #667eea;" +
-                                    "-fx-border-width: 3;" +
-                                    "-fx-border-radius: 10;" +
-                                    "-fx-background-radius: 10;" +
-                                    "-fx-background-color: white;"
-                    );
-
-                    // Instructions
-                    VBox instructions = new VBox(6);
-                    instructions.setAlignment(Pos.CENTER_LEFT);
-                    instructions.setPadding(new Insets(12));
-                    instructions.setStyle(
-                            "-fx-background-color: #f0f4ff;" +
-                                    "-fx-background-radius: 10;"
-                    );
-                    for (String step : new String[]{
-                            "1️⃣  Ouvrez l'appareil photo",
-                            "2️⃣  Pointez vers le QR Code",
-                            "3️⃣  La vidéo YouTube s'ouvre !"
-                    }) {
-                        Label l = new Label(step);
-                        l.setStyle("-fx-font-size: 13px; -fx-text-fill: #555;");
-                        instructions.getChildren().add(l);
-                    }
-
-                    // Bouton fermer
-                    Button btnFermer = new Button("✕ Fermer");
-                    btnFermer.setStyle(
-                            "-fx-background-color: #667eea;" +
-                                    "-fx-text-fill: white;" +
-                                    "-fx-padding: 10 30;" +
-                                    "-fx-background-radius: 25;" +
-                                    "-fx-cursor: hand;"
-                    );
-                    btnFermer.setOnAction(ev -> {
-                        Stage stage = (Stage) dialog.getDialogPane()
-                                .getScene().getWindow();
-                        stage.close();
-                    });
-
-                    contenu.getChildren().addAll(
-                            titre, sousTitre, cadre, instructions, btnFermer
-                    );
-                    dialog.getDialogPane().setContent(contenu);
-
-                    // Mettre à jour l'indicateur vidéo sur la carte
-                    chargerDestinations();
-                }
-            });
-        }).start();
-
-        dialog.showAndWait();
-    }
-
-    // ============================================
     // ➕ AJOUTER UNE DESTINATION
+    // ✅ FIX : save() ne doit PAS appeler saveImages() en interne
+    //          On gère les images ici APRÈS avoir obtenu l'ID
     // ============================================
     @FXML
     private void handleAjouter() {
         Dialog<Destination> dialog = creerDialogFormulaire(null);
         Optional<Destination> result = dialog.showAndWait();
-
         result.ifPresent(destination -> {
+            // ✅ save() stocke directement toutes les images dans image_url
             boolean success = destinationService.save(destination);
+
             if (success) {
-                afficherAlert(Alert.AlertType.INFORMATION,
-                        "Succès", "Destination ajoutée avec succès !");
+                afficherAlert(Alert.AlertType.INFORMATION, "Succès",
+                        "✅ Destination ajoutée avec " + destination.getImages().size() + " image(s) !");
                 chargerDestinations();
             } else {
-                afficherAlert(Alert.AlertType.ERROR,
-                        "Erreur", "Impossible d'ajouter la destination");
+                afficherAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ajouter la destination");
             }
         });
     }
 
     // ============================================
     // ✏️ MODIFIER UNE DESTINATION
+    // ✅ FIX : supprimer les anciennes images PUIS insérer les nouvelles
     // ============================================
     private void handleModifier(Destination destination) {
         Dialog<Destination> dialog = creerDialogFormulaire(destination);
         Optional<Destination> result = dialog.showAndWait();
-
         result.ifPresent(dest -> {
             dest.setId(destination.getId());
+
+            // ✅ update() stocke directement toutes les images dans image_url
             boolean success = destinationService.update(dest);
             if (success) {
-                afficherAlert(Alert.AlertType.INFORMATION,
-                        "Succès", "Destination modifiée avec succès !");
+                afficherAlert(Alert.AlertType.INFORMATION, "Succès",
+                        "✅ Destination modifiée avec " + dest.getImages().size() + " image(s) !");
                 chargerDestinations();
             } else {
-                afficherAlert(Alert.AlertType.ERROR,
-                        "Erreur", "Impossible de modifier la destination");
+                afficherAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de modifier");
             }
         });
     }
 
     // ============================================
-    // 🗑️ SUPPRIMER UNE DESTINATION
+    // 🗑️ SUPPRIMER
     // ============================================
     private void handleSupprimer(Destination destination) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Confirmation");
         confirm.setHeaderText("Supprimer " + destination.getNom() + " ?");
-        confirm.setContentText(
-                "Cette action est irréversible.\n" +
-                        "Tous les voyages liés seront aussi supprimés !"
-        );
-
+        confirm.setContentText("Cette action est irréversible.\nTous les voyages liés seront aussi supprimés !");
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             boolean success = destinationService.delete(destination.getId());
             if (success) {
-                afficherAlert(Alert.AlertType.INFORMATION,
-                        "Succès", "Destination supprimée !");
+                afficherAlert(Alert.AlertType.INFORMATION, "Succès", "Destination supprimée !");
                 chargerDestinations();
             } else {
-                afficherAlert(Alert.AlertType.ERROR,
-                        "Erreur", "Impossible de supprimer");
+                afficherAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de supprimer");
             }
         }
     }
 
     // ============================================
-    // 🔍 RECHERCHE EN TEMPS RÉEL
+    // 🔍 RECHERCHE
     // ============================================
     @FXML
     private void handleRecherche() {
         if (tfRecherche == null || toutesDestinations == null) return;
-
         String keyword = tfRecherche.getText().toLowerCase().trim();
-
         if (keyword.isEmpty()) {
             afficherDestinations(toutesDestinations);
-            if (lblCount != null) {
-                lblCount.setText(toutesDestinations.size() + " destinations");
-            }
+            if (lblCount != null) lblCount.setText(toutesDestinations.size() + " destinations");
             return;
         }
-
         List<Destination> filtrees = toutesDestinations.stream()
-                .filter(d ->
-                        d.getNom().toLowerCase().contains(keyword) ||
-                                (d.getPays() != null && d.getPays().toLowerCase().contains(keyword)) ||
-                                (d.getCodeIata() != null && d.getCodeIata().toLowerCase().contains(keyword))
-                )
+                .filter(d -> d.getNom().toLowerCase().contains(keyword) ||
+                        (d.getPays() != null && d.getPays().toLowerCase().contains(keyword)) ||
+                        (d.getCodeIata() != null && d.getCodeIata().toLowerCase().contains(keyword)))
                 .collect(Collectors.toList());
-
         afficherDestinations(filtrees);
-        if (lblCount != null) {
-            lblCount.setText(filtrees.size() + " résultat(s)");
-        }
+        if (lblCount != null) lblCount.setText(filtrees.size() + " résultat(s)");
     }
 
     // ============================================
@@ -487,9 +310,7 @@ public class DestinationController {
     // ============================================
     @FXML
     private void handleActualiser() {
-        if (tfRecherche != null) {
-            tfRecherche.clear();
-        }
+        if (tfRecherche != null) tfRecherche.clear();
         chargerDestinations();
     }
 
@@ -499,66 +320,39 @@ public class DestinationController {
     private Dialog<Destination> creerDialogFormulaire(Destination existante) {
         Dialog<Destination> dialog = new Dialog<>();
         dialog.setTitle(existante == null ? "➕ Ajouter destination" : "✏️ Modifier destination");
-        dialog.getDialogPane().setPrefWidth(560);
-        dialog.getDialogPane().setPrefHeight(700);
+        dialog.getDialogPane().setPrefWidth(580);
+        dialog.getDialogPane().setPrefHeight(750);
 
-        // ✅ Bouton personnalisé
-        ButtonType btnSauvegarder = new ButtonType(
-                "💾 Sauvegarder", ButtonBar.ButtonData.OK_DONE
-        );
+        ButtonType btnSauvegarder = new ButtonType("💾 Sauvegarder", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(btnSauvegarder, ButtonType.CANCEL);
+        dialog.getDialogPane().setStyle("-fx-background-color: #f8f9ff;");
 
-        // ✅ Style du DialogPane
-        dialog.getDialogPane().setStyle(
-                "-fx-background-color: #f8f9ff;" +
-                        "-fx-border-color: transparent;"
-        );
-
-        // ============================================
-        // 🎨 HEADER
-        // ============================================
+        // HEADER
         VBox header = new VBox(5);
         header.setPadding(new Insets(25, 25, 15, 25));
-        header.setStyle(
-                "-fx-background-color: linear-gradient(to right, #667eea, #764ba2);" +
-                        "-fx-background-radius: 0;"
-        );
-
+        header.setStyle("-fx-background-color: linear-gradient(to right, #667eea, #764ba2);");
         Label titreHeader = new Label(existante == null ? "➕ Nouvelle Destination" : "✏️ Modifier Destination");
         titreHeader.setFont(Font.font("Arial", FontWeight.BOLD, 22));
         titreHeader.setTextFill(Color.WHITE);
-
         Label sousTitreHeader = new Label(existante == null
                 ? "Ajoutez une nouvelle destination de voyage"
                 : "Modifiez les informations de " + existante.getNom());
         sousTitreHeader.setFont(Font.font("Arial", 13));
         sousTitreHeader.setTextFill(Color.rgb(255, 255, 255, 0.8));
-
         header.getChildren().addAll(titreHeader, sousTitreHeader);
 
-        // ============================================
-        // 📝 FORMULAIRE
-        // ============================================
+        String fieldStyle =
+                "-fx-background-color: white; -fx-border-color: #e0e0e0;" +
+                        "-fx-border-radius: 8; -fx-background-radius: 8;" +
+                        "-fx-padding: 10 12; -fx-font-size: 14px; -fx-pref-height: 42px;";
+        String labelStyle =
+                "-fx-font-size: 12px; -fx-font-weight: bold;" +
+                        "-fx-text-fill: #555; -fx-padding: 0 0 3 2;";
+
         VBox formContainer = new VBox(15);
         formContainer.setPadding(new Insets(20, 25, 10, 25));
 
-        // Style commun des champs
-        String fieldStyle =
-                "-fx-background-color: white;" +
-                        "-fx-border-color: #e0e0e0;" +
-                        "-fx-border-radius: 8;" +
-                        "-fx-background-radius: 8;" +
-                        "-fx-padding: 10 12;" +
-                        "-fx-font-size: 14px;" +
-                        "-fx-pref-height: 42px;";
-
-        String labelStyle =
-                "-fx-font-size: 12px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-text-fill: #555;" +
-                        "-fx-padding: 0 0 3 2;";
-
-        // ---- NOM ----
+        // NOM
         VBox nomBox = new VBox(4);
         Label lblNom = new Label("🏙️  Nom de la destination *");
         lblNom.setStyle(labelStyle);
@@ -567,18 +361,16 @@ public class DestinationController {
         tfNom.setPromptText("Ex: Paris, Rome, Dubai...");
         nomBox.getChildren().addAll(lblNom, tfNom);
 
-        // ---- PAYS + IATA sur la même ligne ----
+        // PAYS + IATA
         HBox paysIataBox = new HBox(15);
-
         VBox paysBox = new VBox(4);
         Label lblPays = new Label("🌍  Pays");
         lblPays.setStyle(labelStyle);
         TextField tfPays = new TextField(existante != null ? existante.getPays() : "");
         tfPays.setStyle(fieldStyle);
         tfPays.setPromptText("Ex: France, Italie...");
-        HBox.setHgrow(tfPays, Priority.ALWAYS);
-        paysBox.getChildren().addAll(lblPays, tfPays);
         HBox.setHgrow(paysBox, Priority.ALWAYS);
+        paysBox.getChildren().addAll(lblPays, tfPays);
 
         VBox iataBox = new VBox(4);
         Label lblIata = new Label("✈️  Code IATA");
@@ -589,106 +381,96 @@ public class DestinationController {
         tfIata.setPrefWidth(90);
         tfIata.setMaxWidth(90);
         iataBox.getChildren().addAll(lblIata, tfIata);
-
         paysIataBox.getChildren().addAll(paysBox, iataBox);
 
-        // ---- IMAGE ----
-        VBox imageBox = new VBox(4);
-        Label lblImage = new Label("🖼️  Image de la destination");
-        lblImage.setStyle(labelStyle);
-
-        TextField tfImage = new TextField(existante != null ? existante.getImageUrl() : "");
-        tfImage.setEditable(false);
-        tfImage.setStyle(fieldStyle + "-fx-text-fill: #888;");
-        tfImage.setPromptText("Cliquez sur le bouton pour choisir...");
-        HBox.setHgrow(tfImage, Priority.ALWAYS);
-
-        Button btnChoisirImage = new Button("📁 Parcourir");
-        btnChoisirImage.setStyle(
-                "-fx-background-color: #667eea;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-size: 13px;" +
-                        "-fx-padding: 10 18;" +
-                        "-fx-background-radius: 8;" +
-                        "-fx-cursor: hand;" +
-                        "-fx-font-weight: bold;"
-        );
-
-        HBox imageFieldBox = new HBox(10, tfImage, btnChoisirImage);
-        imageFieldBox.setAlignment(Pos.CENTER_LEFT);
-        HBox.setHgrow(tfImage, Priority.ALWAYS);
-
-        // ---- PREVIEW IMAGE ----
-        ImageView preview = new ImageView();
-        preview.setFitWidth(480);
-        preview.setFitHeight(150);
-        preview.setPreserveRatio(true);
-
-        // Charger image existante
-        if (existante != null && existante.getImageUrl() != null
-                && !existante.getImageUrl().isEmpty()) {
-            try {
-                preview.setImage(new Image(existante.getImageUrl(), true));
-            } catch (Exception ignored) {}
+        // ============================================
+        // ✅ SECTION IMAGES MULTIPLES
+        // ============================================
+        List<String> imagesPaths = new ArrayList<>();
+        if (existante != null && !existante.getImages().isEmpty()) {
+            imagesPaths.addAll(existante.getImages());
+        } else if (existante != null && existante.getImageUrl() != null && !existante.getImageUrl().isEmpty()) {
+            imagesPaths.add(existante.getImageUrl());
         }
 
-        StackPane previewContainer = new StackPane(preview);
-        previewContainer.setStyle(
-                "-fx-background-color: #f0f0f0;" +
-                        "-fx-border-color: #ddd;" +
-                        "-fx-border-radius: 8;" +
-                        "-fx-background-radius: 8;" +
-                        "-fx-min-height: 120px;"
+        VBox imagesBox = new VBox(10);
+        imagesBox.setPadding(new Insets(12));
+        imagesBox.setStyle(
+                "-fx-background-color: white; -fx-border-color: #e0e0e0;" +
+                        "-fx-border-radius: 10; -fx-background-radius: 10;"
         );
-        previewContainer.setPrefHeight(150);
 
-        Label previewLabel = new Label("📷 Aperçu de l'image");
-        previewLabel.setStyle("-fx-text-fill: #bbb; -fx-font-size: 13px;");
-        previewContainer.getChildren().add(previewLabel);
-        StackPane.setAlignment(previewLabel, Pos.CENTER);
+        HBox imgHeader = new HBox(10);
+        imgHeader.setAlignment(Pos.CENTER_LEFT);
+        Label lblImages = new Label("📸  Images (" + imagesPaths.size() + " sélectionnée(s))");
+        lblImages.setStyle(labelStyle + "-fx-font-size: 13px;");
+        Region imgSpacer = new Region();
+        HBox.setHgrow(imgSpacer, Priority.ALWAYS);
 
-        // Action bouton parcourir
-        btnChoisirImage.setOnAction(e -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Choisir une image");
-            fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter(
-                            "Images", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp"
-                    )
-            );
+        Button btnAjouterImg = new Button("+ Ajouter images");
+        btnAjouterImg.setStyle(
+                "-fx-background-color: #667eea; -fx-text-fill: white;" +
+                        "-fx-font-size: 12px; -fx-padding: 6 14;" +
+                        "-fx-background-radius: 8; -fx-cursor: hand;"
+        );
 
+        Button btnSupprimerTout = new Button("🗑️ Tout supprimer");
+        btnSupprimerTout.setStyle(
+                "-fx-background-color: #EF5350; -fx-text-fill: white;" +
+                        "-fx-font-size: 12px; -fx-padding: 6 14;" +
+                        "-fx-background-radius: 8; -fx-cursor: hand;"
+        );
+
+        imgHeader.getChildren().addAll(lblImages, imgSpacer, btnAjouterImg, btnSupprimerTout);
+
+        FlowPane flowApercu = new FlowPane(8, 8);
+        flowApercu.setPrefWrapLength(490);
+        flowApercu.setMinHeight(80);
+
+        // Afficher aperçus initiaux
+        rebuildMiniatures(flowApercu, imagesPaths);
+        if (imagesPaths.isEmpty()) {
+            Label lblVide = new Label("📷 Aucune image — cliquez sur '+ Ajouter images'");
+            lblVide.setStyle("-fx-text-fill: #bbb; -fx-font-size: 12px; -fx-padding: 20;");
+            flowApercu.getChildren().add(lblVide);
+        }
+
+        // ✅ Ajouter plusieurs images via FileChooser
+        btnAjouterImg.setOnAction(e -> {
+            FileChooser fc = new FileChooser();
+            fc.setTitle("Sélectionner des images");
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+                    "Images", "*.jpg", "*.jpeg", "*.png", "*.gif", "*.webp"
+            ));
             Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-            File fichier = fileChooser.showOpenDialog(stage);
+            List<File> fichiers = fc.showOpenMultipleDialog(stage);
 
-            if (fichier != null) {
-                try {
-                    String dossierImages = "src/main/resources/images/destinations/";
-                    new File(dossierImages).mkdirs();
-
-                    String nomFichier = System.currentTimeMillis() + "_" + fichier.getName();
-                    File dest = new File(dossierImages + nomFichier);
-                    Files.copy(fichier.toPath(), dest.toPath(),
-                            StandardCopyOption.REPLACE_EXISTING);
-
-                    String cheminImage = "/images/destinations/" + nomFichier;
-                    tfImage.setText(cheminImage);
-
-                    Image img = new Image(fichier.toURI().toString());
-                    preview.setImage(img);
-                    previewLabel.setVisible(false);
-
-                    System.out.println("✅ Image copiée: " + cheminImage);
-
-                } catch (Exception ex) {
-                    afficherAlert(Alert.AlertType.ERROR,
-                            "Erreur", "Impossible de copier l'image:\n" + ex.getMessage());
+            if (fichiers != null && !fichiers.isEmpty()) {
+                for (File fichier : fichiers) {
+                    String chemin = copierImage(fichier);
+                    if (chemin != null && !imagesPaths.contains(chemin)) {
+                        imagesPaths.add(chemin);
+                    }
                 }
+                // Mettre à jour le compteur
+                lblImages.setText("📸  Images (" + imagesPaths.size() + " sélectionnée(s))");
+                rebuildMiniatures(flowApercu, imagesPaths);
+                System.out.println("📸 Images sélectionnées: " + imagesPaths.size());
             }
         });
 
-        imageBox.getChildren().addAll(lblImage, imageFieldBox, previewContainer);
+        btnSupprimerTout.setOnAction(e -> {
+            imagesPaths.clear();
+            lblImages.setText("📸  Images (0 sélectionnée)");
+            flowApercu.getChildren().clear();
+            Label lblVide = new Label("📷 Aucune image — cliquez sur '+ Ajouter images'");
+            lblVide.setStyle("-fx-text-fill: #bbb; -fx-font-size: 12px; -fx-padding: 20;");
+            flowApercu.getChildren().add(lblVide);
+        });
 
-        // ---- DESCRIPTION ----
+        imagesBox.getChildren().addAll(imgHeader, flowApercu);
+
+        // DESCRIPTION
         VBox descBox = new VBox(4);
         Label lblDesc = new Label("📝  Description");
         lblDesc.setStyle(labelStyle);
@@ -696,71 +478,43 @@ public class DestinationController {
         taDesc.setPrefRowCount(3);
         taDesc.setWrapText(true);
         taDesc.setStyle(
-                "-fx-background-color: white;" +
-                        "-fx-border-color: #e0e0e0;" +
-                        "-fx-border-radius: 8;" +
-                        "-fx-background-radius: 8;" +
-                        "-fx-padding: 10 12;" +
-                        "-fx-font-size: 13px;"
+                "-fx-background-color: white; -fx-border-color: #e0e0e0;" +
+                        "-fx-border-radius: 8; -fx-background-radius: 8;" +
+                        "-fx-padding: 10 12; -fx-font-size: 13px;"
         );
         taDesc.setPromptText("Décrivez cette destination...");
         descBox.getChildren().addAll(lblDesc, taDesc);
 
-        formContainer.getChildren().addAll(nomBox, paysIataBox, imageBox, descBox);
+        formContainer.getChildren().addAll(nomBox, paysIataBox, imagesBox, descBox);
 
-        // ============================================
-        // 🏗️ ASSEMBLAGE FINAL
-        // ============================================
+        ScrollPane scroll = new ScrollPane(formContainer);
+        scroll.setFitToWidth(true);
+        scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+
         VBox mainContainer = new VBox(0);
-        mainContainer.getChildren().addAll(header, formContainer);
-
+        mainContainer.getChildren().addAll(header, scroll);
         dialog.getDialogPane().setContent(mainContainer);
 
-        // ✅ Style des boutons du dialog
         dialog.getDialogPane().lookupButton(btnSauvegarder).setStyle(
-                "-fx-background-color: #667eea;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-padding: 10 25;" +
-                        "-fx-background-radius: 8;" +
-                        "-fx-cursor: hand;"
+                "-fx-background-color: #667eea; -fx-text-fill: white;" +
+                        "-fx-font-weight: bold; -fx-padding: 10 25;" +
+                        "-fx-background-radius: 8; -fx-cursor: hand;"
         );
-
         dialog.getDialogPane().lookupButton(ButtonType.CANCEL).setStyle(
-                "-fx-background-color: #f0f0f0;" +
-                        "-fx-text-fill: #666;" +
-                        "-fx-padding: 10 25;" +
-                        "-fx-background-radius: 8;" +
-                        "-fx-cursor: hand;"
+                "-fx-background-color: #f0f0f0; -fx-text-fill: #666;" +
+                        "-fx-padding: 10 25; -fx-background-radius: 8; -fx-cursor: hand;"
         );
 
-        // ============================================
-        // ✅ VALIDATION
-        // ============================================
+        // VALIDATION
         dialog.setResultConverter(buttonType -> {
             if (buttonType == btnSauvegarder) {
                 String nom = tfNom.getText().trim();
-
                 if (nom.isEmpty()) {
-                    afficherAlert(Alert.AlertType.WARNING,
-                            "Champ obligatoire", "Le nom est obligatoire !");
+                    afficherAlert(Alert.AlertType.WARNING, "Champ obligatoire", "Le nom est obligatoire !");
                     return null;
                 }
                 if (nom.length() < 3) {
-                    afficherAlert(Alert.AlertType.WARNING,
-                            "Nom invalide", "Le nom doit contenir au moins 3 caractères !");
-                    return null;
-                }
-                if (nom.matches("^(.)\\1+$")) {
-                    afficherAlert(Alert.AlertType.WARNING,
-                            "Nom invalide",
-                            "❌ Ce nom n'est pas valide !\nExemple correct: Paris, Rome, Dubai");
-                    return null;
-                }
-                if (!nom.toLowerCase().matches(".*[aeiouy].*")) {
-                    afficherAlert(Alert.AlertType.WARNING,
-                            "Nom invalide",
-                            "❌ Ce nom n'est pas valide !\nLe nom doit contenir des voyelles.");
+                    afficherAlert(Alert.AlertType.WARNING, "Nom invalide", "Le nom doit contenir au moins 3 caractères !");
                     return null;
                 }
 
@@ -768,8 +522,16 @@ public class DestinationController {
                 d.setNom(nom);
                 d.setPays(tfPays.getText().trim());
                 d.setCodeIata(tfIata.getText().trim().toUpperCase());
-                d.setImageUrl(tfImage.getText().trim());
                 d.setDescription(taDesc.getText().trim());
+
+                // ✅ Image principale = première de la liste
+                if (!imagesPaths.isEmpty()) {
+                    d.setImageUrl(imagesPaths.get(0));
+                    d.setImages(new ArrayList<>(imagesPaths));
+                }
+
+                System.out.println("📋 Destination à sauvegarder: " + nom +
+                        " avec " + imagesPaths.size() + " image(s)");
                 return d;
             }
             return null;
@@ -779,7 +541,157 @@ public class DestinationController {
     }
 
     // ============================================
-    // 💬 AFFICHER UNE ALERTE
+    // 🔄 REBUILD MINIATURES
+    // ============================================
+    private void rebuildMiniatures(FlowPane flow, List<String> paths) {
+        flow.getChildren().clear();
+
+        if (paths.isEmpty()) {
+            Label lblVide = new Label("📷 Aucune image — cliquez sur '+ Ajouter images'");
+            lblVide.setStyle("-fx-text-fill: #bbb; -fx-font-size: 12px; -fx-padding: 20;");
+            flow.getChildren().add(lblVide);
+            return;
+        }
+
+        for (int i = 0; i < paths.size(); i++) {
+            String path = paths.get(i);
+
+            StackPane miniature = new StackPane();
+            miniature.setPrefSize(110, 75);
+            miniature.setStyle("-fx-background-color: #eee; -fx-background-radius: 8;");
+
+            ImageView mini = new ImageView();
+            mini.setFitWidth(110);
+            mini.setFitHeight(75);
+            mini.setPreserveRatio(false);
+            try {
+                File f = new File("src/main/resources" + path);
+                mini.setImage(f.exists()
+                        ? new Image(f.toURI().toString())
+                        : new Image(path, true));
+            } catch (Exception ignored) {}
+
+            Label lblNum = new Label(String.valueOf(i + 1));
+            lblNum.setStyle(
+                    "-fx-background-color: rgba(102,126,234,0.85); -fx-text-fill: white;" +
+                            "-fx-font-size: 10px; -fx-padding: 1 5; -fx-background-radius: 8;"
+            );
+            StackPane.setAlignment(lblNum, Pos.TOP_LEFT);
+            StackPane.setMargin(lblNum, new Insets(3, 0, 0, 3));
+
+            Button btnX = new Button("✕");
+            btnX.setStyle(
+                    "-fx-background-color: rgba(239,83,80,0.9); -fx-text-fill: white;" +
+                            "-fx-font-size: 9px; -fx-padding: 1 4;" +
+                            "-fx-background-radius: 8; -fx-cursor: hand;"
+            );
+            StackPane.setAlignment(btnX, Pos.TOP_RIGHT);
+            StackPane.setMargin(btnX, new Insets(3, 3, 0, 0));
+
+            if (i == 0) {
+                Label star = new Label("⭐ principale");
+                star.setStyle(
+                        "-fx-background-color: rgba(102,126,234,0.85); -fx-text-fill: white;" +
+                                "-fx-font-size: 9px; -fx-padding: 1 4; -fx-background-radius: 5;"
+                );
+                StackPane.setAlignment(star, Pos.BOTTOM_LEFT);
+                StackPane.setMargin(star, new Insets(0, 0, 3, 3));
+                miniature.getChildren().add(star);
+            }
+
+            miniature.getChildren().addAll(mini, lblNum, btnX);
+            flow.getChildren().add(miniature);
+
+            btnX.setOnAction(ev -> {
+                paths.remove(path);
+                rebuildMiniatures(flow, paths);
+            });
+        }
+    }
+
+    // ============================================
+    // 📂 COPIER IMAGE DANS RESOURCES
+    // ============================================
+    private String copierImage(File source) {
+        try {
+            String dossier = "src/main/resources/images/destinations/";
+            new File(dossier).mkdirs();
+            String nomFichier = System.currentTimeMillis() + "_" + source.getName();
+            File dest = new File(dossier + nomFichier);
+            Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("✅ Image copiée: /images/destinations/" + nomFichier);
+            return "/images/destinations/" + nomFichier;
+        } catch (IOException e) {
+            System.err.println("❌ Erreur copie image: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // ============================================
+    // 📱 QR CODE
+    // ============================================
+    private void handleQRCode(Destination destination) {
+        QRCodeController.afficherPopupQRCode(destination.getId(), destination.getNom());
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("📱 QR Code - " + destination.getNom());
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.getDialogPane().lookupButton(ButtonType.CLOSE).setVisible(false);
+        dialog.getDialogPane().setStyle("-fx-background-color: white;");
+        dialog.getDialogPane().setPrefWidth(400);
+
+        VBox loading = new VBox(15);
+        loading.setAlignment(Pos.CENTER);
+        loading.setPadding(new Insets(40));
+        loading.getChildren().addAll(
+                new Label("✈️ " + destination.getNom()) {{ setFont(Font.font("Arial", FontWeight.BOLD, 20)); }},
+                new ProgressIndicator() {{ setPrefSize(50, 50); }},
+                new Label("🔍 Recherche de la vidéo YouTube...") {{ setStyle("-fx-text-fill: #666;"); }}
+        );
+        dialog.getDialogPane().setContent(loading);
+
+        new Thread(() -> {
+            String videoUrl = youtubeService.getVideoUrl(destination.getId(), destination.getNom());
+            Image qrImage = qrCodeService.genererQRCode(videoUrl, 260);
+
+            Platform.runLater(() -> {
+                if (qrImage != null) {
+                    VBox contenu = new VBox(15);
+                    contenu.setAlignment(Pos.CENTER);
+                    contenu.setPadding(new Insets(25));
+
+                    Label titre = new Label("✈️ " + destination.getNom());
+                    titre.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+
+                    ImageView imgQR = new ImageView(qrImage);
+                    imgQR.setFitWidth(260);
+                    imgQR.setFitHeight(260);
+                    imgQR.setSmooth(false);
+
+                    VBox cadre = new VBox(imgQR);
+                    cadre.setAlignment(Pos.CENTER);
+                    cadre.setPadding(new Insets(15));
+                    cadre.setStyle("-fx-border-color: #667eea; -fx-border-width: 3;" +
+                            "-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: white;");
+
+                    Button btnFermer = new Button("✕ Fermer");
+                    btnFermer.setStyle("-fx-background-color: #667eea; -fx-text-fill: white;" +
+                            "-fx-padding: 10 30; -fx-background-radius: 25; -fx-cursor: hand;");
+                    btnFermer.setOnAction(ev ->
+                            ((Stage) dialog.getDialogPane().getScene().getWindow()).close());
+
+                    contenu.getChildren().addAll(titre, cadre, btnFermer);
+                    dialog.getDialogPane().setContent(contenu);
+                    chargerDestinations();
+                }
+            });
+        }).start();
+
+        dialog.showAndWait();
+    }
+
+    // ============================================
+    // 💬 ALERT
     // ============================================
     private void afficherAlert(Alert.AlertType type, String titre, String message) {
         Alert alert = new Alert(type);

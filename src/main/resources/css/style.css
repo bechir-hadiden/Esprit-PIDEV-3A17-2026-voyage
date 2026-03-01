@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* 
    State-of-the-art "Travel Blue" Modern Theme
    Theme: Vibrant Blue, Soft Slate, High Elegance
@@ -133,9 +134,89 @@
     -fx-font-size: 24px;
     -fx-font-weight: 700;
 }
+=======
+/* =====================================================
+   SMART TRIP — home.css
+   Theme : Editorial Magazine  |  Bleu Voyage
+   Palette: #083D77  #0A6CF1  #EAF3FF
+===================================================== */
+>>>>>>> 1eb5201 (Fix_designeAcceuil)
 
-.card {
+/* --- ScrollPane transparent --- */
+.scroll-pane {
+    -fx-background-color: #EAF3FF;
+    -fx-background: #EAF3FF;
+}
+.scroll-pane > .viewport {
+    -fx-background-color: #EAF3FF;
+}
+
+/* --- Scrollbar fine bleue --- */
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: #EAF3FF;
+    -fx-pref-width: 5px;
+}
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #0A6CF1;
+    -fx-background-radius: 3px;
+    -fx-opacity: 0.4;
+}
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+.scroll-pane .scroll-bar:horizontal {
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}
+.scroll-pane .corner {
+    -fx-background-color: #EAF3FF;
+}
+
+/* --- Navbar bouton hover --- */
+.navbar .button:hover {
+    -fx-text-fill: #0A6CF1 !important;
+    -fx-background-color: #EAF3FF !important;
+    -fx-background-radius: 4px;
+}
+
+/* --- Bouton admin hover --- */
+.button-admin:hover {
+    -fx-background-color: #083D77 !important;
+}
+
+/* --- Card destination hover --- */
+.destination-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(10,108,241,0.25), 22, 0, 0, 6) !important;
+    -fx-translate-y: -2;
+}
+
+/* --- Boutons CTA hover --- */
+.btn-cta-primary:hover {
+    -fx-background-color: #083D77 !important;
+}
+.btn-cta-secondary:hover {
+    -fx-background-color: #dceeff !important;
+}
+
+/* --- Service item hover --- */
+.service-item:hover {
+    -fx-background-color: #dceeff !important;
+}
+
+/* --- Footer links hover --- */
+.footer-link:hover {
+    -fx-text-fill: #0A6CF1 !important;
+}
+
+/* --- Séparateurs --- */
+.separator .line {
+    -fx-border-color: #EAF3FF;
+}
+
+/* --- Dialog / Alert --- */
+.dialog-pane {
     -fx-background-color: white;
+<<<<<<< HEAD
     -fx-background-radius: 20;
     -fx-padding: 30;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.04), 30, 0, 0, 10);
@@ -562,3 +643,32 @@
 .chart-horizontal-grid-lines {
     -fx-stroke: #e2e8f0;
 }
+=======
+    -fx-border-color: #EAF3FF;
+    -fx-border-width: 2;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+.dialog-pane .header-panel {
+    -fx-background-color: #083D77;
+    -fx-background-radius: 8 8 0 0;
+}
+.dialog-pane .header-panel .label {
+    -fx-text-fill: white;
+    -fx-font-family: 'Georgia';
+}
+.dialog-pane .content.label {
+    -fx-text-fill: #083D77;
+    -fx-font-family: 'Georgia';
+}
+.dialog-pane .button-bar .button {
+    -fx-background-color: #0A6CF1;
+    -fx-text-fill: white;
+    -fx-font-family: 'Georgia';
+    -fx-background-radius: 6;
+    -fx-padding: 8 20;
+}
+.dialog-pane .button-bar .button:hover {
+    -fx-background-color: #083D77;
+}
+>>>>>>> 1eb5201 (Fix_designeAcceuil)

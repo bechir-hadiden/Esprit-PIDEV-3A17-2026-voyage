@@ -11,6 +11,10 @@ public class DestinationService {
 
     private Connection connection;
 
+    // ✅ SÉPARATEUR pour stocker plusieurs images dans image_url
+    // Exemple: "/images/a.jpg;/images/b.jpg;/images/c.jpg"
+    private static final String SEPARATOR = ";";
+
     public DestinationService() {
         this.connection = Database.getInstance().getConnection();
     }
@@ -31,17 +35,19 @@ public class DestinationService {
             pstmt.setString(2, destination.getPays());
             pstmt.setString(3, destination.getCodeIata());
             pstmt.setString(4, destination.getDescription());
-            pstmt.setString(5, destination.getImageUrl());
+
+            // ✅ Stocker toutes les images en une seule cellule séparées par ";"
+            pstmt.setString(5, imagesToString(destination.getImages(), destination.getImageUrl()));
             pstmt.setString(6, destination.getVideoUrl());
 
             int rows = pstmt.executeUpdate();
-
             if (rows > 0) {
                 ResultSet keys = pstmt.getGeneratedKeys();
                 if (keys.next()) {
                     destination.setId(keys.getInt(1));
+                    System.out.println("✅ Destination sauvegardée id=" + destination.getId()
+                            + " avec " + destination.getImages().size() + " image(s)");
                 }
-                System.out.println("✅ Destination sauvegardée: " + destination.getNom());
                 return true;
             }
 
@@ -62,7 +68,8 @@ public class DestinationService {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                destinations.add(mapper(rs));
+                Destination d = mapper(rs);
+                destinations.add(d);
             }
 
         } catch (SQLException e) {
@@ -81,10 +88,7 @@ public class DestinationService {
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                return mapper(rs);
-            }
+            if (rs.next()) return mapper(rs);
 
         } catch (SQLException e) {
             System.err.println("❌ Erreur getById destination: " + e.getMessage());
@@ -92,42 +96,48 @@ public class DestinationService {
         return null;
     }
 
-
+    // ============================================
+    // ✏️ MODIFIER
+    // ============================================
     public boolean update(Destination destination) {
-        String sql = "UPDATE destination SET " +
-                "nom = ?, " +
-                "pays = ?, " +
-                "code_iata = ?, " +
-                "description = ?, " +
-                "image_url = ?, " +
-                "video_url = ? " +
-                "WHERE id = ?";
+        String sql = "UPDATE destination SET nom=?, pays=?, code_iata=?, " +
+                "description=?, image_url=?, video_url=? WHERE id=?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-
             pstmt.setString(1, destination.getNom());
             pstmt.setString(2, destination.getPays());
             pstmt.setString(3, destination.getCodeIata());
             pstmt.setString(4, destination.getDescription());
-            pstmt.setString(5, destination.getImageUrl());
+
+            // ✅ Réécrire toutes les images dans image_url
+            pstmt.setString(5, imagesToString(destination.getImages(), destination.getImageUrl()));
             pstmt.setString(6, destination.getVideoUrl());
             pstmt.setInt(7, destination.getId());
 
             int rows = pstmt.executeUpdate();
-
             if (rows > 0) {
-                System.out.println("✅ Destination modifiée: " + destination.getNom());
+                System.out.println("✅ Destination mise à jour id=" + destination.getId()
+                        + " avec " + destination.getImages().size() + " image(s)");
                 return true;
-            } else {
-                System.out.println("⚠️ Aucune destination modifiée (ID introuvable: " + destination.getId() + ")");
-                return false;
             }
 
         } catch (SQLException e) {
             System.err.println("❌ Erreur update destination: " + e.getMessage());
-            e.printStackTrace();
         }
+        return false;
+    }
 
+    // ============================================
+    // 🗑️ SUPPRIMER
+    // ============================================
+    public boolean delete(int id) {
+        String sql = "DELETE FROM destination WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur delete destination: " + e.getMessage());
+        }
         return false;
     }
 
@@ -136,17 +146,10 @@ public class DestinationService {
     // ============================================
     public boolean updateVideoUrl(int destinationId, String videoUrl) {
         String sql = "UPDATE destination SET video_url = ? WHERE id = ?";
-
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, videoUrl);
             pstmt.setInt(2, destinationId);
-
-            int rows = pstmt.executeUpdate();
-            if (rows > 0) {
-                System.out.println("✅ video_url mise à jour pour destination ID: " + destinationId);
-                return true;
-            }
-
+            return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("❌ Erreur updateVideoUrl: " + e.getMessage());
         }
@@ -154,7 +157,27 @@ public class DestinationService {
     }
 
     // ============================================
+    // ✅ Ces méthodes sont gardées pour compatibilité
+    //    mais ne font plus rien (pas de table séparée)
+    // ============================================
+    public boolean saveImages(int destinationId, List<String> images) {
+        // Les images sont maintenant dans image_url directement
+        return true;
+    }
+
+    public boolean deleteImages(int destinationId) {
+        // Les images sont maintenant dans image_url directement
+        return true;
+    }
+
+    public List<String> getImagesByDestinationId(int destinationId) {
+        Destination d = getById(destinationId);
+        return d != null ? d.getImages() : new ArrayList<>();
+    }
+
+    // ============================================
     // 🗺️ MAPPER ResultSet → Destination
+    // ✅ Parse image_url avec ";" pour remplir la liste images
     // ============================================
     private Destination mapper(ResultSet rs) throws SQLException {
         Destination d = new Destination();
@@ -163,33 +186,38 @@ public class DestinationService {
         d.setPays(rs.getString("pays"));
         d.setCodeIata(rs.getString("code_iata"));
         d.setDescription(rs.getString("description"));
-        d.setImageUrl(rs.getString("image_url"));
         d.setVideoUrl(rs.getString("video_url"));
+
+        // ✅ Parser image_url → liste d'images
+        String imageUrl = rs.getString("image_url");
+        d.setImageUrl(imageUrl); // garder la valeur brute
+
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            List<String> images = new ArrayList<>();
+            for (String url : imageUrl.split(SEPARATOR)) {
+                String trimmed = url.trim();
+                if (!trimmed.isEmpty()) images.add(trimmed);
+            }
+            d.setImages(images);
+            System.out.println("🖼️ " + d.getNom() + " → " + images.size() + " image(s)");
+        }
+
         return d;
     }
 
+    // ============================================
+    // 🔧 HELPERS : convertir liste ↔ string
+    // ============================================
 
-    public boolean delete(int id) {
-        String sql = "DELETE FROM destination WHERE id = ?";
-
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
-
-            int rows = pstmt.executeUpdate();
-
-            if (rows > 0) {
-                System.out.println("✅ Destination supprimée: ID " + id);
-                return true;
-            } else {
-                System.out.println("⚠️ Aucune destination supprimée (ID introuvable: " + id + ")");
-                return false;
-            }
-
-        } catch (SQLException e) {
-            System.err.println("❌ Erreur delete destination: " + e.getMessage());
-            e.printStackTrace();
+    /**
+     * Convertit une liste d'images en String séparé par ";"
+     * Ex: ["/images/a.jpg", "/images/b.jpg"] → "/images/a.jpg;/images/b.jpg"
+     */
+    private String imagesToString(List<String> images, String fallbackUrl) {
+        if (images != null && !images.isEmpty()) {
+            return String.join(SEPARATOR, images);
         }
-
-        return false;
+        // fallback : utiliser imageUrl simple
+        return fallbackUrl != null ? fallbackUrl : "";
     }
 }
