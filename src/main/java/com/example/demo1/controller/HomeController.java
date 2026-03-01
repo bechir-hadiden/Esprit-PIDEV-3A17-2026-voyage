@@ -70,13 +70,32 @@ public class HomeController {
 
     @FXML
     public void ouvrirWhatsApp() {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/fxml/whatsapp.fxml"));
-        Parent root = loader.load();
-        Stage stage = new Stage();
-        stage.setTitle("WhatsApp Business - SmartTrip");
-        stage.setScene(new Scene(root, 520, 700));
-        stage.show();
+        try {
+            // DEBUG — affiche tous les chemins possibles
+            System.out.println("whatsapp path: " + getClass().getResource("/fxml/whatsapp.fxml"));
+
+            // Essayer les 3 chemins dans l'ordre
+            java.net.URL url = getClass().getResource("/fxml/whatsapp.fxml");
+            if (url == null) url = getClass().getResource("/com/example/demo1/fxml/whatsapp.fxml");
+            if (url == null) url = getClass().getResource("whatsapp.fxml");
+
+            if (url == null) {
+                System.err.println("FICHIER whatsapp.fxml INTROUVABLE !");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("WhatsApp Business - SmartTrip");
+            stage.setScene(new Scene(root, 520, 750));
+            stage.setResizable(false);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Erreur: " + e.getMessage());
+        }
     }
     @FXML
     public void ouvrirConvertisseur() {
@@ -339,7 +358,7 @@ public class HomeController {
     }
 
     @FXML
-    public void showAdmin() { showVoyages(); }
+//    public void showAdmin() { showVoyages(); }
     public void showAdmin() {
         System.out.println("📍 Mode Admin - Voyages");
         showVoyages();
@@ -388,16 +407,16 @@ public class HomeController {
         }
     }
 
-    private void setActiveButton(Button activeButton) {
-        btnAccueil.getStyleClass().remove("nav-button-active");
-        btnVoyages.getStyleClass().remove("nav-button-active");
-        btnOffres.getStyleClass().remove("nav-button-active");
-        btnOmra.getStyleClass().remove("nav-button-active");
-
-        if (!activeButton.getStyleClass().contains("nav-button-active")) {
-            activeButton.getStyleClass().add("nav-button-active");
-        }
-    }
+//    private void setActiveButton(Button activeButton) {
+//        btnAccueil.getStyleClass().remove("nav-button-active");
+//        btnVoyages.getStyleClass().remove("nav-button-active");
+//        btnOffres.getStyleClass().remove("nav-button-active");
+//        btnOmra.getStyleClass().remove("nav-button-active");
+//
+//        if (!activeButton.getStyleClass().contains("nav-button-active")) {
+//            activeButton.getStyleClass().add("nav-button-active");
+//        }
+//    }
 
     @FXML
     public void ouvrirChatbot() {
@@ -419,17 +438,17 @@ public class HomeController {
     // ============================================
     // 🔧 HELPERS
     // ============================================
-    private void loadContent(String fxmlPath) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent content = loader.load();
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(content);
-        } catch (IOException e) {
-            System.err.println("❌ Erreur chargement: " + fxmlPath);
-            e.printStackTrace();
-        }
-    }
+//    private void loadContent(String fxmlPath) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+//            Parent content = loader.load();
+//            contentArea.getChildren().clear();
+//            contentArea.getChildren().add(content);
+//        } catch (IOException e) {
+//            System.err.println("❌ Erreur chargement: " + fxmlPath);
+//            e.printStackTrace();
+//        }
+//    }
 
     private void setActiveButton(Button activeButton) {
         if (btnAccueil != null) btnAccueil.getStyleClass().remove("nav-button-active");
@@ -441,4 +460,3 @@ public class HomeController {
     }
 }
 
-}

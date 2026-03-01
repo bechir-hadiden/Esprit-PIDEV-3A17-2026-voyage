@@ -4,10 +4,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+import com.example.demo1.services.SessionManager;
 import java.io.IOException;
 import java.util.Objects;
-
+import javafx.scene.Parent;
 public class HelloApplication extends Application {
 
     private static Stage primaryStage;

@@ -1,139 +1,265 @@
 package com.example.demo1.controller;
 
-import com.example.demo1.services.WhatsAppService;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.util.Random;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Base64;
 
 public class WhatsAppController {
 
+    // ===== FXML =====
+    @FXML private ComboBox<String> cbTypeMessage;
     @FXML private TextField txtNumero;
     @FXML private TextField txtNomClient;
     @FXML private TextField txtDestination;
+    @FXML private TextField txtPays;
     @FXML private TextField txtDateDepart;
     @FXML private TextField txtDateFin;
-    @FXML private TextField txtReference;
-    @FXML private TextField txtPrix;
     @FXML private TextField txtHotel;
-    @FXML private TextField txtPays;
-
-    @FXML private ComboBox<String> cbTypeMessage;
+    @FXML private TextField txtPrix;
+    @FXML private TextField txtReference;
     @FXML private Label lblStatut;
+    @FXML private Label lblTestStatut;
     @FXML private ProgressIndicator progressIndicator;
-    @FXML private VBox panelChamps;
+    @FXML private ProgressIndicator progressTest;
+    @FXML private HBox panelTestResult;
+    @FXML private VBox panelTestBox;
 
+    // ===== TWILIO CONFIG =====
+    // ⚠️ Remplace par tes vraies credentials Twilio
+    private static final String ACCOUNT_SID = "AC4d6f990053c1a86ba9a524215025200d";
+    private static final String AUTH_TOKEN   = "FHTQTZ33NFY3MJCD9C5BSBJD";
+    private static final String FROM_NUMBER  = "whatsapp:+17854294619" ; // Sandbox Twilio
+    // Pour production : "whatsapp:+TONVRAINUM"
+
+    // ============================================
+    // 🚀 INITIALISATION
+    // ============================================
     @FXML
     public void initialize() {
-        cbTypeMessage.getItems().addAll(
-                "Confirmation de Reservation",
-                "Rappel Veille de Depart",
-                "Alerte Modification",
-                "Code OTP",
-                "Itineraire Complet"
-        );
-        cbTypeMessage.setValue("Confirmation de Reservation");
-        progressIndicator.setVisible(false);
+        // Types de messages disponibles
+        cbTypeMessage.setItems(FXCollections.observableArrayList(
+                "Confirmation de réservation",
+                "Rappel de voyage",
+                "Offre spéciale",
+                "Message personnalisé"
+        ));
+        cbTypeMessage.setValue("Confirmation de réservation");
+
+        // Cacher les indicateurs au départ
+        if (progressIndicator != null) progressIndicator.setVisible(false);
+        if (progressTest != null) progressTest.setVisible(false);
+        if (panelTestResult != null) panelTestResult.setVisible(false);
     }
 
     // ============================================
-    // ENVOYER selon le type sélectionné
+    // 🔌 TESTER LA CONNEXION TWILIO
     // ============================================
     @FXML
-    public void envoyer() {
-        String type = cbTypeMessage.getValue();
-        if (type == null) return;
-
-        String numero = txtNumero.getText().trim();
-        if (numero.isEmpty()) {
-            afficherStatut("Numero de telephone requis !", false);
-            return;
-        }
-
-        progressIndicator.setVisible(true);
-        lblStatut.setText("Envoi en cours...");
+    private void testerConnexion() {
+        setTestUI(true, "⏳ Test en cours...", "#0A6CF1");
 
         new Thread(() -> {
-            boolean succes = false;
+            try {
+                String credentials = ACCOUNT_SID + ":" + AUTH_TOKEN;
+                String encoded = Base64.getEncoder().encodeToString(credentials.getBytes());
 
-            switch (type) {
-                case "Confirmation de Reservation" -> {
-                    succes = WhatsAppService.envoyerConfirmationReservation(
-                            numero,
-                            txtNomClient.getText().trim(),
-                            txtDestination.getText().trim(),
-                            txtDateDepart.getText().trim(),
-                            txtDateFin.getText().trim(),
-                            txtReference.getText().trim(),
-                            parseDouble(txtPrix.getText())
-                    );
-                }
-                case "Rappel Veille de Depart" -> {
-                    succes = WhatsAppService.envoyerRappelVeille(
-                            numero,
-                            txtNomClient.getText().trim(),
-                            txtDestination.getText().trim(),
-                            txtDateDepart.getText().trim(),
-                            txtHotel.getText().trim()  // utilisé comme aéroport ici
-                    );
-                }
-                case "Alerte Modification" -> {
-                    succes = WhatsAppService.envoyerAlerteModification(
-                            numero,
-                            txtNomClient.getText().trim(),
-                            txtDestination.getText().trim(),
-                            "modifie",
-                            "Veuillez contacter notre service client."
-                    );
-                }
-                case "Code OTP" -> {
-                    String otp = genererOTP();
-                    succes = WhatsAppService.envoyerOTP(numero, otp);
-                }
-                case "Itineraire Complet" -> {
-                    succes = WhatsAppService.envoyerItineraire(
-                            numero,
-                            txtNomClient.getText().trim(),
-                            txtDestination.getText().trim(),
-                            txtPays.getText().trim(),
-                            txtDateDepart.getText().trim(),
-                            txtDateFin.getText().trim(),
-                            txtHotel.getText().trim(),
-                            txtReference.getText().trim()
-                    );
-                }
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create("https://api.twilio.com/2010-04-01/Accounts/" + ACCOUNT_SID + ".json"))
+                        .header("Authorization", "Basic " + encoded)
+                        .GET()
+                        .build();
+
+                HttpResponse<String> response = client.send(request,
+                        HttpResponse.BodyHandlers.ofString());
+
+                int status = response.statusCode();
+                Platform.runLater(() -> {
+                    if (status == 200) {
+                        setTestUI(false, "✅ Connexion Twilio réussie ! Credentials valides.", "#4caf50");
+                    } else if (status == 401) {
+                        setTestUI(false, "❌ Credentials invalides (401). Vérifiez SID et Token.", "#f44336");
+                    } else {
+                        setTestUI(false, "⚠️ Réponse inattendue: " + status, "#FF9800");
+                    }
+                });
+
+            } catch (Exception e) {
+                Platform.runLater(() ->
+                        setTestUI(false, "❌ Erreur réseau: " + e.getMessage(), "#f44336"));
             }
-
-            final boolean resultat = succes;
-            Platform.runLater(() -> {
-                progressIndicator.setVisible(false);
-                if (resultat) {
-                    afficherStatut("WhatsApp envoye avec succes !", true);
-                } else {
-                    afficherStatut("Echec de l envoi. Verifiez vos credentials Twilio.", false);
-                }
-            });
         }).start();
     }
 
     // ============================================
-    // HELPERS
+    // 📤 ENVOYER MESSAGE WHATSAPP
     // ============================================
-    private void afficherStatut(String message, boolean succes) {
-        lblStatut.setText(message);
-        lblStatut.setStyle(succes
-                ? "-fx-text-fill: #4caf50; -fx-font-weight: bold;"
-                : "-fx-text-fill: #e53935; -fx-font-weight: bold;");
+    @FXML
+    private void envoyer() {
+        String numero = txtNumero.getText().trim();
+
+        if (numero.isEmpty()) {
+            setStatut("⚠️ Veuillez entrer un numéro WhatsApp", "#FF9800");
+            return;
+        }
+
+        // Construire le message selon le type
+        String message = construireMessage();
+        String toNumber = "whatsapp:+" + numero;
+
+        setEnvoiUI(true, "⏳ Envoi en cours...", "#0A6CF1");
+
+        new Thread(() -> {
+            try {
+                String credentials = ACCOUNT_SID + ":" + AUTH_TOKEN;
+                String encoded = Base64.getEncoder().encodeToString(credentials.getBytes());
+
+                String body = "To=" + java.net.URLEncoder.encode(toNumber, "UTF-8")
+                        + "&From=" + java.net.URLEncoder.encode(FROM_NUMBER, "UTF-8")
+                        + "&Body=" + java.net.URLEncoder.encode(message, "UTF-8");
+
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create("https://api.twilio.com/2010-04-01/Accounts/"
+                                + ACCOUNT_SID + "/Messages.json"))
+                        .header("Authorization", "Basic " + encoded)
+                        .header("Content-Type", "application/x-www-form-urlencoded")
+                        .POST(HttpRequest.BodyPublishers.ofString(body))
+                        .build();
+
+                HttpResponse<String> response = client.send(request,
+                        HttpResponse.BodyHandlers.ofString());
+
+                int status = response.statusCode();
+                Platform.runLater(() -> {
+                    if (status == 201) {
+                        setEnvoiUI(false,
+                                "✅ Message WhatsApp envoyé avec succès !", "#4caf50");
+                        viderFormulaire();
+                    } else if (status == 401) {
+                        setEnvoiUI(false,
+                                "❌ Credentials invalides. Vérifiez SID et Token.", "#f44336");
+                    } else if (status == 400) {
+                        setEnvoiUI(false,
+                                "❌ Erreur 400 : Le client n'a pas rejoint le sandbox Twilio.", "#f44336");
+                    } else {
+                        setEnvoiUI(false,
+                                "⚠️ Erreur " + status + ": " + response.body(), "#f44336");
+                    }
+                });
+
+            } catch (Exception e) {
+                Platform.runLater(() ->
+                        setEnvoiUI(false, "❌ Erreur: " + e.getMessage(), "#f44336"));
+            }
+        }).start();
     }
 
-    private double parseDouble(String val) {
-        try { return Double.parseDouble(val.replace(",", ".")); }
-        catch (Exception e) { return 0; }
+    // ============================================
+    // 📝 CONSTRUIRE LE MESSAGE
+    // ============================================
+    private String construireMessage() {
+        String nom     = txtNomClient.getText().trim();
+        String dest    = txtDestination.getText().trim();
+        String pays    = txtPays.getText().trim();
+        String depart  = txtDateDepart.getText().trim();
+        String fin     = txtDateFin.getText().trim();
+        String hotel   = txtHotel.getText().trim();
+        String prix    = txtPrix.getText().trim();
+        String ref     = txtReference.getText().trim();
+        String type    = cbTypeMessage.getValue();
+
+        String nomAffiche = nom.isEmpty() ? "Cher client" : "Cher(e) " + nom;
+
+        switch (type) {
+            case "Confirmation de réservation":
+                return "✈️ *SmartTrip - Confirmation de Réservation*\n\n"
+                        + nomAffiche + ",\n\n"
+                        + "Votre réservation est confirmée !\n\n"
+                        + (dest.isEmpty()  ? "" : "🌍 *Destination :* " + dest + (pays.isEmpty() ? "" : ", " + pays) + "\n")
+                        + (depart.isEmpty() ? "" : "📅 *Départ :* " + depart + "\n")
+                        + (fin.isEmpty()    ? "" : "📅 *Retour :* " + fin + "\n")
+                        + (hotel.isEmpty()  ? "" : "🏨 *Hôtel :* " + hotel + "\n")
+                        + (prix.isEmpty()   ? "" : "💰 *Prix total :* " + prix + " TND\n")
+                        + (ref.isEmpty()    ? "" : "📋 *Référence :* " + ref + "\n")
+                        + "\nMerci de votre confiance !\n"
+                        + "📞 SmartTrip - +216 XX XXX XXX";
+
+            case "Rappel de voyage":
+                return "⏰ *SmartTrip - Rappel de Voyage*\n\n"
+                        + nomAffiche + ",\n\n"
+                        + "Votre voyage approche ! 🎉\n\n"
+                        + (dest.isEmpty()  ? "" : "🌍 *Destination :* " + dest + "\n")
+                        + (depart.isEmpty() ? "" : "📅 *Date de départ :* " + depart + "\n")
+                        + (hotel.isEmpty()  ? "" : "🏨 *Hôtel :* " + hotel + "\n")
+                        + "\nPensez à préparer vos documents de voyage.\n"
+                        + "Bon voyage ! ✈️\n"
+                        + "📞 SmartTrip - +216 XX XXX XXX";
+
+            case "Offre spéciale":
+                return "🎁 *SmartTrip - Offre Spéciale*\n\n"
+                        + nomAffiche + ",\n\n"
+                        + "Nous avons une offre exclusive pour vous !\n\n"
+                        + (dest.isEmpty()  ? "" : "🌍 *Destination :* " + dest + "\n")
+                        + (prix.isEmpty()   ? "" : "💰 *À partir de :* " + prix + " TND\n")
+                        + (depart.isEmpty() ? "" : "📅 *Disponible dès le :* " + depart + "\n")
+                        + "\nContactez-nous pour réserver !\n"
+                        + "📞 SmartTrip - +216 XX XXX XXX";
+
+            default: // Message personnalisé
+                return "✈️ *SmartTrip*\n\n"
+                        + nomAffiche + ",\n\n"
+                        + (dest.isEmpty()  ? "" : "🌍 Destination : " + dest + "\n")
+                        + (depart.isEmpty() ? "" : "📅 Départ : " + depart + "\n")
+                        + (prix.isEmpty()   ? "" : "💰 Prix : " + prix + " TND\n")
+                        + "\nPour plus d'informations, contactez-nous.\n"
+                        + "📞 SmartTrip - +216 XX XXX XXX";
+        }
     }
 
-    private String genererOTP() {
-        return String.valueOf(100000 + new Random().nextInt(900000));
+    // ============================================
+    // 🔧 HELPERS UI
+    // ============================================
+    private void setTestUI(boolean loading, String message, String color) {
+        if (progressTest != null) progressTest.setVisible(loading);
+        if (panelTestResult != null) panelTestResult.setVisible(true);
+        if (lblTestStatut != null) {
+            lblTestStatut.setText(message);
+            lblTestStatut.setStyle("-fx-font-size: 11px; -fx-text-fill: " + color + ";");
+        }
+    }
+
+    private void setEnvoiUI(boolean loading, String message, String color) {
+        if (progressIndicator != null) progressIndicator.setVisible(loading);
+        setStatut(message, color);
+    }
+
+    private void setStatut(String message, String color) {
+        if (lblStatut != null) {
+            lblStatut.setText(message);
+            lblStatut.setStyle("-fx-font-family: 'Georgia'; -fx-font-size: 12px;" +
+                    "-fx-text-fill: " + color + ";");
+        }
+    }
+
+    private void viderFormulaire() {
+        txtNumero.clear();
+        txtNomClient.clear();
+        txtDestination.clear();
+        txtPays.clear();
+        txtDateDepart.clear();
+        txtDateFin.clear();
+        txtHotel.clear();
+        txtPrix.clear();
+        txtReference.clear();
     }
 }
