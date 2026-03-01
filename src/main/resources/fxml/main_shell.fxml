@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.MainShellController"
+      prefHeight="800.0" prefWidth="1200.0">
+
+    <stylesheets>
+        <URL value="@../css/style.css" />
+        <URL value="@../css/sidebar.css" />
+    </stylesheets>
+
+    <!-- Sidebar -->
+    <VBox styleClass="sidebar" spacing="10">
+        <VBox spacing="5" style="-fx-padding: 0 0 20 0;">
+            <Label text="SmartTrip Transport" style="-fx-font-size: 24px; -fx-text-fill: white; -fx-font-weight: 900; -fx-letter-spacing: 1px;"/>
+            <Label fx:id="roleBadge" text="USER" style="-fx-background-color: rgba(255,255,255,0.1); -fx-text-fill: #94a3b8; -fx-padding: 2 10; -fx-background-radius: 5; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <VBox spacing="5" VBox.vgrow="ALWAYS">
+            <Button fx:id="btnDashboard" text="Tableau de bord" onAction="#showDashboard" styleClass="nav-button, nav-button-active" maxWidth="Infinity">
+                <graphic><Region styleClass="icon, icon-home, nav-icon"/></graphic>
+            </Button>
+            
+            <Button fx:id="btnFleet" text="Gestion du Parc" onAction="#showFleet" styleClass="nav-button" maxWidth="Infinity">
+                <graphic><Region styleClass="icon, icon-fleet, nav-icon"/></graphic>
+            </Button>
+            
+            <Button fx:id="btnMyReservations" text="Mes Réservations" onAction="#showMyReservations" styleClass="nav-button" maxWidth="Infinity">
+                <graphic><Region styleClass="icon, icon-calendar, nav-icon"/></graphic>
+            </Button>
+
+            <Button fx:id="btnAIGuide" text="Guide IA" onAction="#showAIGuide" styleClass="nav-button" maxWidth="Infinity">
+                <graphic><Region styleClass="icon, icon-bot, nav-icon"/></graphic>
+            </Button>
+
+            <Button fx:id="btnCategories" text="Configurations" onAction="#showCategories" styleClass="nav-button" maxWidth="Infinity">
+                <graphic><Region styleClass="icon, icon-settings, nav-icon"/></graphic>
+            </Button>
+            
+            <Button fx:id="btnNotify" text="SmartNotify" onAction="#showNotify" styleClass="nav-button" maxWidth="Infinity">
+                <graphic><Region styleClass="icon, icon-email, nav-icon"/></graphic>
+            </Button>
+
+            <Button fx:id="btnStats" text="Analyses AI" onAction="#showStats" styleClass="nav-button" maxWidth="Infinity">
+                <graphic><Region styleClass="icon, icon-chart, nav-icon"/></graphic>
+            </Button>
+        </VBox>
+
+        <Separator style="-fx-opacity: 0.1;"/>
+        
+        <Button text="Déconnexion" onAction="#handleLogout" styleClass="nav-button" maxWidth="Infinity" style="-fx-text-fill: #fca5a5;">
+            <graphic><Region styleClass="icon, icon-logout, nav-icon" style="-fx-background-color: #fca5a5;"/></graphic>
+        </Button>
+    </VBox>
+
+    <!-- Main Content Area -->
+    <StackPane fx:id="contentArea" styleClass="content-area" HBox.hgrow="ALWAYS">
+        <!-- Views will be loaded here -->
+    </StackPane>
+
+</HBox>

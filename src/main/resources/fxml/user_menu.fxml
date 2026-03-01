@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:id="rootPane"
+            fx:controller="org.example.controllers.UserMenuController"
+            style="-fx-background-color: #f8fafc;">
+
+    <stylesheets>
+        <URL value="@../css/style.css" />
+    </stylesheets>
+
+
+    <!-- Main Content -->
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox alignment="CENTER" spacing="50" style="-fx-padding: 80 50;">
+                
+                <VBox alignment="CENTER" spacing="10">
+                    <Label text="Bienvenue dans votre Espace Voyage" styleClass="title-label"/>
+                    <Label text="Sélectionnez un mode de transport pour commencer votre réservation" styleClass="subtitle-label" style="-fx-font-size: 16px;"/>
+                </VBox>
+
+                <!-- Dynamic container for transport type cards -->
+                <FlowPane fx:id="cardsContainer" hgap="40" vgap="40" alignment="CENTER">
+                    <!-- Cards injected dynamically -->
+                </FlowPane>
+                
+            </VBox>
+        </ScrollPane>
+    </center>
+
+
+</BorderPane>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="org.example.controllers.UserController"
+           style="-fx-background-color: #f5f7fa;">
+
+    <!-- Header -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: white; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+            <Label text="Transport" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #667eea;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <VBox spacing="20" style="-fx-padding: 30;">
+            
+            <!-- Transport Type Filter -->
+            <HBox spacing="15" alignment="CENTER">
+                <Label text="Choisissez votre transport:" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Button fx:id="busBtn" text="🚌 Bus" onAction="#filterByType" 
+                        style="-fx-background-color: #667eea; -fx-text-fill: white; -fx-padding: 10 25; -fx-font-size: 14px; -fx-background-radius: 20;"/>
+                <Button fx:id="taxiBtn" text="🚕 Taxi" onAction="#filterByType" 
+                        style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-padding: 10 25; -fx-font-size: 14px; -fx-background-radius: 20;"/>
+                <Button fx:id="carBtn" text="🚗 Voiture" onAction="#filterByType" 
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-padding: 10 25; -fx-font-size: 14px; -fx-background-radius: 20;"/>
+                <Button text="Tous" onAction="#showAllTransports" 
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-padding: 10 25; -fx-font-size: 14px; -fx-background-radius: 20;"/>
+            </HBox>
+
+            <!-- Transport Cards Container -->
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+                <FlowPane fx:id="transportCardsPane" hgap="20" vgap="20" style="-fx-padding: 10;"/>
+            </ScrollPane>
+
+            <!-- My Reservations Section -->
+            <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;">
+                <Label text="📝 Mes Réservations" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <TableView fx:id="reservationTable" prefHeight="200">
+                    <columns>
+                        <TableColumn fx:id="colResType" text="Type" prefWidth="100"/>
+                        <TableColumn fx:id="colResCompagnie" text="Compagnie" prefWidth="150"/>
+                        <TableColumn fx:id="colResNumero" text="Numéro" prefWidth="100"/>
+                        <TableColumn fx:id="colResDate" text="Date" prefWidth="150"/>
+                        <TableColumn fx:id="colResStatut" text="Statut" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

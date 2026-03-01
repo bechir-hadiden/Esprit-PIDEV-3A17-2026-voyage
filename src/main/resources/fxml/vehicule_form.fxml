@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import java.net.URL?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.VehiculeFormController"
+      spacing="0"
+      style="-fx-background-color: #f8fafc;">
+
+    <stylesheets>
+        <java.net.URL value="@../css/style.css" />
+    </stylesheets>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
+        <Button onAction="#handleBack" styleClass="button-secondary, button-icon">
+            <graphic>
+                <Region styleClass="icon, icon-back"/>
+            </graphic>
+        </Button>
+        <Label fx:id="formTitle" text="Ajouter un Véhicule" styleClass="header-title"/>
+    </HBox>
+
+    <VBox alignment="CENTER" VBox.vgrow="ALWAYS" style="-fx-padding: 50;">
+        <VBox spacing="30" maxWidth="600" styleClass="card">
+            <VBox spacing="25">
+                <GridPane hgap="20" vgap="25">
+                    <Label text="Type de transport" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="typeComboBox" promptText="Sélectionner..." GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="400"/>
+
+                    <Label text="Compagnie" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="compagnieField" promptText="ex: TravelExpress" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Numéro" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="numeroField" promptText="ex: 123 TUN 456" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Capacité" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="capaciteField" promptText="ex: 50" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                    <Label text="Tarif (DT)" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="prixField" promptText="0.00" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                    <Label text="Photo du véhicule" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
+                    <HBox spacing="15" alignment="CENTER_LEFT" GridPane.rowIndex="5" GridPane.columnIndex="1">
+                        <Button text="Choisir une image" onAction="#handleChooseImage" styleClass="button-secondary" prefWidth="180"/>
+                        <ImageView fx:id="imagePreview" fitWidth="120" fitHeight="70" preserveRatio="true" style="-fx-border-color: #cbd5e1; -fx-border-width: 1; -fx-background-color: #f1f5f9;"/>
+                    </HBox>
+
+                    <Label text="Disponible" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
+                    <CheckBox fx:id="disponibleCheckBox" selected="true" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                    <Label text="Ville" GridPane.rowIndex="7" GridPane.columnIndex="0" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="villeField" promptText="ex: Tunis, Sousse..." GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+                </GridPane>
+
+                <HBox spacing="15" alignment="CENTER_RIGHT">
+                    <Button text="Annuler" onAction="#handleBack" styleClass="button-secondary" prefWidth="120"/>
+                    <Button fx:id="saveBtn" text="Enregistrer" onAction="#handleSave" styleClass="button-success" prefWidth="150">
+                        <graphic>
+                            <Region styleClass="icon, icon-add" style="-fx-background-color: white;"/>
+                        </graphic>
+                    </Button>
+                </HBox>
+            </VBox>
+        </VBox>
+    </VBox>
+</VBox>

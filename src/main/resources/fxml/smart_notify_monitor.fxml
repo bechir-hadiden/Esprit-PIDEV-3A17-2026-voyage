@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.controllers.SmartNotifyMonitorController"
+            style="-fx-background-color: #f8fafc;">
+
+    <stylesheets>
+        <URL value="@../css/style.css" />
+    </stylesheets>
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
+            <Button text="← Retour" onAction="#goBack" styleClass="button-secondary"/>
+            <Label text="SmartNotify Monitoring" styleClass="header-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Rafraîchir" onAction="#loadNotifications" styleClass="button-primary"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="20" style="-fx-padding: 30;">
+            <Label text="Alertes d'Annulation" styleClass="title-label" style="-fx-font-size: 24px;"/>
+            <Label text="Historique des réservations annulées par les utilisateurs" styleClass="subtitle-label"/>
+            
+            <TableView fx:id="notificationTable" VBox.vgrow="ALWAYS" styleClass="modern-table">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="50" style="-fx-alignment: CENTER;"/>
+                    <TableColumn fx:id="colDate" text="Date de l'alerte" prefWidth="180"/>
+                    <TableColumn fx:id="colMessage" text="Message" prefWidth="500"/>
+                    <TableColumn fx:id="colType" text="Type" prefWidth="120" style="-fx-alignment: CENTER;"/>
+                    <TableColumn fx:id="colActions" text="Actions" prefWidth="100" style="-fx-alignment: CENTER;"/>
+                </columns>
+                <placeholder>
+                    <Label text="Aucune alerte pour le moment." styleClass="subtitle-label"/>
+                </placeholder>
+            </TableView>
+        </VBox>
+    </center>
+
+</BorderPane>
