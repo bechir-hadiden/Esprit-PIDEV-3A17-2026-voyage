@@ -1,142 +1,440 @@
-/* Admin Panel Styles for SmartTrip */
+/* ═══════════════════════════════════════════════════════════════════
+   SmartTrip Admin – Design System
+   Palette : Slate neutrals + Sky blue accent (eye-friendly, soft)
+   ═══════════════════════════════════════════════════════════════════ */
 
-/* Admin Sidebar */
+/* ── Design Tokens ─────────────────────────────────────────────────── */
+.root {
+    /* Soft background */
+    -bg-page: #f0f4f8;
+    -bg-card: #ffffff;
+    -bg-sidebar: #1a2233;
+
+    /* Accent — Sky blue (easier on the eyes than electric blue) */
+    -accent: #0ea5e9;
+    -accent-dim: #e0f2fe;
+    -accent-dk: #0369a1;
+
+    /* Text */
+    -txt-h: #1e293b;
+    -txt-body: #475569;
+    -txt-mute: #94a3b8;
+
+    /* Semantic */
+    -success: #22c55e;
+    -warn: #f59e0b;
+    -danger: #f43f5e;
+    -info: #8b5cf6;
+
+    /* Borders */
+    -border: #e2e8f0;
+    -border-strong: #cbd5e1;
+
+    /* Shadow — very subtle */
+    -shadow-sm: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 8, 0, 0, 2);
+    -shadow-md: dropshadow(gaussian, rgba(15, 23, 42, 0.10), 16, 0, 0, 4);
+}
+
+/* ── Sidebar ────────────────────────────────────────────────────────── */
 .admin-sidebar {
-    -fx-background-color: linear-gradient(to bottom, #1e293b, #0f172a);
-    -fx-pref-width: 280px;
-    -fx-min-width: 280px;
-    -fx-max-width: 280px;
+    -fx-background-color: linear-gradient(to bottom, #0f172a, #1e3a8a);
+    /* Deep ocean / night sky blue for travel theme */
+    -fx-pref-width: 270px;
+    -fx-min-width: 270px;
+    -fx-max-width: 270px;
 }
 
 .admin-sidebar-header {
-    -fx-padding: 30 20 20 20;
-    -fx-spacing: 15;
+    -fx-padding: 32 24 24 24;
+    -fx-spacing: 4;
 }
 
 .admin-logo {
-    -fx-font-size: 24px;
-    -fx-font-weight: bold;
-    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #f8fafc;
 }
 
 .admin-subtitle {
-    -fx-font-size: 14px;
-    -fx-text-fill: #94a3b8;
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
+    -fx-font-weight: 500;
 }
+
+/* We replaced the header section above too */
 
 .admin-nav-item {
     -fx-background-color: transparent;
-    -fx-text-fill: #cbd5e1;
+    -fx-text-fill: #94a3b8;
     -fx-padding: 14 20;
     -fx-cursor: hand;
     -fx-alignment: center-left;
     -fx-spacing: 12;
     -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 12;
 }
 
 .admin-nav-item:hover {
     -fx-background-color: rgba(255, 255, 255, 0.08);
-    -fx-text-fill: white;
+    -fx-text-fill: #ffffff;
 }
 
 .admin-nav-item.active {
-    -fx-background-color: linear-gradient(90deg, #3b82f6, #2563eb);
-    -fx-text-fill: white;
+    -fx-background-color: rgba(14, 165, 233, 0.15);
+    /* Soft sky blue bg */
+    -fx-text-fill: #38bdf8;
+    /* Vibrant sky blue text */
+    -fx-border-color: transparent transparent transparent #38bdf8;
+    -fx-border-width: 0 0 0 3;
+    -fx-border-radius: 12;
 }
 
-/* Admin Content Area */
+.admin-sidebar .logout-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 14px;
+    -fx-padding: 12 20;
+    -fx-cursor: hand;
+}
+
+.admin-sidebar .logout-button:hover {
+    -fx-background-color: rgba(244, 63, 94, 0.12);
+    -fx-text-fill: #fb7185;
+}
+
+/* ── Page Layout ────────────────────────────────────────────────────── */
 .admin-content {
-    -fx-background-color: #f1f5f9;
+    -fx-background-color: #f0f4f8;
+}
+
+.admin-content-container {
+    -fx-background-color: #f0f4f8;
 }
 
 .admin-header {
-    -fx-background-color: white;
-    -fx-padding: 20 30;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 4, 0, 0, 2);
+    -fx-background-color: #ffffff;
+    -fx-padding: 18 28;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 6, 0, 0, 2);
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+    -fx-border-width: 0 0 1 0;
 }
 
-.admin-title {
-    -fx-font-size: 28px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #1e293b;
+.admin-title,
+.admin-page-title,
+.admin-section-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #1e3a8a;
+    /* Travel navy accent for headers */
 }
 
 .admin-subtitle-header {
-    -fx-font-size: 14px;
+    -fx-font-size: 13px;
     -fx-text-fill: #64748b;
 }
 
-/* Admin Cards */
-.admin-card {
-    -fx-background-color: white;
-    -fx-background-radius: 12px;
-    -fx-padding: 24px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 8, 0, 0, 2);
+.admin-top-bar {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-border-color: transparent;
+    -fx-padding: 14 32;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.04), 14, 0, 0, 4);
 }
 
-.stat-card {
-    -fx-background-color: linear-gradient(135deg, #3b82f6, #2563eb);
-    -fx-background-radius: 16px;
-    -fx-padding: 24px;
-    -fx-spacing: 12;
-    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.3), 12, 0, 0, 4);
+/* ── Generic Admin Card ─────────────────────────────────────────────── */
+.admin-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14;
+    -fx-padding: 22;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.07), 10, 0, 0, 3);
+    -fx-border-color: #e8edf3;
+    -fx-border-width: 1;
+    -fx-border-radius: 14;
+}
+
+/* ── Hub / Dashboard Navigation Cards  ─────────────────────────────── */
+.admin-stat-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-padding: 22 24;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.07), 12, 0, 0, 3);
+    -fx-border-color: #e8edf3;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+}
+
+.admin-stat-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(14, 165, 233, 0.18), 18, 0, 0, 5);
+    -fx-border-color: #bae6fd;
+    -fx-translate-y: -3;
+}
+
+/* Icon container inside stat cards */
+.stat-icon-container {
+    -fx-background-radius: 12;
+    -fx-padding: 12;
+    -fx-min-width: 50;
+    -fx-min-height: 50;
+    -fx-max-width: 50;
+    -fx-max-height: 50;
+    -fx-alignment: CENTER;
+}
+
+/* Text inside hub cards */
+.stat-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #94a3b8;
+    -fx-letter-spacing: 0.8;
 }
 
 .stat-value {
-    -fx-font-size: 36px;
-    -fx-font-weight: bold;
-    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #1e293b;
 }
 
-.stat-label {
-    -fx-font-size: 14px;
-    -fx-text-fill: rgba(255, 255, 255, 0.8);
+/* ── KPI / Metric Cards (with trend arrows) ─────────────────────────── */
+.kpi-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-padding: 22 24;
+    -fx-spacing: 12;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.07), 12, 0, 0, 3);
+    -fx-border-color: #e8edf3;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-pref-width: 220;
 }
 
-/* Admin Buttons */
-.admin-button-primary {
-    -fx-background-color: linear-gradient(to right, #3b82f6, #2563eb);
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
+/* Value (large number) */
+.kpi-number {
+    -fx-font-size: 38px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #1e293b;
+}
+
+/* Sub-label */
+.kpi-label {
+    -fx-font-size: 13px;
     -fx-font-weight: 600;
-    -fx-padding: 12 24;
-    -fx-background-radius: 8px;
+    -fx-text-fill: #64748b;
+}
+
+/* Trend row common */
+.kpi-trend {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-padding: 4 10;
+    -fx-background-radius: 20;
+}
+
+/* ▲ Trending up (green) */
+.kpi-trend-up {
+    -fx-text-fill: #065f46;
+    -fx-background-color: #d1fae5;
+}
+
+/* ▼ Trending down (red) */
+.kpi-trend-down {
+    -fx-text-fill: #9f1239;
+    -fx-background-color: #ffe4e6;
+}
+
+/* → Stable / neutral */
+.kpi-trend-neutral {
+    -fx-text-fill: #1e40af;
+    -fx-background-color: #dbeafe;
+}
+
+/* ── Admin Stats Chart Area ─────────────────────────────────────────── */
+.stats-section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #1e293b;
+}
+
+.stats-section-sub {
+    -fx-font-size: 12px;
+    -fx-text-fill: #94a3b8;
+}
+
+/* Chart overrides (coherent with palette) */
+.chart-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #334155;
+}
+
+.chart-pie-label {
+    -fx-fill: #475569;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+}
+
+/* Grid lines */
+.chart-vertical-grid-lines {
+    -fx-stroke: transparent;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: #e2e8f0;
+    -fx-stroke-dash-array: 2 4;
+}
+
+.axis {
+    -fx-tick-label-fill: #1e293b;
+    -fx-tick-label-font-size: 11px;
+    -fx-tick-label-font-weight: bold;
+}
+
+.axis-label {
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 13px;
+    -fx-font-weight: 800;
+}
+
+/* Axis lines themselves */
+.chart .axis:bottom,
+.chart .axis:left {
+    -fx-border-color: #94a3b8;
+}
+
+.axis:bottom .axis-tick-mark,
+.axis:left .axis-tick-mark {
+    -fx-stroke: #94a3b8;
+    -fx-stroke-width: 1.5px;
+}
+
+
+
+.default-color0.chart-pie {
+    -fx-pie-color: #38bdf8;
+}
+
+.default-color1.chart-pie {
+    -fx-pie-color: #34d399;
+}
+
+.default-color2.chart-pie {
+    -fx-pie-color: #fbbf24;
+}
+
+.default-color3.chart-pie {
+    -fx-pie-color: #a78bfa;
+}
+
+.default-color4.chart-pie {
+    -fx-pie-color: #fb7185;
+}
+
+.default-color5.chart-pie {
+    -fx-pie-color: #22d3ee;
+}
+
+.default-color6.chart-pie {
+    -fx-pie-color: #86efac;
+}
+
+/* Bar chart colours */
+.default-color0.chart-bar {
+    -fx-bar-fill: #38bdf8;
+}
+
+.default-color1.chart-bar {
+    -fx-bar-fill: #34d399;
+}
+
+.default-color2.chart-bar {
+    -fx-bar-fill: #fbbf24;
+}
+
+.default-color3.chart-bar {
+    -fx-bar-fill: #a78bfa;
+}
+
+.default-color4.chart-bar {
+    -fx-bar-fill: #fb7185;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────── */
+.admin-button-primary {
+    -fx-background-color: #0ea5e9;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-padding: 11 22;
+    -fx-background-radius: 10;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(14, 165, 233, 0.25), 8, 0, 0, 3);
 }
 
 .admin-button-primary:hover {
-    -fx-background-color: linear-gradient(to right, #2563eb, #1d4ed8);
+    -fx-background-color: #0369a1;
 }
 
 .admin-button-secondary {
-    -fx-background-color: #e2e8f0;
-    -fx-text-fill: #475569;
-    -fx-font-size: 14px;
-    -fx-font-weight: 600;
-    -fx-padding: 12 24;
-    -fx-background-radius: 8px;
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #334155;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-padding: 11 22;
+    -fx-background-radius: 10;
     -fx-cursor: hand;
 }
 
+.admin-button-secondary .icon {
+    -fx-background-color: #334155;
+}
+
 .admin-button-secondary:hover {
-    -fx-background-color: #cbd5e1;
+    -fx-background-color: #e2e8f0;
+}
+
+.admin-button-secondary:hover .icon {
+    -fx-background-color: #0f172a;
 }
 
 .admin-button-danger {
-    -fx-background-color: #ef4444;
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-font-weight: 600;
-    -fx-padding: 12 24;
-    -fx-background-radius: 8px;
+    -fx-background-color: #f43f5e;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-padding: 11 22;
+    -fx-background-radius: 10;
     -fx-cursor: hand;
 }
 
 .admin-button-danger:hover {
-    -fx-background-color: #dc2626;
+    -fx-background-color: #e11d48;
 }
 
-/* Admin Table */
+/* ── Form Inputs ────────────────────────────────────────────────────── */
+.admin-form-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #334155;
+}
+
+.admin-text-field,
+.admin-text-area {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 11 14;
+    -fx-font-size: 13px;
+    -fx-text-fill: #1e293b;
+}
+
+.admin-text-field:focused,
+.admin-text-area:focused {
+    -fx-border-color: #0ea5e9;
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(14, 165, 233, 0.15), 5, 0, 0, 0);
+}
+
+/* ── Table ──────────────────────────────────────────────────────────── */
 .admin-table {
     -fx-background-color: transparent;
     -fx-table-cell-border-color: transparent;
@@ -144,64 +442,91 @@
 
 .admin-table .column-header-background {
     -fx-background-color: #f8fafc;
+    -fx-border-color: transparent transparent #e8edf3 transparent;
+    -fx-border-width: 0 0 1 0;
 }
 
 .admin-table .column-header {
     -fx-background-color: transparent;
-    -fx-font-weight: 600;
-    -fx-text-fill: #475569;
+    -fx-font-weight: 700;
+    -fx-text-fill: #64748b;
+    -fx-font-size: 11px;
     -fx-padding: 12 16;
 }
 
 .admin-table .table-row-cell {
-    -fx-background-color: white;
-    -fx-table-cell-border-color: transparent;
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #f1f5f9 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-cell-size: 56;
+}
+
+.admin-table .table-row-cell:odd {
+    -fx-background-color: #fafbfc;
 }
 
 .admin-table .table-row-cell:hover {
-    -fx-background-color: #f8fafc;
+    -fx-background-color: #f0f9ff;
 }
 
 .admin-table .table-cell {
-    -fx-padding: 12 16;
-    -fx-text-fill: #1e293b;
-}
-
-/* Form Elements */
-.admin-form-label {
-    -fx-font-size: 14px;
-    -fx-font-weight: 600;
+    -fx-padding: 10 16;
     -fx-text-fill: #334155;
+    -fx-font-size: 13px;
 }
 
-.admin-text-field {
-    -fx-background-color: white;
-    -fx-border-color: #e2e8f0;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-padding: 12 16;
+/* ── Badges ─────────────────────────────────────────────────────────── */
+.badge {
+    -fx-background-radius: 20;
+    -fx-padding: 4 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+}
+
+.badge-success {
+    -fx-background-color: #dcfce7;
+    -fx-text-fill: #15803d;
+}
+
+.badge-warning {
+    -fx-background-color: #fef9c3;
+    -fx-text-fill: #a16207;
+}
+
+.badge-danger {
+    -fx-background-color: #ffe4e6;
+    -fx-text-fill: #be123c;
+}
+
+.badge-info {
+    -fx-background-color: #ede9fe;
+    -fx-text-fill: #6d28d9;
+}
+
+/* ── AI Insights Box ────────────────────────────────────────────────── */
+.ai-card {
+    -fx-background-color: #f0f9ff;
+    -fx-background-radius: 14;
+    -fx-padding: 20;
+    -fx-border-color: #bae6fd;
+    -fx-border-width: 1;
+    -fx-border-radius: 14;
+}
+
+.ai-title {
     -fx-font-size: 14px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #0369a1;
 }
 
-.admin-text-field:focused {
-    -fx-border-color: #3b82f6;
-    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.2), 4, 0, 0, 0);
+.ai-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: #1e293b;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 2;
 }
 
-.admin-text-area {
-    -fx-background-color: white;
-    -fx-border-color: #e2e8f0;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-padding: 12 16;
-    -fx-font-size: 14px;
-}
-
-.admin-text-area:focused {
-    -fx-border-color: #3b82f6;
-}
-
-/* Coming Soon */
+/* ── Miscellaneous ──────────────────────────────────────────────────── */
 .coming-soon-container {
     -fx-alignment: center;
     -fx-spacing: 20;
@@ -213,69 +538,18 @@
 }
 
 .coming-soon-title {
-    -fx-font-size: 32px;
-    -fx-font-weight: bold;
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
     -fx-text-fill: #1e293b;
 }
 
 .coming-soon-message {
-    -fx-font-size: 16px;
+    -fx-font-size: 15px;
     -fx-text-fill: #64748b;
     -fx-wrap-text: true;
     -fx-text-alignment: center;
 }
 
-/* Badge */
-.badge {
-    -fx-background-radius: 12px;
-    -fx-padding: 4 12;
-    -fx-font-size: 12px;
-    -fx-font-weight: 600;
-}
-
-.badge-success {
-    -fx-background-color: #d1fae5;
-    -fx-text-fill: #065f46;
-}
-
-.badge-warning {
-    -fx-background-color: #fef3c7;
-    -fx-text-fill: #92400e;
-}
-
-.badge-danger {
-    -fx-background-color: #fee2e2;
-    -fx-text-fill: #991b1b;
-}
-
-/* Admin Top Bar */
-.admin-top-bar {
-    -fx-background-color: white;
-    -fx-border-color: #e2e8f0;
-    -fx-border-width: 0 0 1 0;
-}
-
-.admin-page-title {
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #1e293b;
-}
-
-/* Logout Section */
-.admin-sidebar .logout-section {
-    -fx-padding: 0;
-}
-
 .admin-sidebar .logout-section .separator {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Logout Button - Updated */
-.admin-sidebar .logout-button {
-    -fx-background-color: transparent;
-}
-
-.admin-sidebar .logout-button:hover {
-    -fx-background-color: rgba(220, 38, 38, 0.15);
-    -fx-text-fill: #f87171;
+    -fx-background-color: rgba(255, 255, 255, 0.08);
 }

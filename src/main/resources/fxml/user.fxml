@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.UserController"
+      spacing="0"
+      style="-fx-background-color: #f0f4f8;">
+
+    <stylesheets>
+        <URL value="@../css/style.css" />
+        <URL value="@../css/admin-styles.css" />
+    </stylesheets>
+
+    <!-- Header bar -->
+    <HBox alignment="CENTER_LEFT" spacing="16" styleClass="admin-top-bar">
+        <!-- Back button logic to return to MainHub if needed -->
+        <Button text="← Retour" onAction="#goBack" styleClass="admin-button-secondary"/>
+        <Label text="Mobilité &amp; Transports" styleClass="admin-section-title"/>
+        <HBox HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                style="-fx-background-color: transparent; -fx-background: transparent;">
+        <VBox spacing="24" style="-fx-padding: 30 36;" alignment="TOP_CENTER">
+
+            <!-- Transport Type Filter -->
+            <VBox spacing="16" alignment="CENTER_LEFT" maxWidth="1000">
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label text="Trouver un transport" styleClass="stats-section-title" style="-fx-font-size: 22px;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <HBox spacing="10" alignment="CENTER">
+                        <Button fx:id="busBtn" text="🚌 Bus" onAction="#filterByType" styleClass="admin-button-secondary"/>
+                        <Button fx:id="taxiBtn" text="🚕 Taxi" onAction="#filterByType" styleClass="admin-button-secondary"/>
+                        <Button fx:id="carBtn" text="🚗 Voiture" onAction="#filterByType" styleClass="admin-button-secondary"/>
+                        <Button text="Tous" onAction="#showAllTransports" styleClass="admin-button-primary"/>
+                    </HBox>
+                </HBox>
+
+                <!-- Transport Cards Container -->
+                <ScrollPane fitToWidth="true" styleClass="admin-card" style="-fx-background-color: transparent; -fx-padding: 10;">
+                    <FlowPane fx:id="transportCardsPane" hgap="20" vgap="20"/>
+                </ScrollPane>
+            </VBox>
+
+            <!-- My Reservations Section -->
+            <VBox spacing="12" alignment="CENTER_LEFT" maxWidth="1000">
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Aperçu des Réservations" styleClass="stats-section-title" style="-fx-font-size: 20px;"/>
+                </HBox>
+
+                <VBox styleClass="admin-card" spacing="0" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="reservationTable" VBox.vgrow="ALWAYS" styleClass="admin-table" prefHeight="250">
+                        <columns>
+                            <TableColumn fx:id="colResType" text="Type" prefWidth="120" style="-fx-alignment: CENTER;"/>
+                            <TableColumn fx:id="colResCompagnie" text="Compagnie" prefWidth="200"/>
+                            <TableColumn fx:id="colResNumero" text="Numéro" prefWidth="200"/>
+                            <TableColumn fx:id="colResDate" text="Date de départ" prefWidth="180"/>
+                            <TableColumn fx:id="colResStatut" text="Statut" prefWidth="150" style="-fx-alignment: CENTER;"/>
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                        <placeholder>
+                            <Label text="Aucune réservation." styleClass="stats-section-sub"/>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+</VBox>

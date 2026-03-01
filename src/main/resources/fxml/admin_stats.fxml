@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import java.net.URL?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.AdminStatsController"
+      spacing="0"
+      style="-fx-background-color: #f0f4f8;">
+
+    <stylesheets>
+        <URL value="@../css/style.css" />
+        <URL value="@../css/admin-styles.css" />
+    </stylesheets>
+
+    <!-- Header bar -->
+    <HBox alignment="CENTER_LEFT" spacing="16" styleClass="admin-top-bar">
+        <Button onAction="#handleBack" styleClass="admin-button-secondary" text="← Retour"/>
+        <Label text="Statistiques &amp; Insights AI" styleClass="admin-section-title"/>
+        <HBox HBox.hgrow="ALWAYS"/>
+        <Button text="🔄  Actualiser" onAction="#refreshAI" styleClass="admin-button-primary"/>
+    </HBox>
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                style="-fx-background-color: transparent; -fx-background: transparent;">
+        <VBox spacing="28" style="-fx-padding: 30 36;">
+
+            <!-- ── KPI Cards Row ──────────────────────────────────────── -->
+            <VBox spacing="8">
+                <Label text="Vue d'ensemble" styleClass="stats-section-title"/>
+                <Label text="Indicateurs clés en temps réel" styleClass="stats-section-sub"/>
+            </VBox>
+
+            <HBox fx:id="kpiRow" spacing="16" alignment="CENTER_LEFT"/>
+
+            <!-- ── Charts Row ─────────────────────────────────────────── -->
+            <HBox spacing="20" alignment="TOP_CENTER">
+
+                <!-- Pie Chart -->
+                <VBox spacing="12" styleClass="admin-card" HBox.hgrow="ALWAYS">
+                    <Label text="📊  Répartition par Type" styleClass="stats-section-title"/>
+                    <Label text="Parts de marché par catégorie" styleClass="stats-section-sub"/>
+                    <PieChart fx:id="typePieChart" prefHeight="340" legendVisible="true"/>
+                </VBox>
+
+                <!-- Bar Chart -->
+                <VBox spacing="12" styleClass="admin-card" HBox.hgrow="ALWAYS">
+                    <Label text="📅  Activité sur 7 jours" styleClass="stats-section-title"/>
+                    <Label text="Nombre de réservations par jour" styleClass="stats-section-sub"/>
+                    <BarChart fx:id="activityBarChart" prefHeight="340" legendVisible="false">
+                        <xAxis><CategoryAxis label="Date"/></xAxis>
+                        <yAxis><NumberAxis label="Réservations" minorTickVisible="false"/></yAxis>
+                    </BarChart>
+                </VBox>
+
+            </HBox>
+
+            <!-- ── AI Insights Section ────────────────────────────────── -->
+            <VBox spacing="16" styleClass="ai-card">
+                <HBox spacing="14" alignment="CENTER_LEFT">
+                    <StackPane style="-fx-background-color: #bae6fd; -fx-background-radius: 50; -fx-padding: 10;">
+                        <Label text="🤖" style="-fx-font-size: 22px;"/>
+                    </StackPane>
+                    <VBox spacing="2">
+                        <Label text="Conseils Stratégiques AI" styleClass="ai-title"/>
+                        <Label text="Analyse propulsée par GPT-4" styleClass="stats-section-sub"/>
+                    </VBox>
+                </HBox>
+
+                <Separator style="-fx-background-color: #bae6fd;"/>
+
+                <Label fx:id="aiAdviceLabel"
+                       text="⏳  Analyse des données en cours…"
+                       wrapText="true"
+                       styleClass="ai-text"/>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+</VBox>

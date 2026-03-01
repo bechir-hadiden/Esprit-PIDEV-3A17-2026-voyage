@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox fx:id="rootContainer" spacing="30" styleClass="admin-content-container" stylesheets="@../../css/main.css,@../../css/admin-styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.controller.admin.AdminTransportController">
+    <padding>
+        <Insets bottom="30" left="30" right="30" top="30" />
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label styleClass="admin-section-title" text="Gestion des Transports" />
+    </HBox>
+
+    <FlowPane hgap="30" vgap="30">
+        <!-- Manage Vehicles Card -->
+        <VBox onMouseClicked="#manageVehicles" styleClass="admin-stat-card" prefWidth="300" spacing="15" style="-fx-cursor: hand;">
+             <HBox alignment="CENTER_LEFT" spacing="15">
+                <StackPane styleClass="stat-icon-container" style="-fx-background-color: rgba(59, 130, 246, 0.1);">
+                    <Label style="-fx-font-size: 24px; -fx-text-fill: #3b82f6;" text="🚗" />
+                </StackPane>
+                <VBox>
+                    <Label styleClass="stat-label" text="Véhicules" />
+                    <Label styleClass="stat-value" text="Gérer le Parc" style="-fx-font-size: 18px;"/>
+                </VBox>
+            </HBox>
+            <Label wrapText="true" text="Ajouter, modifier ou supprimer des véhicules dans votre flotte." style="-fx-text-fill: #64748b;" />
+        </VBox>
+
+        <!-- Manage Types Card -->
+        <VBox onMouseClicked="#manageTypes" styleClass="admin-stat-card" prefWidth="300" spacing="15" style="-fx-cursor: hand;">
+             <HBox alignment="CENTER_LEFT" spacing="15">
+                <StackPane styleClass="stat-icon-container" style="-fx-background-color: rgba(16, 185, 129, 0.1);">
+                    <Label style="-fx-font-size: 24px; -fx-text-fill: #10b981;" text="📋" />
+                </StackPane>
+                <VBox>
+                    <Label styleClass="stat-label" text="Catégories" />
+                    <Label styleClass="stat-value" text="Types &amp; Tarifs" style="-fx-font-size: 18px;"/>
+                </VBox>
+            </HBox>
+            <Label wrapText="true" text="Définir les types de transport et leurs tarifs de base." style="-fx-text-fill: #64748b;" />
+        </VBox>
+
+        <!-- Stats/Monitor Card -->
+        <VBox onMouseClicked="#showStats" styleClass="admin-stat-card" prefWidth="300" spacing="15" style="-fx-cursor: hand;">
+             <HBox alignment="CENTER_LEFT" spacing="15">
+                <StackPane styleClass="stat-icon-container" style="-fx-background-color: rgba(245, 158, 11, 0.1);">
+                    <Label style="-fx-font-size: 24px; -fx-text-fill: #f59e0b;" text="📈" />
+                </StackPane>
+                <VBox>
+                    <Label styleClass="stat-label" text="Statistiques" />
+                    <Label styleClass="stat-value" text="Analytiques" style="-fx-font-size: 18px;"/>
+                </VBox>
+            </HBox>
+            <Label wrapText="true" text="Visualiser les statistiques d'utilisation des transports." style="-fx-text-fill: #64748b;" />
+        </VBox>
+
+        <!-- SmartNotify Card -->
+        <VBox onMouseClicked="#showSmartNotify" styleClass="admin-stat-card" prefWidth="300" spacing="15" style="-fx-cursor: hand;">
+             <HBox alignment="CENTER_LEFT" spacing="15">
+                <StackPane styleClass="stat-icon-container" style="-fx-background-color: rgba(139, 92, 246, 0.1);">
+                    <Label style="-fx-font-size: 24px; -fx-text-fill: #8b5cf6;" text="🔔" />
+                </StackPane>
+                <VBox>
+                    <Label styleClass="stat-label" text="SmartNotify" />
+                    <Label styleClass="stat-value" text="SMS Monitor" style="-fx-font-size: 18px;"/>
+                </VBox>
+            </HBox>
+            <Label wrapText="true" text="Surveiller et envoyer des notifications SMS aux clients." style="-fx-text-fill: #64748b;" />
+        </VBox>
+    </FlowPane>
+
+</VBox>

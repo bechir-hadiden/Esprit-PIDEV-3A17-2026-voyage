@@ -1,14 +1,20 @@
 package com.example.demo1.controller.admin;
+
 import com.example.demo1.controller.dao.HotelDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import org.example.services.TransportTypeService;
 
 public class AdminDashboardController {
 
     @FXML
     private Label hotelCountLabel;
 
+    @FXML
+    private Label transportCountLabel;
+
     private final HotelDAO hotelDAO = new HotelDAO();
+    private final TransportTypeService transportTypeService = new TransportTypeService();
 
     @FXML
     public void initialize() {
@@ -20,8 +26,18 @@ public class AdminDashboardController {
             int hotelCount = hotelDAO.getAllHotels().size();
             hotelCountLabel.setText(String.valueOf(hotelCount));
         } catch (Exception e) {
-            System.err.println("Error loading dashboard stats: " + e.getMessage());
+            System.err.println("Error loading hotel stats: " + e.getMessage());
             hotelCountLabel.setText("Error");
+        }
+
+        try {
+            int transportCount = transportTypeService.lister().size();
+            transportCountLabel.setText(String.valueOf(transportCount));
+        } catch (Exception e) {
+            System.err.println("Error loading transport stats: " + e.getMessage());
+            if (transportCountLabel != null) {
+                transportCountLabel.setText("Error");
+            }
         }
     }
 
@@ -37,4 +53,3 @@ public class AdminDashboardController {
         // This will trigger navigation to hotels view via parent controller
     }
 }
-
