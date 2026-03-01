@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import java.net.URL?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.AdminStatsController"
+      spacing="0"
+      style="-fx-background-color: #f8fafc;">
+
+    <stylesheets>
+        <java.net.URL value="@../css/style.css" />
+    </stylesheets>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
+        <Button onAction="#handleBack" styleClass="button-secondary, button-icon">
+            <graphic>
+                <Region styleClass="icon, icon-back"/>
+            </graphic>
+        </Button>
+        <Label text="Statistiques &amp; Insights AI" styleClass="header-title"/>
+    </HBox>
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+        <VBox spacing="30" style="-fx-padding: 40;">
+            
+            <HBox spacing="30" alignment="TOP_CENTER">
+                <!-- Pie Chart: Booking Distribution -->
+                <VBox spacing="15" styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="Répartition par Type" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <PieChart fx:id="typePieChart" prefHeight="400"/>
+                </VBox>
+
+                <!-- Bar Chart: Reservation Activity -->
+                <VBox spacing="15" styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="Activité Temporelle (7 jours)" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <BarChart fx:id="activityBarChart">
+                        <xAxis><CategoryAxis label="Date"/></xAxis>
+                        <yAxis><NumberAxis label="Nombre de Réservations"/></yAxis>
+                    </BarChart>
+                </VBox>
+            </HBox>
+
+            <!-- AI Insights Section -->
+            <VBox spacing="20" styleClass="card" style="-fx-background-color: white; -fx-border-color: #2563eb; -fx-border-width: 2; -fx-border-radius: 20;">
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <StackPane style="-fx-background-color: rgba(37, 99, 235, 0.1); -fx-background-radius: 50; -fx-padding: 10;">
+                        <Label text="🤖" style="-fx-font-size: 24px;"/>
+                    </StackPane>
+                    <VBox>
+                        <Label text="Conseils Stratégiques AI" style="-fx-font-size: 20px; -fx-font-weight: 800; -fx-text-fill: #1e293b;"/>
+                        <Label text="Analyse propulsée par ChatGPT" style="-fx-font-size: 12px; -fx-text-fill: #64748b;"/>
+                    </VBox>
+                </HBox>
+                
+                <Separator/>
+                
+                <Label fx:id="aiAdviceLabel" text="Analyse des données en cours..." wrapText="true" 
+                       style="-fx-font-size: 15px; -fx-line-spacing: 5; -fx-text-fill: #334155; -fx-font-style: italic;"/>
+                
+                <HBox alignment="CENTER_RIGHT">
+                    <Button text="Rafraîchir l'Analyse" onAction="#refreshAI" styleClass="button-primary"/>
+                </HBox>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+</VBox>

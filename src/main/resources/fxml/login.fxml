@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.LoginController"
+      alignment="CENTER"
+      spacing="0"
+      styleClass="login-container">
+
+    <stylesheets>
+        <java.net.URL value="@../css/style.css" />
+    </stylesheets>
+
+    <!-- Login Card -->
+    <VBox alignment="CENTER" spacing="30" maxWidth="450" styleClass="card">
+        
+        <VBox alignment="CENTER" spacing="5">
+            <Label text="Transport" styleClass="title-label" style="-fx-text-fill: -primary-blue;"/>
+        </VBox>
+        
+        <VBox spacing="20">
+            <VBox spacing="8">
+                <Label text="Nom d'utilisateur" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="usernameField" promptText="admin" prefHeight="50"/>
+            </VBox>
+
+            <VBox spacing="8">
+                <Label text="Mot de passe" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
+                <PasswordField fx:id="passwordField" promptText="••••••••" prefHeight="50"/>
+            </VBox>
+
+            <Label fx:id="errorLabel" visible="false" style="-fx-text-fill: -danger-red; -fx-font-size: 13px;"/>
+
+            <Button text="Connexion" onAction="#handleLogin" prefHeight="55" styleClass="button-primary" maxWidth="Infinity"/>
+        </VBox>
+
+        <VBox spacing="8" alignment="CENTER" style="-fx-padding: 20 0 0 0; -fx-border-color: -slate-200 transparent transparent transparent; -fx-border-width: 1 0 0 0;">
+            <Label text="Comptes de test" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+            <HBox spacing="20" alignment="CENTER">
+                <Label text="Admin: admin / admin123" styleClass="subtitle-label" style="-fx-font-size: 11px;"/>
+                <Label text="User: user / user123" styleClass="subtitle-label" style="-fx-font-size: 11px;"/>
+            </HBox>
+        </VBox>
+    </VBox>
+
+</VBox>
+

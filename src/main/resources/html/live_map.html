@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Carte des Véhicules</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #map {
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Custom markers styling */
+        .custom-div-icon {
+            background: transparent;
+            border: none;
+        }
+
+        .marker-pin {
+            width: 30px;
+            height: 30px;
+            border-radius: 50% 50% 50% 0;
+            background: #3b82f6;
+            /* Default Blue */
+            position: absolute;
+            transform: rotate(-45deg);
+            left: 50%;
+            top: 50%;
+            margin: -15px 0 0 -15px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            border: 2px solid white;
+        }
+
+        .marker-icon {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            margin: -10px 0 0 -10px;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+        }
+
+        .marker-label {
+            position: absolute;
+            bottom: -20px;
+            left: -25px;
+            width: 80px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #1e293b;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map;
+        var markers = {}; // Store markers by vehicle ID
+
+        // Initialize map
+        function initMap() {
+            map = L.map('map').setView([36.8065, 10.1815], 11); // Default to Tunis
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+            }).addTo(map);
+
+            console.log("Map initialized");
+        }
+
+        // Called from Java to create/update a marker
+        function setVehicleMarker(id, type, compagnie, lat, lng, isDisponible) {
+            if (!map) initMap();
+
+            var pos = [lat, lng];
+
+            // Determine color based on type & availability
+            var color = isDisponible ? '#10b981' : '#ef4444'; // Green if true, Red if false
+            if (!isDisponible) {
+                color = '#64748b'; // Grey out unavailable ones visually context
+            } else if (type.toLowerCase().includes('taxi')) {
+                color = '#f59e0b'; // Amber for Taxi
+            } else if (type.toLowerCase().includes('bus')) {
+                color = '#3b82f6'; // Blue for Bus
+            }
+
+            var emoji = type.toLowerCase().includes('taxi') ? '🚕' : (type.toLowerCase().includes('bus') ? '🚌' : '🚗');
+            if (!isDisponible) emoji = '🔒';
+
+            // Custom icon HTML
+            var iconHtml = `
+            <div class='marker-pin' style='background: ${color};'></div>
+            <div class='marker-icon'>${emoji}</div>
+            <div class='marker-label'>${compagnie}</div>
+        `;
+
+            var customIcon = L.divIcon({
+                className: 'custom-div-icon',
+                html: iconHtml,
+                iconSize: [30, 42],
+                iconAnchor: [15, 42]
+            });
+
+            if (markers[id]) {
+                // Update existing marker
+                markers[id].setLatLng(pos);
+                markers[id].setIcon(customIcon);
+                // Create restricted marker (not draggable)
+                var marker = L.marker(pos, {
+                    icon: customIcon
+                }).addTo(map);
+
+                // Add popup
+                marker.bindPopup(`<b>${type}</b><br>${compagnie}<br>Statut: ${isDisponible ? 'Disponible' : 'Réservé'}`);
+
+                markers[id] = marker;
+            }
+
+            // Recenter map on first added marker if we have only one, or fit bounds
+            var group = new L.featureGroup(Object.values(markers));
+            map.fitBounds(group.getBounds().pad(0.1));
+        }
+
+        // Clear all markers
+        function clearMarkers() {
+            for (var id in markers) {
+                map.removeLayer(markers[id]);
+            }
+            markers = {};
+        }
+
+        // Init map when page loads
+        window.onload = initMap;
+    </script>
+
+</body>
+
+</html>

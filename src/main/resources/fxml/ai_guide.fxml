@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.SVGPath?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.controllers.AIGuideController"
+      spacing="30" styleClass="content-area" stylesheets="@../css/style.css"
+      alignment="CENTER">
+    
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Button onAction="#goBack" styleClass="button-icon">
+            <graphic>
+                <Region styleClass="icon, icon-back" />
+            </graphic>
+        </Button>
+        <Label text="Assistant Voyage Intelligent AI" styleClass="header-title"/>
+    </HBox>
+
+    <VBox spacing="25" styleClass="card" maxWidth="600" alignment="CENTER">
+        <padding>
+            <Insets top="30" right="30" bottom="30" left="30"/>
+        </padding>
+
+        <Label text="Où souhaitez-vous aller ?" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+        
+        <VBox spacing="10">
+            <Label text="Point de départ" styleClass="field-label"/>
+            <TextField fx:id="departureField" promptText="Ex: Tunis, Centre-ville" styleClass="text-field"/>
+        </VBox>
+
+        <VBox spacing="10">
+            <Label text="Destination" styleClass="field-label"/>
+            <TextField fx:id="arrivalField" promptText="Ex: Sousse, Port" styleClass="text-field"/>
+        </VBox>
+
+        <Button fx:id="suggestBtn" text="Obtenir une recommandation" onAction="#handleGetSuggestion" 
+                styleClass="button-primary" maxWidth="Infinity" style="-fx-font-size: 14px; -fx-padding: 12 24;"/>
+    </VBox>
+
+    <VBox fx:id="resultContainer" spacing="15" visible="false" managed="false" alignment="CENTER">
+        <Label text="Notre suggestion AI :" styleClass="section-title"/>
+        <VBox fx:id="recoCardContainer" alignment="CENTER" />
+    </VBox>
+
+</VBox>

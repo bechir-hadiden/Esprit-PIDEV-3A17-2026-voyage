@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.controllers.MyReservationsController"
+            style="-fx-background-color: #f8fafc;">
+
+    <stylesheets>
+        <URL value="@../css/style.css" />
+    </stylesheets>
+
+    <!-- Header -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
+            <Button text="← Retour" onAction="#goBack" styleClass="button-secondary"/>
+            <Label text="Mes Réservations" styleClass="header-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </top>
+
+    <!-- Reservations Table -->
+    <center>
+        <VBox spacing="30" style="-fx-padding: 40;">
+            
+            <HBox alignment="BOTTOM_LEFT" spacing="20">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Mes Réservations" styleClass="title-label"/>
+                    <Label text="Gérez vos prochaines mobilités en un coup d'œil" styleClass="subtitle-label"/>
+                </VBox>
+                <HBox spacing="10" alignment="BOTTOM_RIGHT" styleClass="card" style="-fx-padding: 15 25; -fx-background-radius: 15;">
+                    <VBox alignment="CENTER_LEFT">
+                        <Label text="Total" style="-fx-font-size: 11px; -fx-text-fill: -slate-500; -fx-font-weight: 800; -fx-text-transform: uppercase;"/>
+                        <Label fx:id="totalLabel" text="0" style="-fx-font-size: 24px; -fx-text-fill: -primary-blue; -fx-font-weight: 900;"/>
+                    </VBox>
+                </HBox>
+            </HBox>
+
+            <StackPane VBox.vgrow="ALWAYS" styleClass="card" style="-fx-padding: 0; -fx-background-radius: 20; -fx-overflow: hidden;">
+                <TableView fx:id="reservationTable" styleClass="modern-table, reservation-table">
+                    <columns>
+                        <TableColumn fx:id="colId" text="Ref" minWidth="60" prefWidth="70"/>
+                        <TableColumn fx:id="colType" text="Service" minWidth="100" prefWidth="120"/>
+                        <TableColumn fx:id="colCompagnie" text="Compagnie" minWidth="150" prefWidth="180"/>
+                        <TableColumn fx:id="colNumero" text="Véhicule" minWidth="120" prefWidth="140"/>
+                        <TableColumn fx:id="colDate" text="Date &amp; Heure" minWidth="160" prefWidth="190"/>
+                        <TableColumn fx:id="colStatut" text="État" minWidth="120" prefWidth="130"/>
+                        <TableColumn fx:id="colPrix" text="Tarif" minWidth="90" prefWidth="110"/>
+                        <TableColumn fx:id="colActions" text="Gestion" minWidth="240" prefWidth="260"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </StackPane>
+        </VBox>
+    </center>
+
+</BorderPane>
