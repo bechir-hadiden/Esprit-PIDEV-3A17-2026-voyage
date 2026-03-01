@@ -15,6 +15,7 @@ public class User {
     private StringProperty phone = new SimpleStringProperty();
     private StringProperty passwordHash = new SimpleStringProperty();
     private StringProperty role = new SimpleStringProperty();
+    private BooleanProperty blocked = new SimpleBooleanProperty(false);
 
     public User() {
     }
@@ -122,6 +123,18 @@ public class User {
 
     public StringProperty roleProperty() {
         return role;
+    }
+
+    public boolean isBlocked() {
+        return blocked.get();
+    }
+
+    public void setBlocked(boolean value) {
+        this.blocked.set(value);
+    }
+
+    public BooleanProperty blockedProperty() {
+        return blocked;
     }
 
     public boolean isAdmin() {

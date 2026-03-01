@@ -73,15 +73,13 @@
                         <Label styleClass="text-muted" text="Don't have an account?"/>
                         <Hyperlink onAction="#handleSignUp" styleClass="auth-link" text="Sign up"/>
                     </HBox>
+                    
+                    <!-- Back to Home -->
+                    <HBox alignment="CENTER">
+                        <Hyperlink onAction="#handleBackToHome" styleClass="auth-link" text="← Back to Home"/>
+                    </HBox>
                 </VBox>
 
-                <!-- Demo Credentials -->
-                <VBox alignment="CENTER" styleClass="demo-section">
-                    <VBox.margin>
-                        <Insets top="20"/>
-                    </VBox.margin>
-                    <Label styleClass="demo-text" text="Demo - Admin: admin / admin | Client: john.doe / admin"/>
-                </VBox>
             </VBox>
         </VBox>
 

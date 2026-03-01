@@ -194,6 +194,7 @@ public class MainLayoutController {
         plansBtn.getStyleClass().remove("nav-button-active");
         bookingsBtn.getStyleClass().remove("nav-button-active");
 
+
         // Set active button
         switch (view) {
             case DASHBOARD:

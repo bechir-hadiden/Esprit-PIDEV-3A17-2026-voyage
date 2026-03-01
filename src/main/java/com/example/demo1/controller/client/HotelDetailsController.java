@@ -19,6 +19,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 
+import java.util.List;
+
 public class HotelDetailsController {
 
     @FXML
@@ -287,7 +289,8 @@ public class HotelDetailsController {
     private void loadRooms() {
         roomsContainer.getChildren().clear();
 
-        if (hotel.getRoomTypes().isEmpty()) {
+        List<RoomType> roomTypes = hotel.getRoomTypes();
+        if (roomTypes == null || roomTypes.isEmpty()) {
             VBox emptyBox = new VBox(16);
             emptyBox.setAlignment(Pos.CENTER_LEFT);
             Label msg = new Label(isAmadeusHotel
@@ -321,7 +324,7 @@ public class HotelDetailsController {
             return;
         }
 
-        for (RoomType room : hotel.getRoomTypes()) {
+        for (RoomType room : roomTypes) {
             HBox roomCard = new HBox(24);
             roomCard.getStyleClass().add("room-card");
             roomCard.setPadding(new Insets(24));
@@ -413,7 +416,8 @@ public class HotelDetailsController {
     private void loadAmenities() {
         amenitiesContainer.getChildren().clear();
 
-        if (hotel.getAmenities().isEmpty()) {
+        List<String> amenities = hotel.getAmenities();
+        if (amenities == null || amenities.isEmpty()) {
             if (isAmadeusHotel) {
                 for (String a : new String[]{"Free WiFi", "Parking", "24h Reception", "Air Conditioning"}) {
                     HBox item = new HBox(12);
@@ -437,7 +441,7 @@ public class HotelDetailsController {
             }
             return;
         }
-        for (String amenity : hotel.getAmenities()) {
+        for (String amenity : amenities) {
             HBox item = new HBox(12);
             item.getStyleClass().add("amenity-item");
             item.setAlignment(Pos.CENTER_LEFT);

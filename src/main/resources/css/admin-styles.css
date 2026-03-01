@@ -40,7 +40,7 @@
 }
 
 .admin-nav-item.active {
-    -fx-background-color: linear-gradient(90deg, #3b82f6, #2563eb);
+    -fx-background-color: linear-gradient(to right, #3b82f6, #2563eb);
     -fx-text-fill: white;
 }
 
@@ -75,7 +75,7 @@
 }
 
 .stat-card {
-    -fx-background-color: linear-gradient(135deg, #3b82f6, #2563eb);
+    -fx-background-color: linear-gradient(to bottom right, #3b82f6, #2563eb);
     -fx-background-radius: 16px;
     -fx-padding: 24px;
     -fx-spacing: 12;

@@ -6,7 +6,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.demo1.controller.DeclarationController"
+            fx:controller="com.example.demo1.controller.GestionReclamationController"
             stylesheets="@../css/contact.css">
 
     <!-- HEADER -->
@@ -63,10 +63,10 @@
                               maxWidth="Infinity">
                         <items>
                             <javafx.collections.FXCollections fx:factory="observableArrayList">
-                                <String fx:value="Demande d'information"/>
-                                <String fx:value="Réclamation"/>
-                                <String fx:value="Suggestion"/>
-                                <String fx:value="Autre"/>
+                                <fx:String fx:value="Demande d'information"/>
+                                <fx:String fx:value="Réclamation"/>
+                                <fx:String fx:value="Suggestion"/>
+                                <fx:String fx:value="Autre"/>
                             </javafx.collections.FXCollections>
                         </items>
                     </ComboBox>

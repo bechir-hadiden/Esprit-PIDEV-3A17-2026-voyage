@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.demo1.controller.admin.UserDialogController"
+            prefWidth="500" prefHeight="550">
+    
+    <content>
+        <VBox spacing="15">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <!-- Title -->
+            <Label fx:id="titleLabel" text="Add New User">
+                <font>
+                    <Font size="20" name="System Bold"/>
+                </font>
+            </Label>
+            
+            <!-- Form Grid -->
+            <GridPane vgap="12" hgap="10">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="100" prefWidth="120"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                
+                <!-- Full Name -->
+                <Label text="Full Name:*" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="fullNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                         promptText="Enter full name"/>
+                
+                <!-- Username -->
+                <Label text="Username:*" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="usernameField" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                         promptText="Enter username"/>
+                
+                <!-- Email -->
+                <Label text="Email:*" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="emailField" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                         promptText="Enter email address"/>
+                
+                <!-- Phone -->
+                <Label text="Phone:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <TextField fx:id="phoneField" GridPane.rowIndex="3" GridPane.columnIndex="1"
+                         promptText="Enter phone number (optional)"/>
+                
+                <!-- Role -->
+                <Label text="Role:*" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="roleComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                          prefWidth="200"/>
+                
+                <!-- Password (for new users) -->
+                <Label fx:id="passwordLabel" text="Password:*" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                <PasswordField fx:id="passwordField" GridPane.rowIndex="5" GridPane.columnIndex="1"
+                              promptText="Enter password"/>
+                
+                <!-- Confirm Password -->
+                <Label fx:id="confirmPasswordLabel" text="Confirm Password:*" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                <PasswordField fx:id="confirmPasswordField" GridPane.rowIndex="6" GridPane.columnIndex="1"
+                              promptText="Confirm password"/>
+                
+                <!-- Blocked Status -->
+                <Label text="Status:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                <CheckBox fx:id="blockedCheckBox" text="Blocked (user cannot login)" 
+                         GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+                
+            </GridPane>
+            
+            <!-- Error Message -->
+            <Label fx:id="errorLabel" text="" 
+                   style="-fx-text-fill: #ef4444; -fx-font-size: 12;"
+                   wrapText="true"
+                   visible="false"/>
+            
+            <!-- Info Text -->
+            <Label text="* Required fields" 
+                   style="-fx-text-fill: #64748b; -fx-font-size: 11;"/>
+            
+        </VBox>
+    </content>
+    
+    <buttonTypes>
+        <ButtonType fx:constant="CANCEL"/>
+        <ButtonType fx:constant="OK"/>
+    </buttonTypes>
+    
+</DialogPane>

@@ -80,6 +80,20 @@ public class HotelsController {
     private FilteredList<Hotel> filteredHotels;
     private SearchFilters filters;
 
+    // Pagination fields
+    private int currentPage = 1;
+    private int itemsPerPage = 20;
+    private int totalPages = 1;
+
+    @FXML
+    private Button prevPageButton;
+    @FXML
+    private Button nextPageButton;
+    @FXML
+    private Label pageLabel;
+    @FXML
+    private HBox paginationBox;
+
     @FXML
     public void initialize() {
         // Initialize filters from session or create new
@@ -242,25 +256,72 @@ public class HotelsController {
     private void updateHotelDisplay() {
         hotelGrid.getChildren().clear();
 
-        int total = filteredHotels.getSource().size();
-        int showing = filteredHotels.size();
-        resultsLabel.setText(String.format("Showing %d of %d properties", showing, total));
+        int total = filteredHotels.size();
+        totalPages = (int) Math.ceil((double) total / itemsPerPage);
+        if (totalPages == 0) totalPages = 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
 
-        if (showing == 0) {
+        // Update pagination controls
+        if (pageLabel != null) {
+            pageLabel.setText(String.format("Page %d of %d", currentPage, totalPages));
+        }
+        if (prevPageButton != null) {
+            prevPageButton.setDisable(currentPage <= 1);
+        }
+        if (nextPageButton != null) {
+            nextPageButton.setDisable(currentPage >= totalPages);
+        }
+
+        // Calculate start and end indices for current page
+        int startIndex = (currentPage - 1) * itemsPerPage;
+        int endIndex = Math.min(startIndex + itemsPerPage, total);
+        int showing = endIndex - startIndex;
+
+        resultsLabel.setText(String.format("Showing %d of %d properties (Page %d/%d)", 
+            showing, total, currentPage, totalPages));
+
+        if (total == 0) {
             hotelGrid.setVisible(false);
             hotelGrid.setManaged(false);
             noResultsBox.setVisible(true);
             noResultsBox.setManaged(true);
+            if (paginationBox != null) {
+                paginationBox.setVisible(false);
+                paginationBox.setManaged(false);
+            }
         } else {
             hotelGrid.setVisible(true);
             hotelGrid.setManaged(true);
             noResultsBox.setVisible(false);
             noResultsBox.setManaged(false);
+            if (paginationBox != null) {
+                paginationBox.setVisible(true);
+                paginationBox.setManaged(true);
+            }
 
-            for (Hotel hotel : filteredHotels) {
+            // Get hotels for current page
+            List<Hotel> pageHotels = filteredHotels.subList(startIndex, endIndex);
+            for (Hotel hotel : pageHotels) {
                 VBox card = createHotelCard(hotel);
                 hotelGrid.getChildren().add(card);
             }
+        }
+    }
+
+    @FXML
+    private void goToPreviousPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            updateHotelDisplay();
+        }
+    }
+
+    @FXML
+    private void goToNextPage() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            updateHotelDisplay();
         }
     }
 
@@ -472,6 +533,7 @@ public class HotelsController {
             List<Hotel> results = task.getValue();
             Platform.runLater(() -> {
                 hotelList.clear();
+                currentPage = 1; // Reset to first page
                 if (results != null && !results.isEmpty()) {
                     hotelList.addAll(results);
                     // Clear main search filter so Amadeus results are not hidden by query
@@ -508,6 +570,7 @@ public class HotelsController {
     private void showDatabaseHotels() {
         hotelList.clear();
         hotelList.addAll(hotelDAO.getAllHotels());
+        currentPage = 1; // Reset to first page
         if (amadeusCityField != null) amadeusCityField.clear();
         applyFilters();
     }
@@ -531,8 +594,9 @@ public class HotelsController {
         h.setCountry(a.getCountryCode() != null ? a.getCountryCode() : "");
         h.setRating(a.getRating() != null ? a.getRating() : 0);
         h.setReviewCount(0);
-        h.setPricePerNight(0); // Amadeus list doesn't include price; use 0 so filter doesn't exclude
+        h.setPricePerNight(0);
         h.setPricePerWeek(0);
+        h.setDescription(a.getName() + " in " + h.getCity() + ". Data from Amadeus API.");
         return h;
     }
 }

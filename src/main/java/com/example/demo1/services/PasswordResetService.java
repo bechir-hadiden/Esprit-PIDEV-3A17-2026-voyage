@@ -1,4 +1,5 @@
 package com.example.demo1.services;
+
 import com.example.demo1.entity.User;
 import com.example.demo1.controller.dao.UserDAO;
 import java.util.Map;
@@ -13,7 +14,7 @@ public class PasswordResetService {
     private static final Random RAND = new Random();
 
     private final UserDAO userDAO = new UserDAO();
-    private final EmailService emailService = new EmailService();
+    private final EmailServicePassword emailService = new EmailServicePassword();
 
     // In-memory: email -> {code, expiryTimeMillis}
     private final Map<String, ResetEntry> codes = new ConcurrentHashMap<>();
@@ -38,7 +39,12 @@ public class PasswordResetService {
         if (user == null) return false;
 
         String code = String.format("%06d", RAND.nextInt(1_000_000));
-        if (!emailService.sendResetCode(e, code)) return false;
+        
+        // Try to send email, fallback to console if it fails
+        boolean emailSent = emailService.sendResetCode(e, code);
+        if (!emailSent) {
+            System.out.println("🔐 Reset code for " + email + ": " + code);
+        }
 
         codes.put(e.toLowerCase(), new ResetEntry(code, System.currentTimeMillis() + CODE_EXPIRY_MINUTES * 60_000L));
         return true;
@@ -70,5 +76,20 @@ public class PasswordResetService {
     public boolean isEmailConfigured() {
         return emailService.isConfigured();
     }
-}
 
+    /**
+     * Verify if code exists and is valid without resetting password.
+     * Used for step 2 verification in multi-step wizard.
+     */
+    public boolean verifyCodeOnly(String email, String code) {
+        if (email == null || code == null) return false;
+        String e = email.trim().toLowerCase();
+        ResetEntry entry = codes.get(e);
+        if (entry == null || !entry.code.equals(code.trim())) return false;
+        if (System.currentTimeMillis() > entry.expiryAt) {
+            codes.remove(e);
+            return false;
+        }
+        return true;
+    }
+}

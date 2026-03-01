@@ -94,6 +94,11 @@ public class SignInController {
         HelloApplication.showView(SessionManager.View.FORGOT_PASSWORD);
     }
 
+    @FXML
+    private void handleBackToHome() {
+        HelloApplication.showHome();
+    }
+
     private void showError(String message) {
         errorLabel.setText(message);
         errorLabel.setVisible(true);

@@ -91,14 +91,33 @@ public class AmadeusHotelService {
                 + "&checkInDate=" + checkInStr
                 + "&checkOutDate=" + checkOutStr;
         try {
-            JsonNode root = client.get("/v1/shopping/hotel-offers", query);
+            JsonNode root = client.get("/v3/shopping/hotel-offers", query);
             return parseHotelOffersResponse(root, checkInStr, checkOutStr);
-        } catch (Exception e) {
-            boolean is404 = (e instanceof AmadeusApiException ex && ex.getStatusCode() == 404)
-                    || (e.getCause() instanceof AmadeusApiException ex2 && ex2.getStatusCode() == 404);
-            if (is404) {
-                JsonNode root = client.get("/v2/shopping/hotel-offers", query);
+        } catch (AmadeusApiException e) {
+            // Handle specific error codes
+            if (e.getStatusCode() == 400) {
+                if (e.getMessage().contains("3843")) {
+                    System.out.println("Hotel " + amadeusHotelId + " cannot accommodate " + a + " guests. Skipping offers.");
+                    return new ArrayList<>(); // Return empty list, hotel can't accommodate this many guests
+                }
+                if (e.getMessage().contains("3664")) {
+                    System.out.println("No rooms available at hotel " + amadeusHotelId + " for the requested dates. Skipping offers.");
+                    return new ArrayList<>(); // Return empty list, no rooms available
+                }
+            }
+            // Try v1 as fallback for 301/404
+            if (e.getStatusCode() == 301 || e.getStatusCode() == 404) {
+                JsonNode root = client.get("/v1/shopping/hotel-offers", query);
                 return parseHotelOffersResponse(root, checkInStr, checkOutStr);
+            }
+            throw e;
+        } catch (Exception e) {
+            // Try v1 as fallback for wrapped exceptions
+            if (e.getCause() instanceof AmadeusApiException cause) {
+                if (cause.getStatusCode() == 301 || cause.getStatusCode() == 404) {
+                    JsonNode root = client.get("/v1/shopping/hotel-offers", query);
+                    return parseHotelOffersResponse(root, checkInStr, checkOutStr);
+                }
             }
             throw e;
         }

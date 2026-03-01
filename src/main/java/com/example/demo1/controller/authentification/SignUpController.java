@@ -49,6 +49,18 @@ public class SignUpController {
             return;
         }
 
+        // Full Name validation - only letters and spaces
+        if (!isValidFullName(fullName)) {
+            showError("Full name must contain only letters and spaces");
+            return;
+        }
+
+        // Email validation
+        if (!isValidEmail(email)) {
+            showError("Please enter a valid email address (must contain @ and domain)");
+            return;
+        }
+
         if (!password.equals(confirmPassword)) {
             showError("Passwords do not match");
             return;
@@ -132,5 +144,15 @@ public class SignUpController {
     private void hideError() {
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
+    }
+
+    private boolean isValidFullName(String fullName) {
+        // Only letters and spaces allowed
+        return fullName.matches("^[a-zA-Z\\s]+$");
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        return email.matches(emailRegex);
     }
 }

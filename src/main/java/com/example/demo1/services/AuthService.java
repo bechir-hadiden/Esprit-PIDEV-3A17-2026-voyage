@@ -3,6 +3,8 @@ import com.example.demo1.entity.User;
 import com.example.demo1.controller.dao.UserDAO;
 import com.example.demo1.*;
 
+import java.util.List;
+
 /**
  * Authentication Service for SmartTrip application.
  * Handles user authentication using database-backed storage.
@@ -26,14 +28,20 @@ public class AuthService {
 
     /**
      * Login with username and password.
+     * Checks if user is blocked before allowing login.
      *
      * @param username User's username
      * @param password User's plain text password
-     * @return true if authentication successful, false otherwise
+     * @return true if authentication successful and user not blocked, false otherwise
      */
     public boolean login(String username, String password) {
         User user = userDAO.authenticateUser(username, password);
         if (user != null) {
+            // Check if user is blocked
+            if (user.isBlocked()) {
+                System.out.println("Blocked user attempted login: " + user.getUsername());
+                return false; // User is blocked, cannot login
+            }
             currentUser = user;
             BookingService.getInstance().loadHotelBookingsFromDb();
             System.out.println("User logged in: " + user.getUsername() + " (Role: " + user.getRole() + ")");
@@ -137,6 +145,36 @@ public class AuthService {
             return userDAO.updatePassword(Integer.parseInt(currentUser.getId()), newPassword);
         }
         return false;
+    }
+
+    /**
+     * Get all users from database.
+     *
+     * @return List of all users
+     */
+    public List<User> getAllUsers() {
+        return userDAO.getAllUsers();
+    }
+
+    /**
+     * Update user's blocked status.
+     *
+     * @param userId User ID
+     * @param blocked true to block, false to unblock
+     * @return true if successful, false otherwise
+     */
+    public boolean updateUserBlockedStatus(String userId, boolean blocked) {
+        return userDAO.updateBlockedStatus(userId, blocked);
+    }
+
+    /**
+     * Delete a user from the database.
+     *
+     * @param userId User ID to delete
+     * @return true if successful, false otherwise
+     */
+    public boolean deleteUser(String userId) {
+        return userDAO.deleteUser(userId);
     }
 }
 

@@ -33,6 +33,8 @@
                         text="🎁  Offers" onAction="#showOffers"/>
                 <Button fx:id="plansButton" maxWidth="Infinity" styleClass="admin-nav-item"
                         text="📋  Plans" onAction="#showPlans"/>
+                <Button fx:id="usersButton" maxWidth="Infinity" styleClass="admin-nav-item"
+                        text="👥  Users" onAction="#showUsers"/>
 
                 <!-- Spacer -->
                 <Region VBox.vgrow="ALWAYS"/>

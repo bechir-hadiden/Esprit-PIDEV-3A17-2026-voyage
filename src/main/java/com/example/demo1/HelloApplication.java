@@ -46,7 +46,7 @@ public class HelloApplication extends Application {
             if (scene == null) {
                 scene = new Scene(root);
                 scene.getStylesheets()
-                        .add(HelloApplication.class.getResource("/com/smarttrip/css/main.css").toExternalForm());
+                        .add(HelloApplication.class.getResource("/com/example/demo1/css/main.css").toExternalForm());
                 primaryStage.setScene(scene);
             } else {
                 scene.setRoot(root);
@@ -99,6 +99,28 @@ public class HelloApplication extends Application {
         }
     }
 
+    public static void showHome() {
+        try {
+            String fxmlFile = "/fxml/home.fxml";
+            FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource(fxmlFile));
+            Parent root = loader.load();
+
+            Scene scene = primaryStage.getScene();
+            if (scene == null) {
+                scene = new Scene(root);
+                primaryStage.setScene(scene);
+            } else {
+                scene.setRoot(root);
+            }
+
+            primaryStage.setMaximized(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error loading home view: " + e.getMessage());
+        }
+    }
+
     private static String getFxmlFile(SessionManager.View view) {
         switch (view) {
             case SIGN_IN:
@@ -106,7 +128,7 @@ public class HelloApplication extends Application {
             case SIGN_UP:
                 return "/fxml/authentification/SignUp.fxml";
             case FORGOT_PASSWORD:
-                return "/fxml/authentification/SignIn.fxml"; // TODO: Create ForgotPassword.fxml
+                return "/fxml/authentification/ForgetPassword.fxml";
             case DASHBOARD:
             case HOTELS:
             case HOTEL_DETAILS:

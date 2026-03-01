@@ -23,7 +23,7 @@ public class SessionManager {
 
     public enum View {
         SIGN_IN, SIGN_UP, FORGOT_PASSWORD, DASHBOARD, HOTELS, HOTEL_DETAILS, BOOKING,
-        TRANSPORT, TICKET_PLANS, MY_BOOKINGS, SETTINGS
+        TRANSPORT, TICKET_PLANS, MY_BOOKINGS, RECLAMATION, SETTINGS
     }
 
     private SessionManager() {}

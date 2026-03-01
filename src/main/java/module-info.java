@@ -5,6 +5,7 @@ module com.example.demo1 {
     requires javafx.web;
     requires javafx.graphics;
     requires java.sql;
+    requires jakarta.mail;
     requires java.net.http; // <-- pour HttpClient
     requires com.google.gson;  // ← Ajoute cette ligne
     requires com.google.zxing;

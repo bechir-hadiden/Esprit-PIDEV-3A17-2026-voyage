@@ -148,6 +148,16 @@
         <!-- Hotel cards will be added dynamically -->
     </FlowPane>
 
+    <!-- Pagination -->
+    <HBox fx:id="paginationBox" alignment="CENTER" spacing="16" visible="false" managed="false">
+        <padding>
+            <Insets top="16" bottom="16"/>
+        </padding>
+        <Button fx:id="prevPageButton" onAction="#goToPreviousPage" styleClass="outline-button" text="◀ Previous"/>
+        <Label fx:id="pageLabel" text="Page 1 of 1" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+        <Button fx:id="nextPageButton" onAction="#goToNextPage" styleClass="outline-button" text="Next ▶"/>
+    </HBox>
+
     <!-- No Results -->
     <VBox fx:id="noResultsBox" alignment="CENTER" spacing="16" visible="false" managed="false" VBox.vgrow="ALWAYS">
         <StackPane styleClass="no-results-icon-bg">

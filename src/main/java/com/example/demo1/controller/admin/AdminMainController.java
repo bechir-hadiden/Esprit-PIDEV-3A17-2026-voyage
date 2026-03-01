@@ -29,6 +29,8 @@ public class AdminMainController {
     private Button offersButton;
     @FXML
     private Button plansButton;
+    @FXML
+    private Button usersButton;
 
     private final AuthService authService = AuthService.getInstance();
 
@@ -71,6 +73,12 @@ public class AdminMainController {
     private void showPlans() {
         loadComingSoon("Plans");
         setActiveButton(plansButton);
+    }
+
+    @FXML
+    private void showUsers() {
+        loadContent("/fxml/admin/AdminUsers.fxml");
+        setActiveButton(usersButton);
     }
 
     @FXML
@@ -125,6 +133,7 @@ public class AdminMainController {
         transportButton.getStyleClass().remove("active");
         offersButton.getStyleClass().remove("active");
         plansButton.getStyleClass().remove("active");
+        usersButton.getStyleClass().remove("active");
 
         // Add active class to the selected button
         if (!activeButton.getStyleClass().contains("active")) {

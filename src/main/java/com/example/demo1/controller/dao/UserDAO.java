@@ -4,6 +4,8 @@ import com.example.demo1.Utils.Database;
 import com.example.demo1.Utils.BCryptWrapper;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Data Access Object for User entity.
@@ -181,33 +183,6 @@ public class UserDAO {
     }
 
     /**
-     * Update existing user.
-     *
-     * @param user User object with updated data
-     * @return true if update successful, false otherwise
-     */
-    public boolean updateUser(User user) {
-        String sql = "UPDATE users SET full_name = ?, email = ?, phone = ?, avatar = ? WHERE id = ?";
-
-        try (Connection conn = dbConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, user.getFullName());
-            pstmt.setString(2, user.getEmail());
-            pstmt.setString(3, user.getPhone());
-            pstmt.setString(4, user.getAvatar());
-            pstmt.setInt(5, Integer.parseInt(user.getId()));
-
-            return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error updating user: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    /**
      * Update user password.
      *
      * @param userId      User ID
@@ -256,6 +231,100 @@ public class UserDAO {
     }
 
     /**
+     * Get all users from database.
+     *
+     * @return List of all users
+     */
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM users";
+
+        try (Connection conn = dbConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                users.add(extractUserFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching all users: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+    /**
+     * Update user's blocked status.
+     *
+     * @param userId User ID string
+     * @param blocked true to block, false to unblock
+     * @return true if successful, false otherwise
+     */
+    public boolean updateBlockedStatus(String userId, boolean blocked) {
+        String sql = "UPDATE users SET blocked = ? WHERE id = ?";
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setBoolean(1, blocked);
+            pstmt.setInt(2, Integer.parseInt(userId));
+
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating blocked status: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
+     * Update existing user information.
+     *
+     * @param user User object with updated data
+     * @return true if update successful, false otherwise
+     */
+    public boolean updateUser(User user) {
+        String sql = "UPDATE users SET full_name = ?, email = ?, phone = ?, role = ?, blocked = ? " +
+                "WHERE id = ?";
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, user.getFullName());
+            pstmt.setString(2, user.getEmail());
+            pstmt.setString(3, user.getPhone());
+            pstmt.setString(4, user.getRole());
+            pstmt.setBoolean(5, user.isBlocked());
+            pstmt.setInt(6, Integer.parseInt(user.getId()));
+
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating user: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
+     * Delete user by ID (String version).
+     *
+     * @param userId User ID as String
+     * @return true if deletion successful, false otherwise
+     */
+    public boolean deleteUser(String userId) {
+        try {
+            int id = Integer.parseInt(userId);
+            return deleteUser(id);
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid user ID format: " + userId);
+            return false;
+        }
+    }
+
+    /**
      * Extract User object from ResultSet.
      *
      * @param rs ResultSet positioned at a user row
@@ -272,6 +341,13 @@ public class UserDAO {
         user.setAvatar(rs.getString("avatar"));
         user.setRole(rs.getString("role"));
         user.setPasswordHash(rs.getString("password_hash"));
+        // Handle blocked field (may not exist in older database schemas)
+        try {
+            user.setBlocked(rs.getBoolean("blocked"));
+        } catch (SQLException e) {
+            // Field doesn't exist, default to false
+            user.setBlocked(false);
+        }
         return user;
     }
 }
