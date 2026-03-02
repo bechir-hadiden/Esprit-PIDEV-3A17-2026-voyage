@@ -107,7 +107,8 @@ public class MyReservationsController {
             private final Button editBtn = new Button();
             private final Button deleteBtn = new Button();
             private final Button pdfBtn = new Button();
-            private final HBox container = new HBox(12, pdfBtn, editBtn, deleteBtn);
+            private final Button payBtn = new Button("💳 Payer");
+            private final HBox container = new HBox(10, pdfBtn, payBtn, editBtn, deleteBtn);
 
             {
                 // Specialized styling for action buttons to make them feel "mini" and
@@ -142,6 +143,15 @@ public class MyReservationsController {
                 editBtn.setOnAction(event -> handleEdit(getTableView().getItems().get(getIndex())));
                 deleteBtn.setOnAction(event -> handleDelete(getTableView().getItems().get(getIndex())));
                 pdfBtn.setOnAction(event -> handlePdfExport(getTableView().getItems().get(getIndex())));
+
+                // Pay Button
+                payBtn.setStyle(
+                        "-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 14; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-size: 12;");
+                payBtn.setOnMouseEntered(ev -> payBtn.setStyle(
+                        "-fx-background-color: #059669; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 14; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-size: 12;"));
+                payBtn.setOnMouseExited(ev -> payBtn.setStyle(
+                        "-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 14; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-size: 12;"));
+                payBtn.setOnAction(event -> handlePay(getTableView().getItems().get(getIndex())));
             }
 
             @Override
@@ -154,6 +164,27 @@ public class MyReservationsController {
                 }
             }
         });
+    }
+
+    private void handlePay(Reservation r) {
+        try {
+            javafx.scene.Scene scene = reservationTable.getScene();
+            javafx.scene.layout.Pane contentArea = (javafx.scene.layout.Pane) scene.lookup("#contentArea");
+            if (contentArea == null)
+                contentArea = (javafx.scene.layout.Pane) scene.lookup("#contentContainer");
+
+            if (contentArea != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/transport_payment.fxml"));
+                contentArea.getChildren().setAll((javafx.scene.Node) loader.load());
+                TransportPaymentController ctrl = loader.getController();
+                ctrl.setReservation(r, currentUser);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Impossible d'ouvrir l'interface de paiement: " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 
     private void handleEdit(Reservation r) {

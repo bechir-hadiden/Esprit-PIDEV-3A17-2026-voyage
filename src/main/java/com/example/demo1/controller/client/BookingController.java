@@ -21,6 +21,9 @@ import java.sql.Date;
 import org.example.services.StripeService;
 import org.example.services.PaiementService;
 import org.example.entities.Paiement;
+import org.example.utils.PDFService;
+import java.io.File;
+import java.awt.Desktop;
 
 public class BookingController {
 
@@ -72,18 +75,30 @@ public class BookingController {
     private Button continueButton;
 
     // Payment Selection Fields
-    @FXML private Label walletBalanceLabel;
-    @FXML private Label loyaltyPointsLabel;
-    @FXML private ToggleGroup paymentGroup;
-    @FXML private ToggleButton stripeToggle;
-    @FXML private ToggleButton walletToggle;
-    @FXML private ToggleButton paypalToggle;
-    @FXML private ToggleButton d17Toggle;
-    @FXML private VBox stripeDetails;
-    @FXML private VBox walletDetails;
-    @FXML private VBox paypalDetails;
-    @FXML private VBox d17Details;
-    @FXML private Label walletStatusLabel;
+    @FXML
+    private Label walletBalanceLabel;
+    @FXML
+    private Label loyaltyPointsLabel;
+    @FXML
+    private ToggleGroup paymentGroup;
+    @FXML
+    private ToggleButton stripeToggle;
+    @FXML
+    private ToggleButton walletToggle;
+    @FXML
+    private ToggleButton paypalToggle;
+    @FXML
+    private ToggleButton d17Toggle;
+    @FXML
+    private VBox stripeDetails;
+    @FXML
+    private VBox walletDetails;
+    @FXML
+    private VBox paypalDetails;
+    @FXML
+    private VBox d17Details;
+    @FXML
+    private Label walletStatusLabel;
 
     @FXML
     private VBox guestDetailsForm;
@@ -91,17 +106,26 @@ public class BookingController {
     private VBox paymentForm;
     @FXML
     private VBox confirmationView;
+    @FXML
+    private Label confirmIconLabel;
+    @FXML
+    private Label confirmTitleLabel;
+    @FXML
+    private Label confirmSubLabel;
+    @FXML
+    private Button downloadPdfButton;
 
     private final SessionManager sessionManager = SessionManager.getInstance();
     private final BookingService bookingService = BookingService.getInstance();
     private final PaiementService paiementService = new PaiementService();
-    
+
     private Hotel hotel;
     private RoomType room;
     private int step = 1;
     private String currentStripeSessionId;
     private boolean isPaymentVerified = false;
     private double bookingTotalAmount = 0.0;
+    private Paiement lastPaiement;
 
     @FXML
     public void initialize() {
@@ -143,19 +167,20 @@ public class BookingController {
     }
 
     private void setupPaymentToggles() {
-        if (paymentGroup == null) return;
-        
+        if (paymentGroup == null)
+            return;
+
         paymentGroup.selectedToggleProperty().addListener((obs, oldT, newT) -> {
             if (newT == null) {
                 stripeToggle.setSelected(true); // Default to Stripe
                 return;
             }
-            
+
             stripeDetails.setVisible(newT == stripeToggle);
             walletDetails.setVisible(newT == walletToggle);
             paypalDetails.setVisible(newT == paypalToggle);
             d17Details.setVisible(newT == d17Toggle);
-            
+
             // Refresh button text
             if (step == 2) {
                 if (newT == stripeToggle) {
@@ -163,7 +188,7 @@ public class BookingController {
                 } else if (newT == walletToggle) {
                     continueButton.setText("Pay with Wallet");
                 } else {
-                    continueButton.setText("Continue to " + ((ToggleButton)newT).getText());
+                    continueButton.setText("Continue to " + ((ToggleButton) newT).getText());
                 }
             }
         });
@@ -247,7 +272,8 @@ public class BookingController {
             loyaltyPointsLabel.setText(user.getLoyaltyPoints() + " pts");
 
             if (user.getWalletBalance() < bookingTotalAmount) {
-                walletStatusLabel.setText("Insufficient balance (" + String.format("%.2f", bookingTotalAmount) + " DT required)");
+                walletStatusLabel.setText(
+                        "Insufficient balance (" + String.format("%.2f", bookingTotalAmount) + " DT required)");
                 walletStatusLabel.setTextFill(Color.RED);
             } else {
                 walletStatusLabel.setText("Pay instantly using your wallet balance.");
@@ -255,7 +281,7 @@ public class BookingController {
             }
         }
 
-        ToggleButton sel = (ToggleButton)paymentGroup.getSelectedToggle();
+        ToggleButton sel = (ToggleButton) paymentGroup.getSelectedToggle();
         if (sel == stripeToggle) {
             continueButton.setText(currentStripeSessionId == null ? "Pay with Stripe" : "Verify Payment");
         } else if (sel == walletToggle) {
@@ -278,24 +304,31 @@ public class BookingController {
                 updateStepUI();
                 return;
             }
-            ToggleButton sel = (ToggleButton)paymentGroup.getSelectedToggle();
+            ToggleButton sel = (ToggleButton) paymentGroup.getSelectedToggle();
             if (sel == stripeToggle) {
-                if (currentStripeSessionId == null) processStripePayment();
-                else verifyStripePayment();
+                if (currentStripeSessionId == null)
+                    processStripePayment();
+                else
+                    verifyStripePayment();
             } else if (sel == walletToggle) {
                 processWalletPayment();
             } else {
                 processExternalPayment(sel.getText());
             }
         } else if (step == 3) {
-            confirmBooking();
+            if (lastPaiement != null) {
+                HelloApplication.showView(SessionManager.View.MY_BOOKINGS);
+            } else {
+                confirmBooking();
+            }
         }
     }
 
     private void processStripePayment() {
         System.out.println("[Stripe] Pay action triggered. total=" + bookingTotalAmount);
         if (!StripeService.isConfigured()) {
-            showAlert("Stripe is not configured. Set stripe.api.key in ./config.properties (project root) or STRIPE_API_KEY env var.");
+            showAlert(
+                    "Stripe is not configured. Set stripe.api.key in ./config.properties (project root) or STRIPE_API_KEY env var.");
             return;
         }
         if (bookingTotalAmount <= 0) {
@@ -370,7 +403,7 @@ public class BookingController {
             return;
         }
         double total = bookingTotalAmount;
-        
+
         if (user.getWalletBalance() >= total) {
             double previousBalance = user.getWalletBalance();
             int previousPoints = user.getLoyaltyPoints();
@@ -378,8 +411,8 @@ public class BookingController {
             // Deduct immediately (in memory first)
             user.setWalletBalance(user.getWalletBalance() - total);
             // Award loyalty points (5% of base price)
-            user.setLoyaltyPoints(user.getLoyaltyPoints() + (int)(total * 0.05));
-            
+            user.setLoyaltyPoints(user.getLoyaltyPoints() + (int) (total * 0.05));
+
             // Sync with DB
             boolean updated = new com.example.demo1.controller.dao.UserDAO().updateUser(user);
             if (!updated) {
@@ -388,7 +421,7 @@ public class BookingController {
                 showAlert("Wallet payment failed: could not update wallet in database.");
                 return;
             }
-            
+
             isPaymentVerified = true;
             step = 3;
             updateStepUI();
@@ -479,8 +512,8 @@ public class BookingController {
             p.setMontant(total);
             p.setDatePaiement(Date.valueOf(LocalDate.now()));
             p.setStatut_paiement("Effectu\u00E9");
-            
-            ToggleButton sel = (ToggleButton)paymentGroup.getSelectedToggle();
+
+            ToggleButton sel = (ToggleButton) paymentGroup.getSelectedToggle();
             if (sel == stripeToggle) {
                 p.setMethodePaiement("Carte Bancaire (Stripe)");
                 p.setStripeSessionId(currentStripeSessionId);
@@ -489,13 +522,13 @@ public class BookingController {
             } else {
                 p.setMethodePaiement(sel.getText());
             }
-            
+
             try {
                 p.setBookingId(Integer.parseInt(booking.getId()));
             } catch (Exception e) {
                 // Ignore if ID is not numeric
             }
-            
+
             // Link to user if available
             var currentUser = AuthService.getInstance().getCurrentUser();
             if (currentUser != null) {
@@ -509,11 +542,54 @@ public class BookingController {
             boolean paymentSaved = paiementService.ajouter(p);
             if (!paymentSaved) {
                 showAlert("Payment was completed but could not be saved to database.");
+            } else {
+                this.lastPaiement = p;
+
+                // Auto-open PDF
+                handleDownloadPDF();
+
+                // Update UI state
+                confirmIconLabel.setText("\u2728"); // Sparkles
+                confirmTitleLabel.setText("R\u00E9servation Confirm\u00E9e !");
+                confirmSubLabel.setText(
+                        "Votre voyage est pr\u00EAt. Vous pouvez t\u00E9l\u00E9charger votre re\u00E7u ci-dessous.");
+                downloadPdfButton.setVisible(true);
+                downloadPdfButton.setManaged(true);
+                continueButton.setText("Aller \u00E0 Mes R\u00E9servations");
             }
         }
+    }
 
-        showSuccessAlert();
-        HelloApplication.showView(SessionManager.View.MY_BOOKINGS);
+    @FXML
+    private void handleDownloadPDF() {
+        if (lastPaiement == null) {
+            showAlert("Aucun paiement trouv\u00E9 pour cette session.");
+            return;
+        }
+
+        try {
+            var user = AuthService.getInstance().getCurrentUser();
+            String fileName = "Confirmation_Paiement_" + lastPaiement.getIdPaiement() + ".pdf";
+            String filePath = System.getProperty("user.home") + File.separator + fileName;
+
+            org.example.entities.User entUser = new org.example.entities.User();
+            if (user != null) {
+                entUser.setFull_name(user.getFullName());
+                entUser.setEmail(user.getEmail());
+            }
+
+            PDFService.generatePaymentReceipt(lastPaiement, entUser, filePath);
+
+            File file = new File(filePath);
+            if (file.exists()) {
+                if (Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().open(file);
+                }
+            }
+        } catch (Exception e) {
+            showAlert("\u00C9chec de g\u00E9n\u00E9ration du PDF: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void showAlert(String message) {
@@ -544,14 +620,6 @@ public class BookingController {
         dialog.setHeaderText("Browser did not open automatically");
         dialog.setContentText("Checkout URL (already copied):");
         dialog.showAndWait();
-    }
-
-    private void showSuccessAlert() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Booking Confirmed");
-        alert.setHeaderText("Your reservation has been confirmed!");
-        alert.setContentText("You can view all your bookings in the My Bookings section.");
-        alert.showAndWait();
     }
 
     private String extractRootMessage(Throwable throwable) {

@@ -22,12 +22,17 @@ import org.example.services.VehiculeService;
 import org.example.services.WeatherService;
 import org.example.services.GeographyService;
 import org.example.services.TransportService;
+import org.example.services.PaiementService;
+import org.example.utils.PDFService;
 import java.io.File;
+import java.awt.Desktop;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
@@ -67,6 +72,7 @@ public class TransportListController {
     private WeatherService weatherService = new WeatherService();
     private GeographyService geoService = new GeographyService();
     private TransportService transportService = new TransportService();
+    private PaiementService paiementService = new PaiementService();
 
     @FXML
     public void initialize() {
@@ -205,6 +211,9 @@ public class TransportListController {
         // l'utilisateur.
         javafx.application.Platform.runLater(() -> {
             detectedUserCity = "Ariana";
+            if (searchField != null) {
+                searchField.setText(detectedUserCity);
+            }
             loadVehicules();
         });
     }
@@ -249,7 +258,7 @@ public class TransportListController {
         double distToUser = calculateVehicleToUserDistance(vehicule, vehicleCity, userCity);
         double roundedDistToUser = Math.round(distToUser * 10.0) / 10.0;
         int minsToUser = geoService.estimateTravelTime(distToUser, vehicule.getType());
-        String etaStr = "Distance vers vous (" + userCity + "): " + roundedDistToUser + " km | Arrive dans "
+        String etaStr = "📍 " + roundedDistToUser + " km de vous | ⏱️ Arrivée dans "
                 + geoService.formatTime(minsToUser);
 
         // 2. Weather at Vehicle Location
@@ -353,10 +362,11 @@ public class TransportListController {
         // ETA Label
         if (!etaStr.isEmpty()) {
             Label etaLabel = new Label(etaStr);
-            etaLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #0ea5e9; -fx-font-weight: bold;");
+            etaLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #0ea5e9; -fx-font-weight: bold;");
+            etaLabel.setWrapText(true);
+            etaLabel.setPrefWidth(260); // Allow wrapping
             content.getChildren().add(etaLabel);
         }
-
         javafx.scene.layout.HBox priceRow = new javafx.scene.layout.HBox(6);
         priceRow.setAlignment(Pos.BASELINE_LEFT);
 
@@ -392,6 +402,73 @@ public class TransportListController {
         cardRoot.getChildren().addAll(imageContainer, content);
 
         return cardRoot;
+    }
+
+    private void handlePayment(BaseVehicule vehicule, double price) {
+        if (currentUser == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Non connecté");
+            alert.setContentText("Veuillez vous connecter pour effectuer un paiement.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Payment method choice dialog
+        ChoiceDialog<String> methodDialog = new ChoiceDialog<>("Carte Bancaire",
+                "Carte Bancaire", "Portefeuille Interne", "PayPal", "D17");
+        methodDialog.setTitle("Méthode de Paiement");
+        methodDialog.setHeaderText("Paiement pour " + vehicule.getCompagnie() + " - " + vehicule.getType());
+        methodDialog.setContentText(String.format("Montant : %.2f DT%nChoisissez votre méthode :", price));
+
+        Optional<String> method = methodDialog.showAndWait();
+        if (method.isEmpty())
+            return;
+
+        // Create payment record
+        Paiement p = new Paiement();
+        p.setMontant(price);
+        p.setDatePaiement(Date.valueOf(LocalDate.now()));
+        p.setStatut_paiement("Effectué");
+        p.setMethodePaiement(method.get());
+        p.setUserId(currentUser.getIdUser());
+
+        boolean saved = paiementService.ajouter(p);
+
+        if (saved) {
+            // Generate PDF Receipt
+            try {
+                String fileName = "Recu_Transport_" + vehicule.getId() + "_" + System.currentTimeMillis() + ".pdf";
+                String filePath = System.getProperty("user.home") + File.separator + fileName;
+
+                User entUser = new User();
+                entUser.setFull_name(currentUser.getUsername());
+                entUser.setEmail(currentUser.getEmail());
+
+                PDFService.generatePaymentReceipt(p, entUser, filePath);
+
+                File pdfFile = new File(filePath);
+                if (pdfFile.exists() && Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().open(pdfFile);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setTitle("Paiement Réussi");
+            success.setHeaderText("✅ Paiement confirmé !");
+            success.setContentText(String.format(
+                    "Montant payé : %.2f DT%nMéthode : %s%nVéhicule : %s - %s%nVotre reçu PDF a été généré.",
+                    price, method.get(), vehicule.getCompagnie(), vehicule.getType()));
+            success.showAndWait();
+
+            loadVehicules(); // Refresh
+        } else {
+            Alert error = new Alert(Alert.AlertType.ERROR);
+            error.setTitle("Erreur");
+            error.setContentText("Le paiement n'a pas pu être enregistré. Veuillez réessayer.");
+            error.showAndWait();
+        }
     }
 
     private void handleReservation(BaseVehicule vehicule) {

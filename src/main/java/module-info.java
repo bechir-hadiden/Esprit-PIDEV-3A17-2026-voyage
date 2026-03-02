@@ -20,11 +20,11 @@ module com.example.demo1 {
     requires java.net.http;
     requires java.mail;
     requires itextpdf;
-//    requires com.itextpdf ;
+    // requires com.itextpdf ;
     // ================================================
     // TWILIO ✅ — module name correct pour 10.1.0
     // ================================================
-//    requires twilio;
+    // requires twilio;
     requires transitive twilio;
 
     // ================================================
@@ -74,8 +74,9 @@ module com.example.demo1 {
     // ================================================
     // OPENS — autres packages si nécessaire
     // ================================================
+    opens org.example to javafx.graphics, javafx.fxml;
     opens org.example.controllers to javafx.fxml;
-    opens org.example.entities to javafx.base;
+    opens org.example.entities to javafx.base, com.google.gson;
 
     // ================================================
     // EXPORTS

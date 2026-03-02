@@ -24,7 +24,10 @@ import org.example.entities.User;
 import org.example.services.PaiementService;
 import org.example.services.UserService;
 
+import org.example.utils.PDFService;
+
 import java.awt.Desktop;
+import java.io.File;
 import java.net.URI;
 import java.sql.Date;
 import java.text.Normalizer;
@@ -38,18 +41,29 @@ public class AdminPaymentsController {
     private static final String STATUS_COMPLETED = "Effectu\u00E9";
     private static final String STATUS_CANCELED = "Annul\u00E9";
 
-    @FXML private TableView<Paiement> paymentsTable;
-    @FXML private TableColumn<Paiement, Integer> idColumn;
-    @FXML private TableColumn<Paiement, String> userColumn;
-    @FXML private TableColumn<Paiement, Double> amountColumn;
-    @FXML private TableColumn<Paiement, String> dateColumn;
-    @FXML private TableColumn<Paiement, String> methodColumn;
-    @FXML private TableColumn<Paiement, String> statusColumn;
-    @FXML private TableColumn<Paiement, String> bookingColumn;
-    @FXML private TableColumn<Paiement, Void> actionsColumn;
+    @FXML
+    private TableView<Paiement> paymentsTable;
+    @FXML
+    private TableColumn<Paiement, Integer> idColumn;
+    @FXML
+    private TableColumn<Paiement, String> userColumn;
+    @FXML
+    private TableColumn<Paiement, Double> amountColumn;
+    @FXML
+    private TableColumn<Paiement, String> dateColumn;
+    @FXML
+    private TableColumn<Paiement, String> methodColumn;
+    @FXML
+    private TableColumn<Paiement, String> statusColumn;
+    @FXML
+    private TableColumn<Paiement, String> bookingColumn;
+    @FXML
+    private TableColumn<Paiement, Void> actionsColumn;
 
-    @FXML private TextField searchField;
-    @FXML private ComboBox<String> statusFilter;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private ComboBox<String> statusFilter;
 
     private final PaiementService paiementService = new PaiementService();
     private final UserService userService = new UserService();
@@ -64,16 +78,21 @@ public class AdminPaymentsController {
     }
 
     private void setupTable() {
-        idColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleIntegerProperty(data.getValue().getIdPaiement()).asObject());
-        userColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(getUserName(data.getValue().getUserId())));
-        amountColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleDoubleProperty(data.getValue().getMontant()).asObject());
+        idColumn.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleIntegerProperty(data.getValue().getIdPaiement()).asObject());
+        userColumn.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleStringProperty(getUserName(data.getValue().getUserId())));
+        amountColumn.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleDoubleProperty(data.getValue().getMontant()).asObject());
         dateColumn.setCellValueFactory(data -> {
             Date paymentDate = data.getValue().getDatePaiement();
             return new javafx.beans.property.SimpleStringProperty(paymentDate != null ? paymentDate.toString() : "-");
         });
-        methodColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getMethodePaiement()));
+        methodColumn.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getMethodePaiement()));
 
-        statusColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getStatut_paiement()));
+        statusColumn.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getStatut_paiement()));
         statusColumn.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -103,24 +122,36 @@ public class AdminPaymentsController {
 
         actionsColumn.setCellFactory(column -> new TableCell<>() {
             private final Button editBtn = new Button("Modifier");
+            private final Button pdfBtn = new Button("PDF");
             private final Button deleteBtn = new Button("Supprimer");
-            private final HBox container = new HBox(8, editBtn, deleteBtn);
+            private final HBox container = new HBox(8, editBtn, pdfBtn, deleteBtn);
 
             {
                 container.setAlignment(Pos.CENTER);
                 editBtn.getStyleClass().add("admin-button-secondary");
+                pdfBtn.getStyleClass().add("admin-button-info");
                 deleteBtn.getStyleClass().add("admin-button-danger");
                 editBtn.setTooltip(new Tooltip("Modifier le paiement"));
+                pdfBtn.setTooltip(new Tooltip("Télécharger la confirmation PDF"));
                 deleteBtn.setTooltip(new Tooltip("Supprimer le paiement"));
 
-                // Keep both buttons readable inside the table cell.
+                // Style
                 editBtn.setStyle("-fx-padding: 6 12; -fx-font-size: 12px;");
+                pdfBtn.setStyle(
+                        "-fx-padding: 6 12; -fx-font-size: 12px; -fx-background-color: #0ea5e9; -fx-text-fill: white;");
                 deleteBtn.setStyle("-fx-padding: 6 12; -fx-font-size: 12px;");
 
                 editBtn.setOnAction(e -> {
                     Paiement paiement = getCurrentRowPayment();
                     if (paiement != null) {
                         handleEdit(paiement);
+                    }
+                });
+
+                pdfBtn.setOnAction(e -> {
+                    Paiement paiement = getCurrentRowPayment();
+                    if (paiement != null) {
+                        handleDownloadPDF(paiement);
                     }
                 });
 
@@ -157,8 +188,7 @@ public class AdminPaymentsController {
                 FILTER_ALL,
                 STATUS_PENDING,
                 STATUS_COMPLETED,
-                STATUS_CANCELED
-        ));
+                STATUS_CANCELED));
         statusFilter.setValue(FILTER_ALL);
 
         searchField.textProperty().addListener((obs, oldValue, newValue) -> applyFilters());
@@ -243,16 +273,13 @@ public class AdminPaymentsController {
 
         TextField amountField = new TextField(String.valueOf(paiement.getMontant()));
         DatePicker datePicker = new DatePicker(
-                paiement.getDatePaiement() != null ? paiement.getDatePaiement().toLocalDate() : LocalDate.now()
-        );
+                paiement.getDatePaiement() != null ? paiement.getDatePaiement().toLocalDate() : LocalDate.now());
         TextField methodField = new TextField(
-                paiement.getMethodePaiement() != null ? paiement.getMethodePaiement() : ""
-        );
+                paiement.getMethodePaiement() != null ? paiement.getMethodePaiement() : "");
         ComboBox<String> statusBox = new ComboBox<>(FXCollections.observableArrayList(
                 STATUS_PENDING,
                 STATUS_COMPLETED,
-                STATUS_CANCELED
-        ));
+                STATUS_CANCELED));
         statusBox.setMaxWidth(Double.MAX_VALUE);
 
         String currentStatus = paiement.getStatut_paiement();
@@ -289,7 +316,8 @@ public class AdminPaymentsController {
             }
 
             try {
-                String amountInput = amountField.getText() == null ? "" : amountField.getText().trim().replace(',', '.');
+                String amountInput = amountField.getText() == null ? ""
+                        : amountField.getText().trim().replace(',', '.');
                 double amount = Double.parseDouble(amountInput);
                 if (amount <= 0) {
                     throw new IllegalArgumentException("Le montant doit etre positif.");
@@ -329,13 +357,33 @@ public class AdminPaymentsController {
         });
     }
 
+    private void handleDownloadPDF(Paiement paiement) {
+        try {
+            User user = userService.getUserById(paiement.getUserId());
+            String fileName = "Confirmation_Paiement_" + paiement.getIdPaiement() + ".pdf";
+            String filePath = System.getProperty("user.home") + File.separator + fileName;
+
+            PDFService.generatePaymentReceipt(paiement, user, filePath);
+
+            File file = new File(filePath);
+            if (file.exists()) {
+                if (Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().open(file);
+                }
+                showInfo("PDF Généré", "Le reçu a été téléchargé dans : " + filePath);
+            }
+        } catch (Exception e) {
+            showError("Erreur PDF", "Échec de génération du PDF: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     private void handleDelete(Paiement paiement) {
         Alert alert = new Alert(
                 Alert.AlertType.WARNING,
                 "Supprimer le paiement #" + paiement.getIdPaiement() + " ?",
                 ButtonType.YES,
-                ButtonType.NO
-        );
+                ButtonType.NO);
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.YES) {
                 paiementService.supprimer(paiement.getIdPaiement());

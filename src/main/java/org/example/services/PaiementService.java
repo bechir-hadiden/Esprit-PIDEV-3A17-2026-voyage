@@ -16,54 +16,65 @@ import java.util.List;
 
 public class PaiementService {
 
-    private Connection conn;
-
     public PaiementService() {
-        try {
-            this.conn = DatabaseConnection.getConnection();
-            if (this.conn == null) {
-                throw new SQLException("Database connection failed.");
-            }
-            ensureSchema();
+        // Run schema migration on first use
+        try (Connection c = getConn()) {
+            if (c != null)
+                ensureSchema(c);
         } catch (Exception e) {
-            System.err.println("Database connection error: " + e.getMessage());
+            System.err.println("PaiementService init error: " + e.getMessage());
         }
     }
 
-    public boolean ajouter(Paiement p) {
-        if (conn == null) {
-            System.err.println("Payment insert skipped: DB connection is null.");
-            return false;
+    /**
+     * Always returns a fresh connection to avoid stale/closed connection issues.
+     */
+    private Connection getConn() {
+        Connection c = DatabaseConnection.getConnection();
+        if (c == null) {
+            System.err.println("PaiementService: DB connection is null.");
         }
+        return c;
+    }
 
+    public boolean ajouter(Paiement p) {
         String req = "INSERT INTO paiements (montant, date_paiement, statut_paiement, methode_paiement, stripe_session_id, user_id, booking_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(req)) {
-            ps.setDouble(1, p.getMontant());
-            ps.setDate(2, p.getDatePaiement());
-            ps.setString(3, p.getStatut_paiement() != null ? p.getStatut_paiement() : "En attente");
-            ps.setString(4, p.getMethodePaiement());
-            ps.setString(5, p.getStripeSessionId());
-            ps.setInt(6, p.getUserId());
-            if (p.getBookingId() != null) {
-                ps.setInt(7, p.getBookingId());
-            } else {
-                ps.setNull(7, Types.INTEGER);
+        try (Connection conn = getConn()) {
+            if (conn == null)
+                return false;
+            try (PreparedStatement ps = conn.prepareStatement(req)) {
+                ps.setDouble(1, p.getMontant());
+                ps.setDate(2, p.getDatePaiement());
+                ps.setString(3, p.getStatut_paiement() != null ? p.getStatut_paiement() : "En attente");
+                ps.setString(4, p.getMethodePaiement());
+                ps.setString(5, p.getStripeSessionId());
+                ps.setInt(6, p.getUserId());
+                if (p.getBookingId() != null) {
+                    ps.setInt(7, p.getBookingId());
+                } else {
+                    ps.setNull(7, Types.INTEGER);
+                }
+                int rows = ps.executeUpdate();
+                System.out.println("Payment inserted: " + rows + " row(s).");
+                return rows > 0;
             }
-            ps.executeUpdate();
-            System.out.println("Payment inserted successfully.");
-            return true;
         } catch (SQLException e) {
             System.err.println("Payment insert error: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
 
     public void supprimer(int id) {
         String req = "DELETE FROM paiements WHERE id_paiement = ?";
-        try (PreparedStatement ps = conn.prepareStatement(req)) {
-            ps.setInt(1, id);
-            ps.executeUpdate();
-            System.out.println("Payment deleted successfully.");
+        try (Connection conn = getConn()) {
+            if (conn == null)
+                return;
+            try (PreparedStatement ps = conn.prepareStatement(req)) {
+                ps.setInt(1, id);
+                ps.executeUpdate();
+                System.out.println("Payment deleted successfully.");
+            }
         } catch (SQLException e) {
             System.err.println("Payment delete error: " + e.getMessage());
         }
@@ -71,7 +82,9 @@ public class PaiementService {
 
     public void modifier(Paiement p) {
         String req = "UPDATE paiements SET montant = ?, date_paiement = ?, statut_paiement = ?, methode_paiement = ?, stripe_session_id = ?, user_id = ?, booking_id = ? WHERE id_paiement = ?";
-        try {
+        try (Connection conn = getConn()) {
+            if (conn == null)
+                return;
             String oldStatus = "";
             String checkStatusReq = "SELECT statut_paiement FROM paiements WHERE id_paiement = ?";
             try (PreparedStatement checkSt = conn.prepareStatement(checkStatusReq)) {
@@ -98,7 +111,8 @@ public class PaiementService {
                 ps.executeUpdate();
             }
 
-            if ("Effectu\u00E9".equalsIgnoreCase(p.getStatut_paiement()) && !"Effectu\u00E9".equalsIgnoreCase(oldStatus)) {
+            if ("Effectué".equalsIgnoreCase(p.getStatut_paiement())
+                    && !"Effectué".equalsIgnoreCase(oldStatus)) {
                 double cashback = p.getMontant() * 0.05;
                 new UserService().updateBalance(p.getUserId(), cashback);
 
@@ -114,28 +128,55 @@ public class PaiementService {
         }
     }
 
+    public Paiement getPaiementByBookingId(int bookingId) {
+        String req = "SELECT * FROM paiements WHERE booking_id = ? LIMIT 1";
+        try (Connection conn = getConn()) {
+            if (conn == null)
+                return null;
+            try (PreparedStatement ps = conn.prepareStatement(req)) {
+                ps.setInt(1, bookingId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        Paiement p = new Paiement();
+                        p.setIdPaiement(rs.getInt("id_paiement"));
+                        p.setMontant(rs.getDouble("montant"));
+                        p.setDatePaiement(rs.getDate("date_paiement"));
+                        p.setStatut_paiement(rs.getString("statut_paiement"));
+                        p.setMethodePaiement(rs.getString("methode_paiement"));
+                        p.setUserId(rs.getInt("user_id"));
+                        p.setBookingId(rs.getInt("booking_id"));
+                        return p;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching payment for booking: " + e.getMessage());
+        }
+        return null;
+    }
+
     public List<Paiement> afficher() {
         List<Paiement> paiements = new ArrayList<>();
-        if (conn == null) {
-            System.err.println("Payment fetch skipped: DB connection is null.");
-            return paiements;
-        }
         String req = "SELECT * FROM paiements";
-        try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(req)) {
-            while (rs.next()) {
-                Paiement p = new Paiement();
-                p.setIdPaiement(rs.getInt("id_paiement"));
-                p.setMontant(rs.getDouble("montant"));
-                p.setDatePaiement(rs.getDate("date_paiement"));
-                p.setStatut_paiement(rs.getString("statut_paiement"));
-                p.setMethodePaiement(rs.getString("methode_paiement"));
-                p.setStripeSessionId(rs.getString("stripe_session_id"));
-                p.setUserId(rs.getInt("user_id"));
-                int bookingId = rs.getInt("booking_id");
-                if (!rs.wasNull()) {
-                    p.setBookingId(bookingId);
+        try (Connection conn = getConn()) {
+            if (conn == null)
+                return paiements;
+            try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(req)) {
+                while (rs.next()) {
+                    Paiement p = new Paiement();
+                    p.setIdPaiement(rs.getInt("id_paiement"));
+                    p.setMontant(rs.getDouble("montant"));
+                    p.setDatePaiement(rs.getDate("date_paiement"));
+                    p.setStatut_paiement(rs.getString("statut_paiement"));
+                    p.setMethodePaiement(rs.getString("methode_paiement"));
+                    p.setStripeSessionId(rs.getString("stripe_session_id"));
+                    p.setUserId(rs.getInt("user_id"));
+                    int bookingId = rs.getInt("booking_id");
+                    if (!rs.wasNull()) {
+                        p.setBookingId(bookingId);
+                    }
+                    paiements.add(p);
                 }
-                paiements.add(p);
             }
         } catch (SQLException e) {
             System.err.println("Payment fetch error: " + e.getMessage());
@@ -143,11 +184,7 @@ public class PaiementService {
         return paiements;
     }
 
-    private void ensureSchema() {
-        if (conn == null) {
-            return;
-        }
-
+    private void ensureSchema(Connection conn) {
         try (Statement st = conn.createStatement()) {
             st.execute("CREATE TABLE IF NOT EXISTS paiements (" +
                     "id_paiement INT PRIMARY KEY AUTO_INCREMENT," +
@@ -163,18 +200,16 @@ public class PaiementService {
             System.err.println("Payment table creation error: " + e.getMessage());
         }
 
-        addColumnIfMissing("methode_paiement", "ALTER TABLE paiements ADD COLUMN methode_paiement VARCHAR(100)");
-        addColumnIfMissing("stripe_session_id", "ALTER TABLE paiements ADD COLUMN stripe_session_id VARCHAR(255)");
-        addColumnIfMissing("user_id", "ALTER TABLE paiements ADD COLUMN user_id INT");
-        addColumnIfMissing("booking_id", "ALTER TABLE paiements ADD COLUMN booking_id INT");
+        addColumnIfMissing(conn, "methode_paiement", "ALTER TABLE paiements ADD COLUMN methode_paiement VARCHAR(100)");
+        addColumnIfMissing(conn, "stripe_session_id",
+                "ALTER TABLE paiements ADD COLUMN stripe_session_id VARCHAR(255)");
+        addColumnIfMissing(conn, "user_id", "ALTER TABLE paiements ADD COLUMN user_id INT");
+        addColumnIfMissing(conn, "booking_id", "ALTER TABLE paiements ADD COLUMN booking_id INT");
     }
 
-    private void addColumnIfMissing(String columnName, String alterSql) {
-        if (conn == null) {
-            return;
-        }
+    private void addColumnIfMissing(Connection conn, String columnName, String alterSql) {
         try {
-            if (!hasColumn(columnName)) {
+            if (!hasColumn(conn, columnName)) {
                 try (Statement st = conn.createStatement()) {
                     st.execute(alterSql);
                 }
@@ -184,7 +219,7 @@ public class PaiementService {
         }
     }
 
-    private boolean hasColumn(String columnName) throws SQLException {
+    private boolean hasColumn(Connection conn, String columnName) throws SQLException {
         DatabaseMetaData meta = conn.getMetaData();
         try (ResultSet rs = meta.getColumns(conn.getCatalog(), null, "paiements", columnName)) {
             if (rs.next()) {
