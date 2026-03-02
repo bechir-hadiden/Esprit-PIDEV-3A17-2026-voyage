@@ -4,6 +4,7 @@ import org.example.entities.BaseVehicule;
 import org.example.entities.Bus;
 import org.example.entities.Taxi;
 import org.example.entities.Voiture;
+import org.example.entities.Scooter;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class AIService {
 
     private VehiculeService vehiculeService = new VehiculeService();
+    private WeatherService weatherService = new WeatherService();
     private Random random = new Random();
 
     private String escapeJson(String input) {
@@ -75,9 +77,12 @@ public class AIService {
         if (all.isEmpty())
             return null;
 
+        // Fetch real-time weather metadata
+        WeatherService.WeatherData weather = weatherService.getWeather(end);
+
         // Si la clé n'est pas configurée, on utilise le fallback
         if (API_KEY.equals("votre_cle_openai_ici")) {
-            return getHeuristicRecommendation(all, start, end, priority, context);
+            return getHeuristicRecommendation(all, start, end, priority, context, weather);
         }
 
         try {
@@ -87,11 +92,16 @@ public class AIService {
                             + v.getCapacite() + ", Tarif/Base:" + v.getPrix() + " DT)")
                     .collect(Collectors.joining("\n"));
 
+            String weatherStr = String.format("%.1f°C, %s %s", weather.temp, weather.condition,
+                    weather.isRainy ? "(PLUIE)" : "");
+
             String prompt = "Tu es un assistant de transport expert en Tunisie. " +
+                    "Météo actuelle à " + end + " : " + weatherStr + ".\n" +
                     "Voici la liste des véhicules disponibles :\n" + vehiclesList + "\n\n" +
                     "L'utilisateur veut aller de '" + start + "' à '" + end + "'.\n" +
-                    "Recommande le MEILLEUR véhicule de la liste et donne une raison courte et convaincante basée sur la distance, le confort ou le type de trajet.\n"
+                    "Recommande le MEILLEUR véhicule en tenant compte de la météo (ex: éviter les motos si pluie, privilégier clim si canicule).\n"
                     +
+                    "Donne une raison courte et convaincante.\n" +
                     "Réponds STRICTEMENT au format JSON suivant : {\"vehicule_id\": X, \"reason\": \"...\"}";
 
             String jsonPayload = "{" +
@@ -113,7 +123,6 @@ public class AIService {
             if (response.statusCode() == 200) {
                 String body = response.body();
                 // Extraction simple du JSON imbriqué dans la réponse OpenAI
-                // Car OpenAI renvoie un gros JSON, on cherche le contenu du message
                 Pattern contentPattern = Pattern.compile("\"content\":\\s*\"(.*?)\"", Pattern.DOTALL);
                 Matcher contentMatcher = contentPattern.matcher(body);
                 if (contentMatcher.find()) {
@@ -134,7 +143,7 @@ public class AIService {
                                 .filter(v -> v.getId() == id)
                                 .findFirst()
                                 .map(v -> new AIRecommendation(v, reason))
-                                .orElse(getHeuristicRecommendation(all, start, end, priority, context));
+                                .orElse(getHeuristicRecommendation(all, start, end, priority, context, weather));
                     }
                 }
             }
@@ -143,12 +152,17 @@ public class AIService {
         }
 
         // Fallback en cas d'erreur API
-        return getHeuristicRecommendation(all, start, end, priority, context);
+        return getHeuristicRecommendation(all, start, end, priority, context, weather);
     }
 
-    private String generateProTip(String city, String context, String priority) {
+    private String generateProTip(String city, String context, String priority, WeatherService.WeatherData weather) {
         String tip = "";
         boolean isRushHour = context.toLowerCase().contains("1h") || context.toLowerCase().contains("soir");
+
+        if (weather != null && weather.isRainy) {
+            return "🌧️ Alerte Météo : Il pleut à " + city
+                    + ". Privilégiez un transport couvert comme une Voiture ou un Bus pour votre confort.";
+        }
 
         if (priority.contains("Budget")) {
             tip = "💡 Conseil Économie : Réservez un aller-retour pour bénéficier de -10% sur ce trajet.";
@@ -157,29 +171,35 @@ public class AIService {
                     ? "⚠️ Alerte Trafic : Embouteillages détectés à l'entrée de " + city + ". Prévoyez 15 min de marge."
                     : "⚡ Info Trafic : La voie rapide est fluide. Arrivée estimée en un temps record !";
         } else {
-            tip = "☂️ Météo : Risque d'averses à " + city + ". Votre véhicule climatisé assurera un confort optimal.";
+            tip = "✨ Conseil Confort : La température à " + city + " est de " + (weather != null ? weather.temp : "22")
+                    + "°C. Un trajet en voiture climatisée est idéal.";
         }
         return tip;
     }
 
     private AIRecommendation getHeuristicRecommendation(List<BaseVehicule> all, String start, String end,
-            String priority, String context) {
+            String priority, String context, WeatherService.WeatherData weather) {
         String s = start.toLowerCase();
         String e = end.toLowerCase();
 
         boolean isHighDistance = !s.contains(e) && !e.contains(s);
         String reasonStr = "";
 
-        if (priority.contains("Budget")) {
+        if (weather != null && weather.isRainy) {
+            reasonStr = "Analyse Météo (Pluie) : Un véhicule fermé est prioritaire pour votre sécurité.";
+        } else if (priority.contains("Budget")) {
             reasonStr = "Analyse Budget : Le Bus est sélectionné pour son tarif imbattable sur ce trajet.";
         } else if (priority.contains("Rapide")) {
-            reasonStr = "Analyse Vitesse : Un Taxi est privilégié pour éviter les arrêts fréquents et arriver plus vite.";
+            reasonStr = "Analyse Vitesse : Un Taxi est privilégié pour éviter les arrêts fréquents.";
         } else {
-            reasonStr = "Analyse Confort : Une Voiture privée est recommandée pour une expérience VIP et un trajet sans stress.";
+            reasonStr = "Analyse Confort : Une Voiture privée est recommandée pour une expérience optimale.";
         }
 
         List<BaseVehicule> candidates;
-        if (priority.contains("Budget")) {
+        if (weather != null && weather.isRainy) {
+            candidates = all.stream().filter(v -> v.isDisponible() && !(v instanceof Scooter))
+                    .collect(java.util.stream.Collectors.toList());
+        } else if (priority.contains("Budget")) {
             candidates = all.stream().filter(v -> v.isDisponible() && v instanceof Bus)
                     .collect(java.util.stream.Collectors.toList());
         } else if (priority.contains("Rapide")) {
@@ -197,7 +217,7 @@ public class AIService {
         BaseVehicule selected = candidates.isEmpty() ? all.get(random.nextInt(all.size()))
                 : candidates.get(random.nextInt(candidates.size()));
 
-        String proTip = generateProTip(end, context, priority);
+        String proTip = generateProTip(end, context, priority, weather);
         return new AIRecommendation(selected, reasonStr + "\n\n" + proTip);
     }
 

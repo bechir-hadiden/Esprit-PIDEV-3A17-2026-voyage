@@ -19,6 +19,9 @@ import org.example.services.ReservationService;
 import org.example.services.SmartNotifyService;
 import org.example.services.UserService;
 import org.example.services.VehiculeService;
+import org.example.services.WeatherService;
+import org.example.services.GeographyService;
+import org.example.services.TransportService;
 import java.io.File;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -39,6 +42,7 @@ public class TransportListController {
     private User currentUser;
     private String transportType;
     private Timeline autoRefreshTimeline;
+    private String detectedUserCity = "Tunis";
 
     @FXML
     private Label titleLabel;
@@ -60,6 +64,9 @@ public class TransportListController {
     private ReservationService reservationService = new ReservationService();
     private UserService userService = new UserService();
     private SmartNotifyService notifyService = new SmartNotifyService();
+    private WeatherService weatherService = new WeatherService();
+    private GeographyService geoService = new GeographyService();
+    private TransportService transportService = new TransportService();
 
     @FXML
     public void initialize() {
@@ -169,6 +176,22 @@ public class TransportListController {
         }
     }
 
+    private String getUserCity() {
+        return detectedUserCity;
+    }
+
+    private double calculateVehicleToUserDistance(BaseVehicule vehicule, String vehicleCity, String userCity) {
+        GeographyService.Coordinates userCoords = geoService.getCoordinates(userCity);
+        if (userCoords != null && geoService.isValidCoordinate(vehicule.getLatitude(), vehicule.getLongitude())) {
+            return geoService.calculateDistance(
+                    vehicule.getLatitude(),
+                    vehicule.getLongitude(),
+                    userCoords.lat,
+                    userCoords.lon);
+        }
+        return geoService.calculateDistance(vehicleCity, userCity);
+    }
+
     @FXML
     private void handleSearch() {
         loadVehicules();
@@ -181,7 +204,7 @@ public class TransportListController {
         // Pour les besoins de la démonstration, on simule la position exacte de
         // l'utilisateur.
         javafx.application.Platform.runLater(() -> {
-            searchField.setText("Ariana");
+            detectedUserCity = "Ariana";
             loadVehicules();
         });
     }
@@ -211,6 +234,26 @@ public class TransportListController {
         cardRoot.getStyleClass().add("admin-card");
         cardRoot.setStyle("-fx-padding: 0;");
         cardRoot.setPrefWidth(300);
+
+        // Advanced Logic: Surge Pricing
+        double basePrice = vehicule.getPrix();
+        double displayedPrice = transportService.getSurgePrice(vehicule.getId(), basePrice);
+        boolean isSurgeActive = displayedPrice > basePrice;
+
+        // Distance and ETA from vehicle position to user position
+        String userCity = getUserCity();
+        String vehicleCity = (vehicule.getVille() != null && !vehicule.getVille().isEmpty()) ? vehicule.getVille()
+                : "Sousse";
+
+        // 1. ETA from Vehicle to User (The original request)
+        double distToUser = calculateVehicleToUserDistance(vehicule, vehicleCity, userCity);
+        double roundedDistToUser = Math.round(distToUser * 10.0) / 10.0;
+        int minsToUser = geoService.estimateTravelTime(distToUser, vehicule.getType());
+        String etaStr = "Distance vers vous (" + userCity + "): " + roundedDistToUser + " km | Arrive dans "
+                + geoService.formatTime(minsToUser);
+
+        // 2. Weather at Vehicle Location
+        WeatherService.WeatherData weather = weatherService.getWeather(vehicleCity);
 
         // Hover Effect
         cardRoot.setOnMouseEntered(e -> cardRoot.setStyle(
@@ -260,6 +303,32 @@ public class TransportListController {
         } catch (Exception e) {
         }
 
+        // Weather & Location Badges
+        String weatherCity = vehicleCity;
+        if (weather != null && (weather.isRainy || weather.temp > 30)) {
+            String weatherText = weather.isRainy ? "🌧️ Pluie à " : "🔥 Canicule à ";
+            Label weatherBadge = new Label(weatherText + weatherCity);
+            weatherBadge.setStyle(
+                    "-fx-background-color: rgba(30, 41, 59, 0.82); -fx-text-fill: #f8fafc; -fx-padding: 5 10; -fx-background-radius: 8; -fx-font-size: 10px; -fx-font-weight: bold;");
+            StackPane.setAlignment(weatherBadge, Pos.TOP_LEFT);
+            StackPane.setMargin(weatherBadge, new Insets(15));
+            imageContainer.getChildren().add(weatherBadge);
+        }
+
+        // AI Recommendation Badge
+        boolean isAIRecommended = (weather != null && weather.isRainy
+                && !vehicule.getType().equalsIgnoreCase("Scooter"))
+                || (vehicule.getCapacite() > 4 && vehicule.getPrix() < 50);
+
+        if (isAIRecommended) {
+            Label aiBadge = new Label("🤖 SMART CHOICE");
+            aiBadge.setStyle(
+                    "-fx-background-color: #0ea5e9; -fx-text-fill: white; -fx-padding: 4 10; -fx-background-radius: 20; -fx-font-size: 9px; -fx-font-weight: 900;");
+            StackPane.setAlignment(aiBadge, Pos.BOTTOM_LEFT);
+            StackPane.setMargin(aiBadge, new Insets(10));
+            imageContainer.getChildren().add(aiBadge);
+        }
+
         // Status Badge Overlay on Image
         Label statusBadge = new Label(vehicule.isDisponible() ? "DISPONIBLE" : "INDISPONIBLE");
         statusBadge.setStyle("-fx-background-color: " + (vehicule.isDisponible() ? "#10b981" : "#ef4444") + "; " +
@@ -278,12 +347,30 @@ public class TransportListController {
         Label numLabel = new Label("N° " + vehicule.getNumero() + " • " + vehicule.getCapacite() + " places");
         numLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748b;");
 
+        Label locLabel = new Label("📍 Localisé à : " + vehicleCity);
+        locLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-font-style: italic;");
+
+        // ETA Label
+        if (!etaStr.isEmpty()) {
+            Label etaLabel = new Label(etaStr);
+            etaLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #0ea5e9; -fx-font-weight: bold;");
+            content.getChildren().add(etaLabel);
+        }
+
         javafx.scene.layout.HBox priceRow = new javafx.scene.layout.HBox(6);
         priceRow.setAlignment(Pos.BASELINE_LEFT);
-        Label priceVal = new Label(String.format("%.2f DT", vehicule.getPrix()));
+
+        Label priceVal = new Label(String.format("%.2f DT", displayedPrice));
         priceVal.setStyle("-fx-font-size: 20px; -fx-text-fill: " + (vehicule.isDisponible() ? "#0ea5e9" : "#94a3b8")
                 + "; -fx-font-weight: 900;");
         priceRow.getChildren().add(priceVal);
+
+        if (isSurgeActive) {
+            Label surgeLabel = new Label("🔥 Forte Demande");
+            surgeLabel.setStyle(
+                    "-fx-font-size: 10px; -fx-text-fill: #f59e0b; -fx-font-weight: bold; -fx-padding: 0 0 0 5;");
+            priceRow.getChildren().add(surgeLabel);
+        }
 
         Button reserveBtn = new Button(vehicule.isDisponible() ? "Réserver" : "Indisponible");
         reserveBtn.setMaxWidth(Double.MAX_VALUE);
@@ -301,7 +388,7 @@ public class TransportListController {
                     "-fx-opacity: 0.6; -fx-cursor: default; -fx-background-color: #475569; -fx-text-fill: white; -fx-padding: 10 0; -fx-background-radius: 8;");
         }
 
-        content.getChildren().addAll(compLabel, numLabel, priceRow, reserveBtn);
+        content.getChildren().addAll(compLabel, locLabel, numLabel, priceRow, reserveBtn);
         cardRoot.getChildren().addAll(imageContainer, content);
 
         return cardRoot;
