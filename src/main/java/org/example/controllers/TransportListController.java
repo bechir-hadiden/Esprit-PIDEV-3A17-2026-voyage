@@ -85,7 +85,7 @@ public class TransportListController {
                 this.currentUser.setUsername(authUser.getUsername());
                 this.currentUser.setEmail(authUser.getEmail());
                 this.currentUser.setTelephone(authUser.getTelephone());
-                this.currentUser.setRole(authUser.getRole());
+                this.currentUser.setRole_string(authUser.getRole());
             }
         } catch (NoClassDefFoundError | Exception e) {
             // Fallback or ignore if not in demo1 context

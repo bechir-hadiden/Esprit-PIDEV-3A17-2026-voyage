@@ -33,6 +33,8 @@
                         text="🌴 Offres de Voyage" onAction="#showOffers"/>
                 <Button fx:id="plansButton" maxWidth="Infinity" styleClass="admin-nav-item"
                         text="⭐ Abonnements" onAction="#showPlans"/>
+                <Button fx:id="paymentsButton" maxWidth="Infinity" styleClass="admin-nav-item"
+                        text="💳 Paiements" onAction="#showPayments"/>
 
                 <!-- Spacer -->
                 <Region VBox.vgrow="ALWAYS"/>

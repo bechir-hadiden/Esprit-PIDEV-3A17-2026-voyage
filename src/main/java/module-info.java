@@ -33,6 +33,7 @@ module com.example.demo1 {
     requires com.google.gson;
     requires okhttp3;
     requires org.json;
+    requires stripe.java;
 
     // ================================================
     // QR CODE
