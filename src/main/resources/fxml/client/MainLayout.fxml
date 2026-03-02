@@ -111,6 +111,16 @@
                         </HBox>
                     </graphic>
                 </Button>
+                <Button fx:id="DecartionBtn" onAction="#showDecartion" styleClass="nav-button">
+                    <graphic>
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label styleClass="nav-icon" text="📅"/> <!-- Calendar Check -->
+                            <Label fx:id="bookingsLabel" styleClass="nav-text" text="Decartion"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="bookingCountBadge" styleClass="nav-badge" text="0"/>
+                        </HBox>
+                    </graphic>
+                </Button>
             </VBox>
 
             <!-- Spacer -->

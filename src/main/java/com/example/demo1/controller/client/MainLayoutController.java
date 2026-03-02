@@ -71,6 +71,10 @@ public class MainLayoutController {
     @FXML
     private Button bookingsBtn;
 
+    @FXML
+    private Button DecartionBtn;
+
+
     private final SessionManager sessionManager = SessionManager.getInstance();
     private final AuthService authService = AuthService.getInstance();
     private final BookingService bookingService = BookingService.getInstance();
@@ -158,6 +162,8 @@ public class MainLayoutController {
                 return "Ticket Plans";
             case MY_BOOKINGS:
                 return "My Bookings";
+            case Decartion:
+                return " Decartion";
             case SETTINGS:
                 return "Settings";
             default:
@@ -183,6 +189,8 @@ public class MainLayoutController {
                 return "/fxml/client/TicketPlans.fxml";
             case MY_BOOKINGS:
                 return "/fxml/client/MyBookings.fxml";
+            case Decartion:
+                return "/fxml/gestion-reclamation.fxml";
             case SETTINGS:
                 return "/fxml/client/Settings.fxml";
             default:
@@ -250,6 +258,11 @@ public class MainLayoutController {
     @FXML
     private void showBookings() {
         loadView(View.MY_BOOKINGS);
+    }
+
+    @FXML
+    private void showDecartion() {
+        loadView(View.Decartion);
     }
 
     @FXML
