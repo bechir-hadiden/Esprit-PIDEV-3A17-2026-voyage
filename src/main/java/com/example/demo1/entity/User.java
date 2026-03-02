@@ -17,6 +17,8 @@ public class User {
     private StringProperty role = new SimpleStringProperty();
     private IntegerProperty idProfession = new SimpleIntegerProperty();
     private StringProperty telephone = new SimpleStringProperty();
+    private DoubleProperty walletBalance = new SimpleDoubleProperty(0.0);
+    private IntegerProperty loyaltyPoints = new SimpleIntegerProperty(0);
 
     public User() {
     }
@@ -148,6 +150,30 @@ public class User {
 
     public StringProperty telephoneProperty() {
         return telephone;
+    }
+
+    public double getWalletBalance() {
+        return walletBalance.get();
+    }
+
+    public void setWalletBalance(double value) {
+        this.walletBalance.set(value);
+    }
+
+    public DoubleProperty walletBalanceProperty() {
+        return walletBalance;
+    }
+
+    public int getLoyaltyPoints() {
+        return loyaltyPoints.get();
+    }
+
+    public void setLoyaltyPoints(int value) {
+        this.loyaltyPoints.set(value);
+    }
+
+    public IntegerProperty loyaltyPointsProperty() {
+        return loyaltyPoints;
     }
 
     public boolean isAdmin() {

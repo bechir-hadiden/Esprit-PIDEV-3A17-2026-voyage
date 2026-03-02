@@ -38,6 +38,8 @@ public class MainLayoutController {
     @FXML
     private Label dashboardLabel;
     @FXML
+    private Label walletLabel;
+    @FXML
     private Label hotelsLabel;
     @FXML
     private Label transportLabel;
@@ -62,6 +64,8 @@ public class MainLayoutController {
 
     @FXML
     private Button dashboardBtn;
+    @FXML
+    private Button walletBtn;
     @FXML
     private Button hotelsBtn;
     @FXML
@@ -144,6 +148,8 @@ public class MainLayoutController {
         switch (view) {
             case DASHBOARD:
                 return "Dashboard";
+            case MY_WALLET:
+                return "My Wallet";
             case HOTELS:
                 return "Find Hotels";
             case HOTEL_DETAILS:
@@ -169,6 +175,8 @@ public class MainLayoutController {
         switch (view) {
             case DASHBOARD:
                 return "/fxml/client/Dashboard.fxml";
+            case MY_WALLET:
+                return "/fxml/client/MyWallet.fxml";
             case HOTELS:
                 return "/fxml/client/Hotels.fxml";
             case HOTEL_DETAILS:
@@ -193,6 +201,7 @@ public class MainLayoutController {
     private void updateActiveNavButton(View view) {
         // Reset all buttons
         dashboardBtn.getStyleClass().remove("nav-button-active");
+        walletBtn.getStyleClass().remove("nav-button-active");
         hotelsBtn.getStyleClass().remove("nav-button-active");
         transportBtn.getStyleClass().remove("nav-button-active");
         plansBtn.getStyleClass().remove("nav-button-active");
@@ -202,6 +211,9 @@ public class MainLayoutController {
         switch (view) {
             case DASHBOARD:
                 dashboardBtn.getStyleClass().add("nav-button-active");
+                break;
+            case MY_WALLET:
+                walletBtn.getStyleClass().add("nav-button-active");
                 break;
             case HOTELS:
             case HOTEL_DETAILS:
@@ -229,6 +241,11 @@ public class MainLayoutController {
     private void showHotels() {
         sessionManager.clearBookingSelection();
         loadView(View.HOTELS);
+    }
+
+    @FXML
+    private void showWallet() {
+        loadView(View.MY_WALLET);
     }
 
     @FXML
@@ -292,6 +309,7 @@ public class MainLayoutController {
             userInfoSection.setVisible(false);
             userInfoSection.setManaged(false);
             dashboardLabel.setVisible(false);
+            walletLabel.setVisible(false);
             hotelsLabel.setVisible(false);
             transportLabel.setVisible(false);
             plansLabel.setVisible(false);
@@ -306,6 +324,7 @@ public class MainLayoutController {
             userInfoSection.setVisible(true);
             userInfoSection.setManaged(true);
             dashboardLabel.setVisible(true);
+            walletLabel.setVisible(true);
             hotelsLabel.setVisible(true);
             transportLabel.setVisible(true);
             plansLabel.setVisible(true);

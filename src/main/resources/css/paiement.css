@@ -1,0 +1,154 @@
+/* ===============================
+   MAIN BACKGROUND - TRAVEL BLUE
+================================= */
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #EFF6FF, #DBEAFE);
+    -fx-font-family: 'Segoe UI', sans-serif;
+}
+
+/* ===============================
+   HEADERS
+================================= */
+.header-label {
+    -fx-text-fill: #1E40AF;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.subheader-label {
+    -fx-text-fill: #2563EB;
+    -fx-font-size: 16px;
+    -fx-font-weight: 500;
+}
+
+/* ===============================
+   FORM CONTAINER
+================================= */
+.form-container {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(37, 99, 235, 0.15), 25, 0, 0, 10);
+    -fx-padding: 32;
+}
+
+/* ===============================
+   INPUT FIELDS
+================================= */
+.text-field,
+.date-picker,
+.combo-box {
+    -fx-font-size: 14px;
+    -fx-background-radius: 10;
+    -fx-background-color: #F0F9FF;
+    -fx-border-color: #BFDBFE;
+    -fx-border-radius: 10;
+    -fx-padding: 10;
+}
+
+.text-field:focused,
+.date-picker:focused,
+.combo-box:focused {
+    -fx-border-color: #2563EB;
+    -fx-effect: dropshadow(three-pass-box, rgba(37, 99, 235, 0.3), 8, 0, 0, 0);
+}
+
+/* ===============================
+   MODERN TRAVEL BUTTONS
+================================= */
+.button {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-padding: 12 24;
+    -fx-text-fill: white;
+}
+
+/* Primary Button */
+.button-primary {
+    -fx-background-color: linear-gradient(to right, #2563EB, #1E40AF);
+}
+
+.button-primary:hover {
+    -fx-background-color: linear-gradient(to right, #1D4ED8, #1E3A8A);
+}
+
+/* Secondary */
+.button-secondary {
+    -fx-background-color: #3B82F6;
+}
+
+.button-secondary:hover {
+    -fx-background-color: #2563EB;
+}
+
+/* Danger */
+.button-danger {
+    -fx-background-color: #EF4444;
+}
+
+.button-danger:hover {
+    -fx-background-color: #DC2626;
+}
+
+/* ===============================
+   CARDS
+================================= */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(30, 64, 175, 0.1), 20, 0, 0, 5);
+    -fx-padding: 24;
+    -fx-border-color: #DBEAFE;
+    -fx-border-radius: 16;
+}
+
+.card-amount {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E40AF;
+}
+
+.card-id {
+    -fx-font-size: 12px;
+    -fx-text-fill: #3B82F6;
+}
+
+/* ===============================
+   TABLE STYLE (IMPORTANT)
+================================= */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #DBEAFE;
+    -fx-border-radius: 12;
+}
+
+.table-view .column-header {
+    -fx-background-color: #2563EB;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #DBEAFE;
+}
+
+/* ===============================
+   DARK MODE (BLUE VERSION)
+================================= */
+.dark-theme {
+    -fx-background-color: linear-gradient(to bottom right, #0F172A, #1E3A8A);
+}
+
+.dark-theme .header-label {
+    -fx-text-fill: #93C5FD;
+}
+
+.dark-theme .form-container,
+.dark-theme .card {
+    -fx-background-color: #1E293B;
+    -fx-border-color: #2563EB;
+}

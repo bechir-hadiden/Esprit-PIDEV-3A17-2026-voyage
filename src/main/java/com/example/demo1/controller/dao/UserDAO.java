@@ -145,8 +145,8 @@ public class UserDAO {
      * @return true if user created successfully, false otherwise
      */
     public boolean createUser(User user, String plainPassword) {
-        String sql = "INSERT INTO users (username, password_hash, full_name, email, phone, avatar, role) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, password_hash, full_name, email, phone, avatar, role, wallet_balance, loyalty_points) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -161,6 +161,8 @@ public class UserDAO {
             pstmt.setString(5, user.getPhone());
             pstmt.setString(6, user.getAvatar());
             pstmt.setString(7, user.getRole());
+            pstmt.setDouble(8, user.getWalletBalance());
+            pstmt.setInt(9, user.getLoyaltyPoints());
 
             int affectedRows = pstmt.executeUpdate();
 
@@ -187,7 +189,7 @@ public class UserDAO {
      * @return true if update successful, false otherwise
      */
     public boolean updateUser(User user) {
-        String sql = "UPDATE users SET full_name = ?, email = ?, phone = ?, avatar = ? WHERE id = ?";
+        String sql = "UPDATE users SET full_name = ?, email = ?, phone = ?, avatar = ?, wallet_balance = ?, loyalty_points = ? WHERE id = ?";
 
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -196,7 +198,9 @@ public class UserDAO {
             pstmt.setString(2, user.getEmail());
             pstmt.setString(3, user.getPhone());
             pstmt.setString(4, user.getAvatar());
-            pstmt.setInt(5, Integer.parseInt(user.getId()));
+            pstmt.setDouble(5, user.getWalletBalance());
+            pstmt.setInt(6, user.getLoyaltyPoints());
+            pstmt.setInt(7, Integer.parseInt(user.getId()));
 
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -272,6 +276,8 @@ public class UserDAO {
         user.setAvatar(rs.getString("avatar"));
         user.setRole(rs.getString("role"));
         user.setPasswordHash(rs.getString("password_hash"));
+        user.setWalletBalance(rs.getDouble("wallet_balance"));
+        user.setLoyaltyPoints(rs.getInt("loyalty_points"));
         return user;
     }
 }
