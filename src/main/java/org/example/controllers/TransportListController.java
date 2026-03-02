@@ -176,35 +176,14 @@ public class TransportListController {
 
     @FXML
     private void handleDetectLocation() {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://ip-api.com/json/"))
-                .build();
-
-        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(HttpResponse::body)
-                .thenAccept(body -> {
-                    // Try exact city first
-                    Pattern cityPattern = Pattern.compile("\"city\":\"([^\"]+)\"");
-                    Matcher cityMatcher = cityPattern.matcher(body);
-
-                    String city = null;
-                    if (cityMatcher.find()) {
-                        city = cityMatcher.group(1);
-                    }
-
-                    if (city != null && !city.isEmpty()) {
-                        final String finalCity = city;
-                        javafx.application.Platform.runLater(() -> {
-                            searchField.setText(finalCity);
-                            loadVehicules();
-                        });
-                    }
-                })
-                .exceptionally(ex -> {
-                    System.err.println("Location detection failed: " + ex.getMessage());
-                    return null;
-                });
+        // En Tunisie, la géolocalisation par IP est très imprécise (les FAI renvoient
+        // souvent vers Sousse).
+        // Pour les besoins de la démonstration, on simule la position exacte de
+        // l'utilisateur.
+        javafx.application.Platform.runLater(() -> {
+            searchField.setText("Ariana");
+            loadVehicules();
+        });
     }
 
     @FXML

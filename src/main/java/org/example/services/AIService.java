@@ -70,14 +70,14 @@ public class AIService {
         }
     }
 
-    public AIRecommendation getDetailedRecommendation(String start, String end) {
+    public AIRecommendation getDetailedRecommendation(String start, String end, String priority, String context) {
         List<BaseVehicule> all = vehiculeService.listerTous();
         if (all.isEmpty())
             return null;
 
         // Si la clé n'est pas configurée, on utilise le fallback
         if (API_KEY.equals("votre_cle_openai_ici")) {
-            return getHeuristicRecommendation(all, start, end);
+            return getHeuristicRecommendation(all, start, end, priority, context);
         }
 
         try {
@@ -134,7 +134,7 @@ public class AIService {
                                 .filter(v -> v.getId() == id)
                                 .findFirst()
                                 .map(v -> new AIRecommendation(v, reason))
-                                .orElse(getHeuristicRecommendation(all, start, end));
+                                .orElse(getHeuristicRecommendation(all, start, end, priority, context));
                     }
                 }
             }
@@ -143,52 +143,62 @@ public class AIService {
         }
 
         // Fallback en cas d'erreur API
-        return getHeuristicRecommendation(all, start, end);
+        return getHeuristicRecommendation(all, start, end, priority, context);
     }
 
-    private AIRecommendation getHeuristicRecommendation(List<BaseVehicule> all, String start, String end) {
+    private String generateProTip(String city, String context, String priority) {
+        String tip = "";
+        boolean isRushHour = context.toLowerCase().contains("1h") || context.toLowerCase().contains("soir");
+
+        if (priority.contains("Budget")) {
+            tip = "💡 Conseil Économie : Réservez un aller-retour pour bénéficier de -10% sur ce trajet.";
+        } else if (priority.contains("Rapide")) {
+            tip = isRushHour
+                    ? "⚠️ Alerte Trafic : Embouteillages détectés à l'entrée de " + city + ". Prévoyez 15 min de marge."
+                    : "⚡ Info Trafic : La voie rapide est fluide. Arrivée estimée en un temps record !";
+        } else {
+            tip = "☂️ Météo : Risque d'averses à " + city + ". Votre véhicule climatisé assurera un confort optimal.";
+        }
+        return tip;
+    }
+
+    private AIRecommendation getHeuristicRecommendation(List<BaseVehicule> all, String start, String end,
+            String priority, String context) {
         String s = start.toLowerCase();
         String e = end.toLowerCase();
 
-        boolean isTunis = s.contains("tunis") || s.contains("cedria") || s.contains("ariana")
-                || s.contains("ben arous");
-        boolean destTunis = e.contains("tunis") || e.contains("cedria") || e.contains("ariana")
-                || e.contains("ben arous");
-
-        boolean differentRegion = false;
+        boolean isHighDistance = !s.contains(e) && !e.contains(s);
         String reasonStr = "";
 
-        if (isTunis && !destTunis) {
-            differentRegion = true;
-            reasonStr = "Ce trajet sort de la zone du Grand Tunis. Un Bus est recommandé pour sa fiabilité sur de longues distances inter-régionales.";
-        } else if (!isTunis && destTunis) {
-            differentRegion = true;
-            reasonStr = "Vous entrez dans la capitale. Le Bus est l'option la plus économique et sécurisée pour ce type de voyage.";
-        } else if (isTunis && destTunis) {
-            reasonStr = "Trajet local détecté dans le Grand Tunis. Un Taxi ou une Voiture offre la meilleure flexibilité pour vos déplacements urbains.";
+        if (priority.contains("Budget")) {
+            reasonStr = "Analyse Budget : Le Bus est sélectionné pour son tarif imbattable sur ce trajet.";
+        } else if (priority.contains("Rapide")) {
+            reasonStr = "Analyse Vitesse : Un Taxi est privilégié pour éviter les arrêts fréquents et arriver plus vite.";
         } else {
-            differentRegion = true;
-            reasonStr = "Distance inter-urbaine importante détectée. L'AI suggère un transport collectif (Bus) pour optimiser votre confort.";
+            reasonStr = "Analyse Confort : Une Voiture privée est recommandée pour une expérience VIP et un trajet sans stress.";
         }
 
         List<BaseVehicule> candidates;
-        if (differentRegion) {
-            candidates = all.stream()
-                    .filter(v -> v.isDisponible() && v instanceof Bus)
-                    .collect(Collectors.toList());
-            if (candidates.isEmpty())
-                candidates = all.stream()
-                        .filter(v -> v.isDisponible() && v instanceof Voiture)
-                        .collect(Collectors.toList());
+        if (priority.contains("Budget")) {
+            candidates = all.stream().filter(v -> v.isDisponible() && v instanceof Bus)
+                    .collect(java.util.stream.Collectors.toList());
+        } else if (priority.contains("Rapide")) {
+            candidates = all.stream().filter(v -> v.isDisponible() && v instanceof Taxi)
+                    .collect(java.util.stream.Collectors.toList());
         } else {
-            candidates = all.stream()
-                    .filter(v -> v.isDisponible() && (v instanceof Taxi || v instanceof Voiture))
-                    .collect(Collectors.toList());
+            candidates = all.stream().filter(v -> v.isDisponible() && v instanceof Voiture)
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
+        if (candidates.isEmpty()) {
+            candidates = all.stream().filter(BaseVehicule::isDisponible).collect(java.util.stream.Collectors.toList());
         }
 
         BaseVehicule selected = candidates.isEmpty() ? all.get(random.nextInt(all.size()))
                 : candidates.get(random.nextInt(candidates.size()));
-        return new AIRecommendation(selected, reasonStr);
+
+        String proTip = generateProTip(end, context, priority);
+        return new AIRecommendation(selected, reasonStr + "\n\n" + proTip);
     }
 
     public String getAdminInsights(String statsSummary) {
