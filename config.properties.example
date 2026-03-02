@@ -1,0 +1,8 @@
+# Copy this file to `config.properties` (project root) and replace values.
+
+# Stripe secret key (starts with sk_test_... or sk_live_...)
+stripe.api.key=YOUR_STRIPE_SECRET_KEY_HERE
+
+# SendGrid settings (optional for email features)
+sendgrid.api.key=YOUR_SENDGRID_API_KEY_HERE
+sendgrid.from.email=no-reply@example.com
