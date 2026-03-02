@@ -59,8 +59,17 @@
                 <Button fx:id="dashboardBtn" onAction="#showDashboard" styleClass="nav-button">
                     <graphic>
                         <HBox alignment="CENTER_LEFT" spacing="12">
-                            <Label styleClass="nav-icon" text="🏠"/> <!-- Home -->
+                            <Label styleClass="nav-icon" text="&#xf015;"/>
                             <Label fx:id="dashboardLabel" styleClass="nav-text" text="Dashboard"/>
+                        </HBox>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="walletBtn" onAction="#showWallet" styleClass="nav-button">
+                    <graphic>
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label styleClass="nav-icon" text="&#xf0d6;"/>
+                            <Label fx:id="walletLabel" styleClass="nav-text" text="My Wallet"/>
                         </HBox>
                     </graphic>
                 </Button>
@@ -68,12 +77,11 @@
                 <Button fx:id="hotelsBtn" onAction="#showHotels" styleClass="nav-button">
                     <graphic>
                         <HBox alignment="CENTER_LEFT" spacing="12">
-                            <Label styleClass="nav-icon" text="🏨"/> <!-- Hotel -->
+                            <Label styleClass="nav-icon" text="&#xf236;"/>
                             <Label fx:id="hotelsLabel" styleClass="nav-text" text="Hotels"/>
                         </HBox>
                     </graphic>
                 </Button>
-
                 <Button fx:id="transportBtn" onAction="#showTransport" styleClass="nav-button">
                     <graphic>
                         <HBox alignment="CENTER_LEFT" spacing="12">
@@ -212,3 +220,6 @@
         </VBox>
     </center>
 </BorderPane>
+
+
+

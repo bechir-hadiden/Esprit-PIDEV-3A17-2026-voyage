@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox styleClass="admin-content" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.demo1.controller.admin.AdminPaymentsController" spacing="20">
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <!-- Header -->
+    <HBox styleClass="admin-header" alignment="CENTER_LEFT" spacing="20">
+        <VBox HBox.hgrow="ALWAYS">
+            <Label styleClass="admin-title" text="Payment Management"/>
+            <Label styleClass="admin-subtitle-header" text="Review and verify user transactions"/>
+        </VBox>
+        <Button styleClass="admin-button-secondary" text="Afficher paiements r&#233;alis&#233;s" onAction="#handleShowRealizedPayments"/>
+        <Button styleClass="admin-button-secondary" text="Open Stripe Dashboard" onAction="#handleOpenStripe"/>
+    </HBox>
+
+    <!-- Search and Filter Bar -->
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <TextField fx:id="searchField" promptText="Search by User or ID..." prefWidth="250" styleClass="admin-text-field"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label styleClass="admin-form-label" text="Filter:"/>
+        <ComboBox fx:id="statusFilter" promptText="All Statuses"/>
+    </HBox>
+
+    <!-- Payments Table -->
+    <VBox styleClass="admin-card" VBox.vgrow="ALWAYS">
+        <TableView fx:id="paymentsTable" styleClass="admin-table" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="idColumn" text="ID" prefWidth="60"/>
+                <TableColumn fx:id="userColumn" text="User" prefWidth="120"/>
+                <TableColumn fx:id="amountColumn" text="Amount" prefWidth="100"/>
+                <TableColumn fx:id="dateColumn" text="Date" prefWidth="120"/>
+                <TableColumn fx:id="methodColumn" text="Method" prefWidth="150"/>
+                <TableColumn fx:id="statusColumn" text="Status" prefWidth="120"/>
+                <TableColumn fx:id="bookingColumn" text="Booking" prefWidth="80"/>
+                <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="300"/>
+            </columns>
+            <placeholder>
+                <Label text="No payments found."/>
+            </placeholder>
+        </TableView>
+    </VBox>
+
+</VBox>

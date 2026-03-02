@@ -1,6 +1,7 @@
 package com.example.demo1.controller.client;
 
 
+import com.example.demo1.services.EmailService;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
@@ -34,6 +35,7 @@ public class DetailOffreController {
     @FXML private Button btnPDF;
     @FXML private Label lblDates;
     @FXML private Label lblRemiseBadge;
+    @FXML private Button btnEmail;
 
     private Offre currentOffre;
     private CodePromoService cs = new CodePromoService();
@@ -95,6 +97,7 @@ public class DetailOffreController {
             CodePromo cp = new CodePromo(nouveauCode, Date.valueOf(LocalDate.now().plusMonths(1)), currentOffre.getId_offre());
             cs.ajouter(cp);
             btnPDF.setDisable(false);
+            btnEmail.setDisable(false); // <--- AJOUTE ÇA
         } catch (Exception e) { e.printStackTrace(); }
     }
 
@@ -160,6 +163,37 @@ public class DetailOffreController {
             System.err.println("Erreur génération PDF/QR : " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    @FXML
+    private void handleSendEmail() {
+        String code = txtCodeGenere.getText();
+        // Le nom du fichier que tu viens de générer avec iText
+        String fileName = "Coupon_SmartTrip_" + code + ".pdf";
+
+        // On demande l'email du client (ou on utilise celui de la session)
+        TextInputDialog dialog = new TextInputDialog("client@email.com");
+        dialog.setTitle("Envoi du coupon");
+        dialog.setHeaderText("Recevez votre réduction par email");
+        dialog.setContentText("Entrez votre adresse email :");
+
+        dialog.showAndWait().ifPresent(email -> {
+            // Utilisation d'un Thread pour ne pas bloquer l'interface (TRICK PRO)
+            new Thread(() -> {
+                boolean success = EmailService.envoyerCouponEmail(email, currentOffre.getTitre(), fileName);
+
+                javafx.application.Platform.runLater(() -> {
+                    if (success) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setContentText("Votre coupon a été envoyé à : " + email);
+                        alert.show();
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("Échec de l'envoi de l'email.");
+                        alert.show();
+                    }
+                });
+            }).start();
+        });
     }
 
     @FXML private void handleFermer() {

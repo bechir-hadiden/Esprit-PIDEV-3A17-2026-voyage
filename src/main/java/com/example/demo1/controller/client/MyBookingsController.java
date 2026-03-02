@@ -1,26 +1,42 @@
 package com.example.demo1.controller.client;
+
 import com.example.demo1.entity.Booking;
 import com.example.demo1.entity.PlanBooking;
+import com.example.demo1.entity.User;
 import com.example.demo1.services.AuthService;
 import com.example.demo1.services.BookingService;
 import com.example.demo1.Utils.Formatter;
+import org.example.entities.Paiement;
+import org.example.services.PaiementService;
+import org.example.utils.PDFService;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+import java.awt.Desktop;
+import java.io.File;
+
 public class MyBookingsController {
 
-    @FXML private Label totalBookingsLabel;
-    @FXML private Label hotelBookingsLabel;
-    @FXML private Label planBookingsLabel;
-    @FXML private Label totalSpentLabel;
-    @FXML private TabPane bookingsTabPane;
-    @FXML private VBox hotelBookingsContainer;
-    @FXML private VBox planBookingsContainer;
+    @FXML
+    private Label totalBookingsLabel;
+    @FXML
+    private Label hotelBookingsLabel;
+    @FXML
+    private Label planBookingsLabel;
+    @FXML
+    private Label totalSpentLabel;
+    @FXML
+    private TabPane bookingsTabPane;
+    @FXML
+    private VBox hotelBookingsContainer;
+    @FXML
+    private VBox planBookingsContainer;
 
     private final BookingService bookingService = BookingService.getInstance();
+    private final PaiementService paiementService = new PaiementService();
 
     @FXML
     public void initialize() {
@@ -52,8 +68,7 @@ public class MyBookingsController {
         hotelBookingsContainer.getChildren().clear();
 
         var activeBookings = bookingService.getHotelBookings().filtered(
-                b -> b.getStatus() == Booking.Status.CONFIRMED
-        );
+                b -> b.getStatus() == Booking.Status.CONFIRMED);
 
         if (activeBookings.isEmpty()) {
             VBox emptyState = createEmptyState("No hotel bookings yet", "Start exploring and book your first stay");
@@ -98,7 +113,8 @@ public class MyBookingsController {
         header.getChildren().addAll(iconBg, nameBox);
 
         Label statusLabel = new Label("Confirmed");
-        statusLabel.setStyle("-fx-background-color: #DCFCE7; -fx-text-fill: #166534; -fx-background-radius: 10; -fx-padding: 4 12; -fx-font-size: 12;");
+        statusLabel.setStyle(
+                "-fx-background-color: #DCFCE7; -fx-text-fill: #166534; -fx-background-radius: 10; -fx-padding: 4 12; -fx-font-size: 12;");
 
         info.getChildren().addAll(header, statusLabel);
 
@@ -113,13 +129,18 @@ public class MyBookingsController {
         addDetail(details, 2, 0, "Guests", String.valueOf(booking.getGuestCount()));
         addDetail(details, 3, 0, "Total", booking.getFormattedTotalPrice());
 
-        // Cancel button
+        // Buttons
+        Button receiptBtn = new Button("Reçu PDF");
+        receiptBtn.getStyleClass().add("outline-button");
+        receiptBtn.setStyle("-fx-border-color: #0ea5e9; -fx-text-fill: #0ea5e9;");
+        receiptBtn.setOnAction(e -> handleDownloadReceipt(booking));
+
         Button cancelBtn = new Button("Cancel");
         cancelBtn.getStyleClass().add("outline-button");
         cancelBtn.setStyle("-fx-border-color: #FECACA; -fx-text-fill: #EF4444;");
         cancelBtn.setOnAction(e -> cancelBooking(booking.getId()));
 
-        card.getChildren().addAll(info, details, cancelBtn);
+        card.getChildren().addAll(info, details, receiptBtn, cancelBtn);
 
         return card;
     }
@@ -138,8 +159,7 @@ public class MyBookingsController {
         planBookingsContainer.getChildren().clear();
 
         var activePlans = bookingService.getPlanBookings().filtered(
-                b -> b.getStatus() == PlanBooking.Status.ACTIVE
-        );
+                b -> b.getStatus() == PlanBooking.Status.ACTIVE);
 
         if (activePlans.isEmpty()) {
             VBox emptyState = createEmptyState("No active plans", "Subscribe to a plan and unlock exclusive benefits");
@@ -184,7 +204,8 @@ public class MyBookingsController {
         header.getChildren().addAll(iconBg, nameBox);
 
         Label statusLabel = new Label("Active");
-        statusLabel.setStyle("-fx-background-color: #DCFCE7; -fx-text-fill: #166534; -fx-background-radius: 10; -fx-padding: 4 12; -fx-font-size: 12;");
+        statusLabel.setStyle(
+                "-fx-background-color: #DCFCE7; -fx-text-fill: #166534; -fx-background-radius: 10; -fx-padding: 4 12; -fx-font-size: 12;");
 
         info.getChildren().addAll(header, statusLabel);
 
@@ -261,5 +282,54 @@ public class MyBookingsController {
             }
         });
     }
-}
 
+    private void handleDownloadReceipt(Booking booking) {
+        try {
+            int bookingId;
+            try {
+                bookingId = Integer.parseInt(booking.getId());
+            } catch (NumberFormatException e) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "ID de réservation invalide.");
+                return;
+            }
+
+            Paiement paiement = paiementService.getPaiementByBookingId(bookingId);
+            if (paiement == null) {
+                showAlert(Alert.AlertType.INFORMATION, "Paiement non trouvé",
+                        "Aucun record de paiement trouvé pour cette réservation.");
+                return;
+            }
+
+            User user = AuthService.getInstance().getCurrentUser();
+            String fileName = "Confirmation_Paiement_" + paiement.getIdPaiement() + ".pdf";
+            String filePath = System.getProperty("user.home") + File.separator + fileName;
+
+            org.example.entities.User entUser = new org.example.entities.User();
+            if (user != null) {
+                entUser.setFull_name(user.getFullName());
+                entUser.setEmail(user.getEmail());
+            }
+
+            PDFService.generatePaymentReceipt(paiement, entUser, filePath);
+
+            File file = new File(filePath);
+            if (file.exists()) {
+                if (Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().open(file);
+                }
+                showAlert(Alert.AlertType.INFORMATION, "PDF Généré", "Le reçu a été téléchargé dans : " + filePath);
+            }
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur PDF", "Échec de génération du PDF: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+}

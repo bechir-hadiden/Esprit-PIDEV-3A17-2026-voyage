@@ -125,4 +125,34 @@ public class TransportService {
         }
         return list;
     }
+
+    public double getSurgePrice(int idTransport, double basePrice) {
+        // Simple Demand-based surge pricing logic
+        int reservationsCount = 0;
+        String sql = "SELECT COUNT(*) FROM transport_reservation WHERE idVehicule = ? AND DATE(dateReservation) = CURDATE()";
+        try (Connection con = DatabaseConnection.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idTransport);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                reservationsCount = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        double multiplier = 1.0;
+        if (reservationsCount > 10)
+            multiplier = 1.25;
+        else if (reservationsCount > 5)
+            multiplier = 1.15;
+
+        // Weather multiplier
+        WeatherService weatherService = new WeatherService();
+        WeatherService.WeatherData weather = weatherService.getWeather("Tunis");
+        if (weather != null && weather.isRainy)
+            multiplier += 0.10;
+
+        return basePrice * multiplier;
+    }
 }

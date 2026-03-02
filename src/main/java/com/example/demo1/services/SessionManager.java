@@ -22,8 +22,21 @@ public class SessionManager {
     private final BooleanProperty sidebarCollapsed = new SimpleBooleanProperty(false);
 
     public enum View {
-        SIGN_IN, SIGN_UP, FORGOT_PASSWORD, DASHBOARD, HOTELS, HOTEL_DETAILS, BOOKING,
-        TRANSPORT, OFFERS, TICKET_PLANS, MY_BOOKINGS, SETTINGS , Decartion
+        SIGN_IN,
+        SIGN_UP,
+        FORGOT_PASSWORD,
+        DASHBOARD,
+        MY_WALLET,
+        HOTELS,
+        HOTEL_DETAILS,
+        BOOKING,
+        TRANSPORT,
+        OFFERS,
+        TICKET_PLANS,
+        MY_BOOKINGS,
+        SETTINGS,
+        Decartion,   // ← make sure this exists exactly as used in switch
+
     }
 
     private SessionManager() {}
