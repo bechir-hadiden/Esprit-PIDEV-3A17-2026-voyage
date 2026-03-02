@@ -35,6 +35,8 @@
                         text="⭐ Abonnements" onAction="#showPlans"/>
                 <Button fx:id="paymentsButton" maxWidth="Infinity" styleClass="admin-nav-item"
                         text="💳 Paiements" onAction="#showPayments"/>
+                <Button fx:id="reclamtionButton" maxWidth="Infinity" styleClass="admin-nav-item"
+                        text="💳 Reclamtion" onAction="#showReclmation"/>
 
                 <!-- Spacer -->
                 <Region VBox.vgrow="ALWAYS"/>

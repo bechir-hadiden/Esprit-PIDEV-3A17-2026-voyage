@@ -34,6 +34,8 @@ public class AdminMainController {
     private Button plansButton;
     @FXML
     private Button paymentsButton;
+    @FXML
+    private Button reclamtionButton;
 
     private final AuthService authService = AuthService.getInstance();
 
@@ -63,6 +65,12 @@ public class AdminMainController {
     @FXML
     private void showTransport() {
         loadContent("/fxml/admin/AdminTransport.fxml");
+        setActiveButton(transportButton);
+    }
+
+    @FXML
+    private void showReclmation() {
+        loadContent("/fxml/gestion-reclamation.fxml");
         setActiveButton(transportButton);
     }
 

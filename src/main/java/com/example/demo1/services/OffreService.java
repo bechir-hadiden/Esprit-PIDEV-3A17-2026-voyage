@@ -53,7 +53,7 @@ public class OffreService implements IService<Offre> {
                 "vol.arrivee as dest_vol, vol.prix as prix_vol, vol.image_url as vol_img, " + // <-- vol_img ajouté ici
                 "veh.type as type_veh, veh.ville as ville_veh, veh.prix as prix_veh, veh.image as veh_img " + // <-- veh_img ajouté ici
                 "FROM offre o " +
-                "LEFT JOIN voyage v ON o.id_voyage = v.id_voyage " +
+                "LEFT JOIN voyages v ON o.id_voyage = v.id " +
                 "LEFT JOIN hotels h ON o.id_hotel = h.id " +
                 "LEFT JOIN hotel_images hi ON h.id = hi.hotel_id AND hi.display_order = 1 " +
                 "LEFT JOIN vols vol ON o.id_vol = vol.id " +
