@@ -152,6 +152,8 @@ public class MainLayoutController {
                 return "Complete Booking";
             case TRANSPORT:
                 return "Book Transport";
+            case OFFERS:
+                return "Exclusive Offers";
             case TICKET_PLANS:
                 return "Ticket Plans";
             case MY_BOOKINGS:
@@ -175,6 +177,8 @@ public class MainLayoutController {
                 return "/fxml/client/Booking.fxml";
             case TRANSPORT:
                 return "/fxml/client/Transport.fxml";
+            case OFFERS:
+                return "/fxml/client/ConsultationOffres.fxml";
             case TICKET_PLANS:
                 return "/fxml/client/TicketPlans.fxml";
             case MY_BOOKINGS:
@@ -231,6 +235,12 @@ public class MainLayoutController {
     @FXML
     private void showTransport() {
         loadView(View.TRANSPORT);
+    }
+
+    @FXML
+    private void showOffers() {
+        System.out.println("Bouton cliqué, chargement de OFFERS...");
+        loadView(View.OFFERS);
     }
 
     @FXML

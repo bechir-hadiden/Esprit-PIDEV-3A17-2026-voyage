@@ -15,6 +15,8 @@ public class User {
     private StringProperty phone = new SimpleStringProperty();
     private StringProperty passwordHash = new SimpleStringProperty();
     private StringProperty role = new SimpleStringProperty();
+    private IntegerProperty idProfession = new SimpleIntegerProperty();
+    private StringProperty telephone = new SimpleStringProperty();
     private BooleanProperty blocked = new SimpleBooleanProperty(false);
 
     public User() {
@@ -135,6 +137,30 @@ public class User {
 
     public BooleanProperty blockedProperty() {
         return blocked;
+    }
+
+    public int getIdProfession() {
+        return idProfession.get();
+    }
+
+    public void setIdProfession(int value) {
+        this.idProfession.set(value);
+    }
+
+    public IntegerProperty idProfessionProperty() {
+        return idProfession;
+    }
+
+    public String getTelephone() {
+        return telephone.get();
+    }
+
+    public void setTelephone(String value) {
+        this.telephone.set(value);
+    }
+
+    public StringProperty telephoneProperty() {
+        return telephone;
     }
 
     public boolean isAdmin() {

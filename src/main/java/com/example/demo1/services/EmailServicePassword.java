@@ -6,7 +6,7 @@ import java.util.Properties;
 
 /**
  * Email service for password reset using Gmail App Passwords.
- * Uses Jakarta Mail (modular) instead of JavaMail (non-modular).
+ * Uses JavaMail (non-modular) for compatibility.
  */
 public class EmailServicePassword {
 

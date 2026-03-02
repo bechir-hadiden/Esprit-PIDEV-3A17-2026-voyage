@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.TypeListController"
+      spacing="20"
+      style="-fx-background-color: #f8fafc; -fx-padding: 30;">
+
+    <stylesheets>
+        <URL value="@../css/style.css" />
+        <URL value="@../css/admin-styles.css" />
+    </stylesheets>
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 30 40 10 40;">
+        <Button text="← Retour" onAction="#goBack" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;"/>
+        <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+            <Label text="Catégories &amp; Tarifs" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #1e293b;"/>
+        </VBox>
+        <HBox spacing="12" alignment="CENTER_RIGHT">
+            <Button onAction="#refresh" styleClass="admin-button-secondary" text="🔄 Rafraîchir" style="-fx-padding: 8 16;"/>
+            <Button onAction="#openAddForm" styleClass="admin-button-primary" text="➕ Nouveau" style="-fx-padding: 8 16;"/>
+        </HBox>
+    </HBox>
+
+
+
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+        <FlowPane fx:id="cardsContainer" hgap="25" vgap="25">
+            <padding>
+                <Insets bottom="30" left="40" right="40" top="30" />
+            </padding>
+            <!-- Cards will be added dynamically by controller -->
+        </FlowPane>
+    </ScrollPane>
+</VBox>

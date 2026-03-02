@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.MyReservationsController"
+      spacing="0"
+      style="-fx-background-color: #f0f4f8;">
+
+    <stylesheets>
+        <URL value="@../css/style.css" />
+        <URL value="@../css/admin-styles.css" />
+    </stylesheets>
+
+    <!-- Single Elegant Header matching other pages -->
+    <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 30 40 10 40;">
+        <Button text="← Retour" onAction="#goBack" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;"/>
+        <VBox HBox.hgrow="ALWAYS">
+            <Label text="Mes Réservations" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #1e293b;"/>
+            <Label text="Consultez et gérez l'historique de vos trajets." style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+        </VBox>
+        <HBox spacing="10" alignment="CENTER" styleClass="admin-card" style="-fx-padding: 12 20; -fx-background-radius: 12;">
+            <VBox alignment="CENTER">
+                <Label text="TOTAL" style="-fx-font-size: 11px; -fx-text-fill: #64748b; -fx-font-weight: 800;"/>
+                <Label fx:id="totalLabel" text="0" style="-fx-font-size: 24px; -fx-text-fill: #0ea5e9; -fx-font-weight: 900;"/>
+            </VBox>
+        </HBox>
+    </HBox>
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                style="-fx-background-color: transparent; -fx-background: transparent;">
+        <VBox spacing="24" style="-fx-padding: 20 40;" alignment="TOP_CENTER">
+            
+            <VBox styleClass="admin-card" spacing="0" VBox.vgrow="ALWAYS" maxWidth="1200" style="-fx-padding: 10;">
+                <TableView fx:id="reservationTable" VBox.vgrow="ALWAYS" styleClass="admin-table" prefHeight="500">
+                    <columns>
+                        <TableColumn fx:id="colId" text="Ref" minWidth="60" prefWidth="70"/>
+                        <TableColumn fx:id="colType" text="Service" minWidth="100" prefWidth="120"/>
+                        <TableColumn fx:id="colCompagnie" text="Compagnie" minWidth="150" prefWidth="180"/>
+                        <TableColumn fx:id="colNumero" text="Véhicule" minWidth="120" prefWidth="140"/>
+                        <TableColumn fx:id="colDate" text="Date &amp; Heure" minWidth="160" prefWidth="190"/>
+                        <TableColumn fx:id="colStatut" text="État" minWidth="120" prefWidth="130" style="-fx-alignment: CENTER;"/>
+                        <TableColumn fx:id="colPrix" text="Tarif" minWidth="90" prefWidth="110"/>
+                        <TableColumn fx:id="colActions" text="Gestion" minWidth="240" prefWidth="260" style="-fx-alignment: CENTER;"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                    <placeholder>
+                        <Label text="Aucune réservation pour le moment." style="-fx-font-size: 15px; -fx-text-fill: #94a3b8; -fx-font-weight: 600; -fx-padding: 40;"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+</VBox>
+

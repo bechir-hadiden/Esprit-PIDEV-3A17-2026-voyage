@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.controllers.TransportTypeSelectorController"
+            style="-fx-background-color: #f8fafc;">
+
+    <stylesheets>
+        <URL value="@../css/style.css" />
+    </stylesheets>
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 30 40 10 40;">
+            <Button text="← Retour" onAction="#goBack" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;"/>
+            <VBox>
+                <Label text="Types de Transport" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #1e293b;"/>
+                <Label text="Sélectionnez une catégorie pour voir les véhicules" style="-fx-font-size: 14px; -fx-text-fill: #64748b;"/>
+            </VBox>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <FlowPane fx:id="cardsContainer" hgap="30" vgap="30" alignment="CENTER" style="-fx-padding: 20 40;">
+                <!-- Dynamically loaded cards -->
+            </FlowPane>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

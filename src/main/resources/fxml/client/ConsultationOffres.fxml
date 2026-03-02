@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@../../css/client-style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.controller.client.ConsultationOffresController">
+    <children>
+        <VBox spacing="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
+            <children>
+
+                <!-- White Content Container -->
+                <VBox spacing="20.0" styleClass="white-container" VBox.vgrow="ALWAYS">
+                    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+                    <children>
+
+                        <!-- Header Section -->
+                        <HBox alignment="CENTER_LEFT" spacing="20.0">
+                            <children>
+                                <Label styleClass="label-title" text="Exclusive Offers" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="txtSearch" prefHeight="45.0" prefWidth="300.0" promptText="Search destination..." styleClass="text-field" />
+                            </children>
+                        </HBox>
+
+                        <!-- Filters Pills -->
+                        <HBox spacing="15.0">
+                            <children>
+                                <Button fx:id="btnAll" onAction="#filterAll" styleClass="filter-btn, filter-active" text="All Offers" />
+                                <Button fx:id="btnHotels" onAction="#filterHotels" styleClass="filter-btn" text="Hotels" />
+                                <Button fx:id="btnVols" onAction="#filterVols" styleClass="filter-btn" text="Flights" />
+                                <Button fx:id="btnTransp" onAction="#filterTransp" styleClass="filter-btn" text="Transport" />
+                            </children>
+                        </HBox>
+
+                        <!-- Scrollable Grid -->
+                        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
+                            <content>
+                                <TilePane fx:id="offersContainer" hgap="25.0" prefColumns="3" vgap="25.0">
+                                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                                </TilePane>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

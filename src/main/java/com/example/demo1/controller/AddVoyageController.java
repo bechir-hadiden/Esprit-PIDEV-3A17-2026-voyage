@@ -9,9 +9,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddVoyageController {
@@ -27,13 +31,21 @@ public class AddVoyageController {
     @FXML private Label lblNoImage;
     @FXML private TextField tfPaysDepart;
 
+    // ===== CARROUSEL =====
+    @FXML private Button btnPrev;
+    @FXML private Button btnNext;
+    @FXML private HBox hboxIndicateurs;
+    @FXML private Label lblCompteur;
+
+    // ===== ÉTAT CARROUSEL =====
+    private List<String> listeImages = new ArrayList<>();
+    private int indexImageCourant = 0;
+    private ImageView imagePreview;
+
     // ===== SERVICES =====
     private VoyageServices voyageService;
     private DestinationService destinationService;
     private VoyageController voyageController;
-    private ImageView imagePreview;
-
-    // ✅ VARIABLE POUR DISTINGUER AJOUT / MODIFICATION
     private Voyage voyageAModifier = null;
 
     public AddVoyageController() {
@@ -48,20 +60,26 @@ public class AddVoyageController {
     public void initialize() {
         System.out.println("🚀 Initialisation AddVoyageController...");
 
+        // Préparer l'ImageView du carrousel
         imagePreview = new ImageView();
-        imagePreview.setFitWidth(400);
-        imagePreview.setFitHeight(180);
-        imagePreview.setPreserveRatio(true);
-        imagePreview.setVisible(false);
+        imagePreview.setFitWidth(480);
+        imagePreview.setFitHeight(200);
+        imagePreview.setPreserveRatio(false);
+        imagePreview.setStyle("-fx-background-radius: 12;");
+
+        // Cacher les boutons au départ
+        btnPrev.setVisible(false);
+        btnPrev.setManaged(false);
+        btnNext.setVisible(false);
+        btnNext.setManaged(false);
 
         chargerDestinations();
-
-        // ✅ Valeur par défaut
         tfPaysDepart.setText("Tunisie");
 
+        // Quand on choisit une destination → afficher son carrousel
         cbDestination.setOnAction(e -> {
             Destination dest = cbDestination.getValue();
-            if (dest != null) afficherApercu(dest);
+            if (dest != null) afficherCarrousel(dest);
         });
 
         System.out.println("✅ AddVoyageController initialisé");
@@ -106,40 +124,158 @@ public class AddVoyageController {
     }
 
     // ============================================
-    // 🖼️ APERCU IMAGE
+    // 🎠 AFFICHER LE CARROUSEL
     // ============================================
-    private void afficherApercu(Destination dest) {
+    private void afficherCarrousel(Destination dest) {
+        // ✅ Récupérer la liste complète des images
+        listeImages = new ArrayList<>(dest.getImages());
+        indexImageCourant = 0;
+
+        System.out.println("🖼️ Nombre d'images pour " + dest.getNom() + " : " + listeImages.size());
+
+        if (listeImages.isEmpty()) {
+            afficherPlaceholder(dest.getNom());
+            cacherBoutons();
+            return;
+        }
+
+        // Afficher la première image
+        afficherImageIndex(0);
+
+        // ✅ Afficher les boutons seulement si plusieurs images
+        boolean multipleImages = listeImages.size() > 1;
+        btnPrev.setVisible(multipleImages);
+        btnPrev.setManaged(multipleImages);
+        btnNext.setVisible(multipleImages);
+        btnNext.setManaged(multipleImages);
+
+        // Mettre à jour les indicateurs et le compteur
+        mettreAJourIndicateurs();
+        mettreAJourCompteur();
+    }
+
+    // ============================================
+    // 🖼️ AFFICHER L'IMAGE À L'INDEX DONNÉ
+    // ============================================
+    private void afficherImageIndex(int index) {
         imagePreviewContainer.getChildren().clear();
 
-        if (dest.getImageUrl() != null && !dest.getImageUrl().isEmpty()) {
-            try {
-                Image image;
-                String imageUrl = dest.getImageUrl();
+        if (index < 0 || index >= listeImages.size()) return;
 
-                if (imageUrl.startsWith("/images/")) {
-                    File fichier = new File("src/main/resources" + imageUrl);
-                    image = fichier.exists()
-                            ? new Image(fichier.toURI().toString())
-                            : new Image(imageUrl, true);
+        String imageUrl = listeImages.get(index);
+        System.out.println("📷 Affichage image [" + index + "] : " + imageUrl);
+
+        try {
+            Image image;
+
+            if (imageUrl.startsWith("/images/")) {
+                // Image locale dans les ressources
+                File fichier = new File("src/main/resources" + imageUrl);
+                if (fichier.exists()) {
+                    image = new Image(fichier.toURI().toString());
                 } else {
-                    image = new Image(imageUrl, true);
+                    // Essayer depuis le classpath
+                    var stream = getClass().getResourceAsStream(imageUrl);
+                    if (stream != null) {
+                        image = new Image(stream);
+                    } else {
+                        afficherPlaceholder("Image introuvable");
+                        return;
+                    }
                 }
-
-                imagePreview.setImage(image);
-                imagePreview.setVisible(true);
-                imagePreviewContainer.getChildren().add(imagePreview);
-
-            } catch (Exception e) {
-                afficherPlaceholder(dest.getNom());
+            } else {
+                // URL externe (http/https)
+                image = new Image(imageUrl, true);
             }
-        } else {
-            afficherPlaceholder(dest.getNom());
+
+            imagePreview.setImage(image);
+            imagePreviewContainer.getChildren().add(imagePreview);
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur chargement image: " + e.getMessage());
+            afficherPlaceholder("Erreur image");
         }
     }
 
+    // ============================================
+    // ◀ PRÉCÉDENT
+    // ============================================
+    @FXML
+    private void handlePrev() {
+        if (listeImages.isEmpty()) return;
+        indexImageCourant = (indexImageCourant - 1 + listeImages.size()) % listeImages.size();
+        afficherImageIndex(indexImageCourant);
+        mettreAJourIndicateurs();
+        mettreAJourCompteur();
+    }
+
+    // ============================================
+    // ▶ SUIVANT
+    // ============================================
+    @FXML
+    private void handleNext() {
+        if (listeImages.isEmpty()) return;
+        indexImageCourant = (indexImageCourant + 1) % listeImages.size();
+        afficherImageIndex(indexImageCourant);
+        mettreAJourIndicateurs();
+        mettreAJourCompteur();
+    }
+
+    // ============================================
+    // 🔵 INDICATEURS (points cliquables en bas)
+    // ============================================
+    private void mettreAJourIndicateurs() {
+        hboxIndicateurs.getChildren().clear();
+
+        for (int i = 0; i < listeImages.size(); i++) {
+            Circle point = new Circle(5);
+            point.setFill(i == indexImageCourant
+                    ? Color.web("#667eea")  // actif  → violet
+                    : Color.web("#cccccc")); // inactif → gris
+            point.setStyle("-fx-cursor: hand;");
+
+            final int idx = i;
+            point.setOnMouseClicked(e -> {
+                indexImageCourant = idx;
+                afficherImageIndex(indexImageCourant);
+                mettreAJourIndicateurs();
+                mettreAJourCompteur();
+            });
+
+            hboxIndicateurs.getChildren().add(point);
+        }
+    }
+
+    // ============================================
+    // 🔢 COMPTEUR  ex: 2 / 5
+    // ============================================
+    private void mettreAJourCompteur() {
+        if (listeImages.size() > 1) {
+            lblCompteur.setText((indexImageCourant + 1) + " / " + listeImages.size());
+        } else {
+            lblCompteur.setText("");
+        }
+    }
+
+    // ============================================
+    // 🙈 CACHER LES BOUTONS
+    // ============================================
+    private void cacherBoutons() {
+        btnPrev.setVisible(false);
+        btnPrev.setManaged(false);
+        btnNext.setVisible(false);
+        btnNext.setManaged(false);
+        hboxIndicateurs.getChildren().clear();
+        lblCompteur.setText("");
+    }
+
+    // ============================================
+    // 📷 PLACEHOLDER (aucune image)
+    // ============================================
     private void afficherPlaceholder(String nom) {
+        imagePreviewContainer.getChildren().clear();
         Label placeholder = new Label("📷 " + nom);
-        placeholder.setStyle("-fx-font-size: 18px; -fx-text-fill: #aaa; -fx-padding: 50;");
+        placeholder.setStyle("-fx-font-size: 16px; -fx-text-fill: #aaa; -fx-padding: 50;");
         imagePreviewContainer.getChildren().add(placeholder);
     }
 
@@ -154,7 +290,7 @@ public class AddVoyageController {
             Destination destChoisie = cbDestination.getValue();
 
             if (voyageAModifier != null) {
-                // ✅ MODE MODIFICATION
+                // MODE MODIFICATION
                 voyageAModifier.setDestination(destChoisie.getNom());
                 voyageAModifier.setDestinationId(destChoisie.getId());
                 voyageAModifier.setDestinationObj(destChoisie);
@@ -176,7 +312,7 @@ public class AddVoyageController {
                 }
 
             } else {
-                // ✅ MODE AJOUT
+                // MODE AJOUT
                 Voyage voyage = new Voyage();
                 voyage.setDestination(destChoisie.getNom());
                 voyage.setDestinationId(destChoisie.getId());
@@ -279,8 +415,6 @@ public class AddVoyageController {
     // ============================================
     public void preRemplir(Voyage voyage) {
         if (voyage == null) return;
-
-        // ✅ MÉMORISER LE VOYAGE À MODIFIER
         this.voyageAModifier = voyage;
 
         if (voyage.getPaysDepart() != null)
@@ -292,12 +426,12 @@ public class AddVoyageController {
                     .findFirst()
                     .ifPresent(d -> {
                         cbDestination.setValue(d);
-                        afficherApercu(d);
+                        afficherCarrousel(d);
                     });
         }
 
         if (voyage.getDateDebut() != null) dateDebut.setValue(voyage.getDateDebut());
-        if (voyage.getDateFin() != null) dateFin.setValue(voyage.getDateFin());
+        if (voyage.getDateFin() != null)   dateFin.setValue(voyage.getDateFin());
         txtPrix.setText(String.valueOf(voyage.getPrix()));
         if (voyage.getDescription() != null) txtDescription.setText(voyage.getDescription());
 
