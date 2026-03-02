@@ -1,0 +1,40 @@
+[33m62a36f2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/feature_meteo[m[33m, [m[1;32mfeature_meteo[m[33m)[m HEAD@{0}: reset: moving to HEAD~1
+[33m1eb5201[m HEAD@{1}: checkout: moving from feature-desgineAcceuil to main
+[33ma68f644[m[33m ([m[1;31morigin/feature-desgineAcceuil[m[33m, [m[1;32mfeature-desgineAcceuil[m[33m)[m HEAD@{2}: checkout: moving from main to feature-desgineAcceuil
+[33m1eb5201[m HEAD@{3}: reset: moving to HEAD
+[33m1eb5201[m HEAD@{4}: checkout: moving from feature-desgineAcceuil to main
+[33ma68f644[m[33m ([m[1;31morigin/feature-desgineAcceuil[m[33m, [m[1;32mfeature-desgineAcceuil[m[33m)[m HEAD@{5}: commit: wathsappcommit
+[33m1eb5201[m HEAD@{6}: checkout: moving from main to feature-desgineAcceuil
+[33m1eb5201[m HEAD@{7}: commit: Fix_designeAcceuil
+[33m62a36f2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/feature_meteo[m[33m, [m[1;32mfeature_meteo[m[33m)[m HEAD@{8}: checkout: moving from feature_meteo to main
+[33m62a36f2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/feature_meteo[m[33m, [m[1;32mfeature_meteo[m[33m)[m HEAD@{9}: checkout: moving from main to feature_meteo
+[33m62a36f2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/feature_meteo[m[33m, [m[1;32mfeature_meteo[m[33m)[m HEAD@{10}: commit: ConfigMeteo
+[33m0e80614[m[33m ([m[1;31morigin/feature-codeQR[m[33m, [m[1;32mfeature-codeQR[m[33m)[m HEAD@{11}: checkout: moving from feature-codeQR to main
+[33m0e80614[m[33m ([m[1;31morigin/feature-codeQR[m[33m, [m[1;32mfeature-codeQR[m[33m)[m HEAD@{12}: checkout: moving from main to feature-codeQR
+[33m0e80614[m[33m ([m[1;31morigin/feature-codeQR[m[33m, [m[1;32mfeature-codeQR[m[33m)[m HEAD@{13}: checkout: moving from feature-codeQR to main
+[33m0e80614[m[33m ([m[1;31morigin/feature-codeQR[m[33m, [m[1;32mfeature-codeQR[m[33m)[m HEAD@{14}: checkout: moving from main to feature-codeQR
+[33m0e80614[m[33m ([m[1;31morigin/feature-codeQR[m[33m, [m[1;32mfeature-codeQR[m[33m)[m HEAD@{15}: checkout: moving from feature-codeQR to main
+[33m0e80614[m[33m ([m[1;31morigin/feature-codeQR[m[33m, [m[1;32mfeature-codeQR[m[33m)[m HEAD@{16}: checkout: moving from main to feature-codeQR
+[33m0e80614[m[33m ([m[1;31morigin/feature-codeQR[m[33m, [m[1;32mfeature-codeQR[m[33m)[m HEAD@{17}: commit: addQRcodeDestination
+[33m01515a0[m[33m ([m[1;31morigin/feature-relmation[m[33m, [m[1;31morigin/feature-correction[m[33m, [m[1;32mfeature-relmation[m[33m, [m[1;32mfeature-reclation[m[33m, [m[1;32mfeature-corrections[m[33m, [m[1;32mfeature-correction[m[33m)[m HEAD@{18}: merge feature-relmation: Fast-forward
+[33mb0e02ea[m[33m ([m[1;31morigin/feature-chatbot-recherche[m[33m, [m[1;32mfeature-chatbot-recherche[m[33m)[m HEAD@{19}: reset: moving to origin/main
+[33m01515a0[m[33m ([m[1;31morigin/feature-relmation[m[33m, [m[1;31morigin/feature-correction[m[33m, [m[1;32mfeature-relmation[m[33m, [m[1;32mfeature-reclation[m[33m, [m[1;32mfeature-corrections[m[33m, [m[1;32mfeature-correction[m[33m)[m HEAD@{20}: checkout: moving from main to main
+[33m01515a0[m[33m ([m[1;31morigin/feature-relmation[m[33m, [m[1;31morigin/feature-correction[m[33m, [m[1;32mfeature-relmation[m[33m, [m[1;32mfeature-reclation[m[33m, [m[1;32mfeature-corrections[m[33m, [m[1;32mfeature-correction[m[33m)[m HEAD@{21}: checkout: moving from feature-correction to main
+[33m01515a0[m[33m ([m[1;31morigin/feature-relmation[m[33m, [m[1;31morigin/feature-correction[m[33m, [m[1;32mfeature-relmation[m[33m, [m[1;32mfeature-reclation[m[33m, [m[1;32mfeature-corrections[m[33m, [m[1;32mfeature-correction[m[33m)[m HEAD@{22}: checkout: moving from main to feature-correction
+[33m01515a0[m[33m ([m[1;31morigin/feature-relmation[m[33m, [m[1;31morigin/feature-correction[m[33m, [m[1;32mfeature-relmation[m[33m, [m[1;32mfeature-reclation[m[33m, [m[1;32mfeature-corrections[m[33m, [m[1;32mfeature-correction[m[33m)[m HEAD@{23}: checkout: moving from feature-relmation to main
+[33m01515a0[m[33m ([m[1;31morigin/feature-relmation[m[33m, [m[1;31morigin/feature-correction[m[33m, [m[1;32mfeature-relmation[m[33m, [m[1;32mfeature-reclation[m[33m, [m[1;32mfeature-corrections[m[33m, [m[1;32mfeature-correction[m[33m)[m HEAD@{24}: checkout: moving from main to feature-relmation
+[33m01515a0[m[33m ([m[1;31morigin/feature-relmation[m[33m, [m[1;31morigin/feature-correction[m[33m, [m[1;32mfeature-relmation[m[33m, [m[1;32mfeature-reclation[m[33m, [m[1;32mfeature-corrections[m[33m, [m[1;32mfeature-correction[m[33m)[m HEAD@{25}: checkout: moving from feature-relmation to main
+[33m01515a0[m[33m ([m[1;31morigin/feature-relmation[m[33m, [m[1;31morigin/feature-correction[m[33m, [m[1;32mfeature-relmation[m[33m, [m[1;32mfeature-reclation[m[33m, [m[1;32mfeature-corrections[m[33m, [m[1;32mfeature-correction[m[33m)[m HEAD@{26}: checkout: moving from feature-reclation to feature-relmation
+[33m01515a0[m[33m ([m[1;31morigin/feature-relmation[m[33m, [m[1;31morigin/feature-correction[m[33m, [m[1;32mfeature-relmation[m[33m, [m[1;32mfeature-reclation[m[33m, [m[1;32mfeature-corrections[m[33m, [m[1;32mfeature-correction[m[33m)[m HEAD@{27}: checkout: moving from main to feature-reclation
+[33m01515a0[m[33m ([m[1;31morigin/feature-relmation[m[33m, [m[1;31morigin/feature-correction[m[33m, [m[1;32mfeature-relmation[m[33m, [m[1;32mfeature-reclation[m[33m, [m[1;32mfeature-corrections[m[33m, [m[1;32mfeature-correction[m[33m)[m HEAD@{28}: commit: 'feature-reclamtion'
+[33mb0e02ea[m[33m ([m[1;31morigin/feature-chatbot-recherche[m[33m, [m[1;32mfeature-chatbot-recherche[m[33m)[m HEAD@{29}: merge feature-chatbot-recherche: Fast-forward
+[33m43fda71[m[33m ([m[1;31morigin/Voyage[m[33m, [m[1;32mVoyage[m[33m)[m HEAD@{30}: checkout: moving from feature-chatbot-recherche to main
+[33mb0e02ea[m[33m ([m[1;31morigin/feature-chatbot-recherche[m[33m, [m[1;32mfeature-chatbot-recherche[m[33m)[m HEAD@{31}: commit: chatbot/recherche
+[33m43fda71[m[33m ([m[1;31morigin/Voyage[m[33m, [m[1;32mVoyage[m[33m)[m HEAD@{32}: checkout: moving from main to feature-chatbot-recherche
+[33m43fda71[m[33m ([m[1;31morigin/Voyage[m[33m, [m[1;32mVoyage[m[33m)[m HEAD@{33}: merge Voyage: Fast-forward
+[33m47fd88a[m HEAD@{34}: checkout: moving from Voyage to main
+[33m43fda71[m[33m ([m[1;31morigin/Voyage[m[33m, [m[1;32mVoyage[m[33m)[m HEAD@{35}: commit: add/update-voyage
+[33m47fd88a[m HEAD@{36}: checkout: moving from main to Voyage
+[33m47fd88a[m HEAD@{37}: checkout: moving from Voyage to main
+[33m47fd88a[m HEAD@{38}: checkout: moving from main to Voyage
+[33m47fd88a[m HEAD@{39}: clone: from https://github.com/bechir-hadiden/PI_dev_javafx.git

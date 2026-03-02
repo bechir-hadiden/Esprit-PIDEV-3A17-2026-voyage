@@ -218,4 +218,57 @@ public class EmailService {
             return false;
         }
     }
+
+    /**
+     * Envoie le coupon de réduction avec le PDF en pièce jointe
+     */
+    public static boolean envoyerCouponEmail(String emailDestinataire, String nomOffre, String cheminFichierPDF) {
+        try {
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.port", "587");
+            props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+
+            Session session = Session.getInstance(props, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    // On utilise les constantes déjà définies dans la classe
+                    return new PasswordAuthentication(ADMIN_EMAIL, ADMIN_PASSWORD);
+                }
+            });
+
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(ADMIN_EMAIL, "SmartTrip Promotions"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailDestinataire));
+            message.setSubject("Votre Coupon SmartTrip : " + nomOffre + " ✈️");
+
+            // --- Création du corps du mail (MultiPart pour PJ) ---
+            MimeBodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setText("Félicitations !\n\nVous trouverez en pièce jointe votre coupon de réduction pour l'offre : " + nomOffre + ".\n" +
+                    "Scannez le QR Code présent dans le PDF lors de votre passage.\n\n" +
+                    "L'équipe SmartTrip.");
+
+            // --- Création de la pièce jointe ---
+            MimeBodyPart attachmentPart = new MimeBodyPart();
+            attachmentPart.attachFile(new java.io.File(cheminFichierPDF));
+
+            // Assemblage du mail
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPart);
+            multipart.addBodyPart(attachmentPart);
+
+            message.setContent(multipart);
+
+            Transport.send(message);
+            System.out.println("✅ Coupon envoyé avec succès à : " + emailDestinataire);
+            return true;
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors de l'envoi du coupon : " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

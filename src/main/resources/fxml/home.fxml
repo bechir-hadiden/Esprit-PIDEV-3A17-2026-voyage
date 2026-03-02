@@ -9,277 +9,321 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.demo1.controller.HomeController"
-            stylesheets="@../css/home.css">
-
-    <!-- NAVBAR -->
+            stylesheets="@../css/home.css"
+            style="-fx-background-color: #EAF3FF;">
     <top>
-        <HBox styleClass="navbar" spacing="0" alignment="CENTER_LEFT">
-            <padding>
-                <Insets top="15" right="30" bottom="15" left="30"/>
-            </padding>
-
-            <!-- Logo et nom -->
-            <HBox spacing="20" alignment="CENTER_LEFT">
-                <ImageView fitHeight="300" fitWidth="140" preserveRatio="true" >
-                    <image>
-                        <Image url="@../images/logo.png"/>
-                    </image>
-                </ImageView>
-<!--                <VBox spacing="0">-->
-<!--                    <Label onSwipeRight="20" text="SMART TRIP" styleClass="logo-text"/>-->
-<!--                    <Label text="Votre passerelle vers le monde" styleClass="logo-subtitle"/>-->
-<!--                </VBox>-->
+        <VBox>
+            <HBox alignment="CENTER_RIGHT" spacing="24"
+                  style="-fx-background-color: #083D77; -fx-padding: 5 36 5 36;">
+                <Label text="Tunis, Tunisie"
+                       style="-fx-font-family: 'Georgia'; -fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.5);"/>
+                <Label text="|" style="-fx-text-fill: rgba(255,255,255,0.2); -fx-font-size: 10px;"/>
+                <Label text="+216 XX XXX XXX"
+                       style="-fx-font-family: 'Georgia'; -fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.5);"/>
+                <Label text="|" style="-fx-text-fill: rgba(255,255,255,0.2); -fx-font-size: 10px;"/>
+                <Label text="Lun - Sam  9h-18h"
+                       style="-fx-font-family: 'Georgia'; -fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.5);"/>
             </HBox>
-
-            <Region HBox.hgrow="ALWAYS"/>
-
-            <!-- Menu Navigation -->
-            <HBox spacing="20" alignment="CENTER">
-                <Button fx:id="btnAccueil" text="Accueil" styleClass="nav-button, nav-button-active"
-                        onAction="#showAccueil"/>
-                <Button fx:id="btnVoyages" text="Voyages" styleClass="nav-button"
-                        onAction="#showVoyages"/>
-                <Button fx:id="btnOffres" text="Offres" styleClass="nav-button"
-                        onAction="#showOffres"/>
-                <Button fx:id="btnOmra" text="Omra" styleClass="nav-button"
-                        onAction="#showOmra"/>
-                <Button text="👤 Admin" styleClass="nav-button-admin"
-                        onAction="#showAdmin"/>
-                <Button text="🔑 Sign In" styleClass="nav-button"
-                        onAction="#showSignIn"/>
+            <HBox alignment="CENTER_LEFT" spacing="0"
+                  style="-fx-background-color: white; -fx-min-height: 66px; -fx-pref-height: 66px;
+                         -fx-padding: 0 36 0 36;
+                         -fx-effect: dropshadow(gaussian, rgba(10,108,241,0.1), 10, 0, 0, 2);
+                         -fx-border-color: transparent transparent #EAF3FF transparent;
+                         -fx-border-width: 0 0 2 0;">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fitHeight="52" fitWidth="140" preserveRatio="true">
+                        <image><Image url="@../images/logo.png"/></image>
+                    </ImageView>
+                    <VBox spacing="0">
+                        <Label text="SMART"
+                               style="-fx-font-family: 'Georgia'; -fx-font-size: 18px;
+                                      -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
+                        <Label text="TRIP"
+                               style="-fx-font-family: 'Georgia'; -fx-font-size: 18px;
+                                      -fx-font-weight: bold; -fx-text-fill: #0A6CF1;
+                                      -fx-padding: -6 0 0 0;"/>
+                    </VBox>
+                </HBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <HBox spacing="0" alignment="CENTER">
+                    <Button fx:id="btnAccueil" text="Accueil" onAction="#showAccueil"
+                            style="-fx-background-color: transparent; -fx-text-fill: #083D77;
+                                   -fx-font-family: 'Georgia'; -fx-font-size: 13px; -fx-font-weight: bold;
+                                   -fx-padding: 10 20;
+                                   -fx-border-color: transparent transparent #0A6CF1 transparent;
+                                   -fx-border-width: 0 0 3 0; -fx-cursor: hand;"/>
+                    <Button fx:id="btnVoyages" text="Voyages" onAction="#showVoyages"
+                            style="-fx-background-color: transparent; -fx-text-fill: #6b7f99;
+                                   -fx-font-family: 'Georgia'; -fx-font-size: 13px;
+                                   -fx-padding: 10 20; -fx-cursor: hand;"/>
+                    <Button fx:id="btnOffres" text="Destinations" onAction="#showdestination"
+                            style="-fx-background-color: transparent; -fx-text-fill: #6b7f99;
+                                   -fx-font-family: 'Georgia'; -fx-font-size: 13px;
+                                   -fx-padding: 10 20; -fx-cursor: hand;"/>
+                    <Button text="Devises" onAction="#ouvrirConvertisseur"
+                            style="-fx-background-color: transparent; -fx-text-fill: #6b7f99;
+                                   -fx-font-family: 'Georgia'; -fx-font-size: 13px;
+                                   -fx-padding: 10 20; -fx-cursor: hand;"/>
+                    <Button text="WhatsApp" onAction="#ouvrirWhatsApp"
+                            style="-fx-background-color: #25D366; -fx-text-fill: white;
+               -fx-font-family: 'Georgia'; -fx-font-size: 12px; -fx-font-weight: bold;
+               -fx-padding: 9 18; -fx-background-radius: 20;
+               -fx-cursor: hand;"/>
+                    <Button fx:id="btnOmra" text="Omra" onAction="#showOmra"
+                            style="-fx-background-color: transparent; -fx-text-fill: #6b7f99;
+                                   -fx-font-family: 'Georgia'; -fx-font-size: 13px;
+                                   -fx-padding: 10 20; -fx-cursor: hand;"/>
+                    <Button text="Chatbot" onAction="#ouvrirChatbot"
+                            style="-fx-background-color: #EAF3FF; -fx-text-fill: #0A6CF1;
+                                   -fx-font-family: 'Georgia'; -fx-font-size: 12px; -fx-font-weight: bold;
+                                   -fx-padding: 9 18; -fx-background-radius: 20;
+                                   -fx-border-color: #0A6CF1; -fx-border-width: 1.5;
+                                   -fx-border-radius: 20; -fx-cursor: hand;"/>
+                    <Region prefWidth="16"/>
+                    <Button text="Admin"
+                            style="-fx-background-color: #0A6CF1; -fx-text-fill: white;
+                                   -fx-font-family: 'Georgia'; -fx-font-size: 12px; -fx-font-weight: bold;
+                                   -fx-padding: 9 22; -fx-background-radius: 6; -fx-cursor: hand;"
+                            onAction="#showSignIn"/>
+                </HBox>
             </HBox>
-        </HBox>
+        </VBox>
     </top>
-
-    <!-- CONTENU PRINCIPAL -->
     <center>
         <StackPane fx:id="contentArea">
-
-            <!-- PAGE ACCUEIL (par défaut visible) -->
-            <ScrollPane fx:id="accueilPane" fitToWidth="true" styleClass="content-scroll">
-                <VBox spacing="0" styleClass="accueil-container">
-
-                    <!-- HERO SECTION -->
-                    <VBox styleClass="hero-section" alignment="CENTER" spacing="20">
-                        <padding>
-                            <Insets top="80" right="40" bottom="80" left="40"/>
-                        </padding>
-
-                        <Label text="Explorez le Monde avec Nous" styleClass="hero-title"/>
-                        <Label text="Découvrez des destinations exceptionnelles et créez des souvenirs inoubliables"
-                               styleClass="hero-subtitle"/>
-
-                        <HBox spacing="15" alignment="CENTER">
-                            <padding>
-                                <Insets top="20"/>
-                            </padding>
-                            <Button text="🌍 Découvrir nos voyages" styleClass="btn-primary-large"
-                                    onAction="#showVoyages"/>
-                            <Button text="📞 Nous contacter" styleClass="btn-secondary-large"
-                                    onAction="#showContact"/>
-                            <Button text="🛫 Rechercher des vols" onAction="#ouvrirRechercheVols" styleClass="btn-primary-large"/>
-                            <Button text="💬 Aide" styleClass="nav-button"
-                                    onAction="#ouvrirChatbot"/>
-                            <Button text="✈️ Rechercher un Vol"
-                                    onAction="#ouvrirRechercheVols"
-                                    style="-fx-background-color: #48c774; -fx-text-fill: white; -fx-padding: 15 30; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 10;"/>
-                        </HBox>
-                    </VBox>
-
-                    <!-- STATISTIQUES -->
-                    <HBox styleClass="stats-section" spacing="40" alignment="CENTER">
-                        <padding>
-                            <Insets top="60" right="40" bottom="60" left="40"/>
-                        </padding>
-
-                        <VBox styleClass="stat-box" alignment="CENTER" spacing="10">
-                            <Label text="500+" styleClass="stat-number"/>
-                            <Label text="Voyages organisés" styleClass="stat-label"/>
+            <ScrollPane fx:id="accueilScrollPane" fitToWidth="true"
+                        style="-fx-background-color: #EAF3FF; -fx-background: #EAF3FF; -fx-border-color: transparent;">
+                <VBox spacing="0" style="-fx-background-color: #EAF3FF;">
+                    <HBox prefHeight="560" spacing="0" style="-fx-background-color: white;">
+                        <VBox alignment="CENTER_LEFT" spacing="0" HBox.hgrow="ALWAYS"
+                              style="-fx-padding: 70 50 70 60; -fx-background-color: white;">
+                            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 0 0 24 0;">
+                                <Region prefWidth="30" prefHeight="3"
+                                        style="-fx-background-color: #0A6CF1; -fx-background-radius: 2;"/>
+                                <Label text="AGENCE DE VOYAGE PREMIUM"
+                                       style="-fx-font-family: 'Georgia'; -fx-font-size: 10px;
+                                              -fx-letter-spacing: 3px; -fx-text-fill: #0A6CF1;"/>
+                            </HBox>
+                            <Label text="Explorez"
+                                   style="-fx-font-family: 'Georgia'; -fx-font-size: 72px;
+                                          -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
+                            <Label text="le Monde"
+                                   style="-fx-font-family: 'Georgia'; -fx-font-size: 72px;
+                                          -fx-font-weight: bold; -fx-text-fill: #0A6CF1;
+                                          -fx-padding: -8 0 0 0;"/>
+                            <Label text="Sans Limites"
+                                   style="-fx-font-family: 'Georgia'; -fx-font-size: 72px;
+                                          -fx-font-weight: bold; -fx-text-fill: #083D77;
+                                          -fx-opacity: 0.18; -fx-padding: -8 0 18 0;"/>
+                            <Label text="Depuis 2009, nous creeons des voyages d exception pour ceux qui cherchent a vivre des experiences inoubliables."
+                                   style="-fx-font-family: 'Georgia'; -fx-font-size: 14px;
+                                          -fx-text-fill: #6b7f99; -fx-line-height: 1.6; -fx-padding: 0 0 36 0;"
+                                   wrapText="true"/>
+                            <HBox spacing="12" alignment="CENTER_LEFT">
+                                <Button text="Decouvrir nos voyages" onAction="#showVoyages"
+                                        style="-fx-background-color: #0A6CF1; -fx-text-fill: white;
+                                               -fx-font-family: 'Georgia'; -fx-font-size: 13px; -fx-font-weight: bold;
+                                               -fx-padding: 13 28; -fx-background-radius: 6;
+                                               -fx-effect: dropshadow(gaussian, rgba(10,108,241,0.35), 12, 0, 0, 4);
+                                               -fx-cursor: hand;"/>
+                                <Button text="Rechercher un vol" onAction="#ouvrirRechercheVols"
+                                        style="-fx-background-color: #EAF3FF; -fx-text-fill: #0A6CF1;
+                                               -fx-font-family: 'Georgia'; -fx-font-size: 13px; -fx-font-weight: bold;
+                                               -fx-padding: 13 28; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                            </HBox>
+                            <HBox spacing="32" style="-fx-padding: 40 0 0 0;">
+                                <VBox spacing="2">
+                                    <Label text="500+" style="-fx-font-family: 'Georgia'; -fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
+                                    <Label text="Voyages" style="-fx-font-size: 10px; -fx-text-fill: #aab8cc;"/>
+                                </VBox>
+                                <Region prefWidth="1" prefHeight="40" style="-fx-background-color: #EAF3FF;"/>
+                                <VBox spacing="2">
+                                    <Label text="50+" style="-fx-font-family: 'Georgia'; -fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
+                                    <Label text="Destinations" style="-fx-font-size: 10px; -fx-text-fill: #aab8cc;"/>
+                                </VBox>
+                                <Region prefWidth="1" prefHeight="40" style="-fx-background-color: #EAF3FF;"/>
+                                <VBox spacing="2">
+                                    <Label text="2000+" style="-fx-font-family: 'Georgia'; -fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
+                                    <Label text="Clients" style="-fx-font-size: 10px; -fx-text-fill: #aab8cc;"/>
+                                </VBox>
+                                <Region prefWidth="1" prefHeight="40" style="-fx-background-color: #EAF3FF;"/>
+                                <VBox spacing="2">
+                                    <Label text="15+" style="-fx-font-family: 'Georgia'; -fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
+                                    <Label text="Annees" style="-fx-font-size: 10px; -fx-text-fill: #aab8cc;"/>
+                                </VBox>
+                            </HBox>
                         </VBox>
-
-                        <Separator orientation="VERTICAL" prefHeight="60"/>
-
-                        <VBox styleClass="stat-box" alignment="CENTER" spacing="10">
-                            <Label text="50+" styleClass="stat-number"/>
-                            <Label text="Destinations" styleClass="stat-label"/>
-                        </VBox>
-
-                        <Separator orientation="VERTICAL" prefHeight="60"/>
-
-                        <VBox styleClass="stat-box" alignment="CENTER" spacing="10">
-                            <Label text="2000+" styleClass="stat-number"/>
-                            <Label text="Clients satisfaits" styleClass="stat-label"/>
-                        </VBox>
-
-                        <Separator orientation="VERTICAL" prefHeight="60"/>
-
-                        <VBox styleClass="stat-box" alignment="CENTER" spacing="10">
-                            <Label text="15+" styleClass="stat-number"/>
-                            <Label text="Années d'expérience" styleClass="stat-label"/>
+                        <VBox prefWidth="420" alignment="CENTER" spacing="0"
+                              style="-fx-background-color: #083D77; -fx-padding: 44 30 44 30;">
+                            <VBox alignment="CENTER" spacing="6" style="-fx-padding: 0 0 26 0;">
+                                <Label text="POURQUOI NOUS CHOISIR"
+                                       style="-fx-font-family: 'Georgia'; -fx-font-size: 9px;
+                                              -fx-letter-spacing: 3px; -fx-text-fill: rgba(255,255,255,0.4);"/>
+                                <Region prefHeight="2" prefWidth="36"
+                                        style="-fx-background-color: #0A6CF1; -fx-background-radius: 1;"/>
+                            </VBox>
+                            <GridPane hgap="14" vgap="14" alignment="CENTER">
+                                <VBox GridPane.columnIndex="0" GridPane.rowIndex="0"
+                                      prefWidth="172" prefHeight="158" alignment="CENTER" spacing="10"
+                                      style="-fx-background-color: rgba(255,255,255,0.07); -fx-background-radius: 18;
+                                             -fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 1;
+                                             -fx-border-radius: 18; -fx-padding: 22 12 22 12;">
+                                    <Label text="500+" style="-fx-font-family: 'Georgia'; -fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                    <Label text="Voyages realises" style="-fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.45);" wrapText="true"/>
+                                </VBox>
+                                <VBox GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                      prefWidth="172" prefHeight="158" alignment="CENTER" spacing="10"
+                                      style="-fx-background-color: #0A6CF1; -fx-background-radius: 18;
+                                             -fx-border-color: rgba(255,255,255,0.2); -fx-border-width: 1;
+                                             -fx-border-radius: 18; -fx-padding: 22 12 22 12;
+                                             -fx-effect: dropshadow(gaussian, rgba(10,108,241,0.55), 20, 0, 0, 8);">
+                                    <Label text="50+" style="-fx-font-family: 'Georgia'; -fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                    <Label text="Destinations" style="-fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.75);" wrapText="true"/>
+                                </VBox>
+                                <VBox GridPane.columnIndex="0" GridPane.rowIndex="1"
+                                      prefWidth="172" prefHeight="158" alignment="CENTER" spacing="10"
+                                      style="-fx-background-color: #0A6CF1; -fx-background-radius: 18;
+                                             -fx-border-color: rgba(255,255,255,0.2); -fx-border-width: 1;
+                                             -fx-border-radius: 18; -fx-padding: 22 12 22 12;
+                                             -fx-effect: dropshadow(gaussian, rgba(10,108,241,0.55), 20, 0, 0, 8);">
+                                    <Label text="2000+" style="-fx-font-family: 'Georgia'; -fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                    <Label text="Clients satisfaits" style="-fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.75);" wrapText="true"/>
+                                </VBox>
+                                <VBox GridPane.columnIndex="1" GridPane.rowIndex="1"
+                                      prefWidth="172" prefHeight="158" alignment="CENTER" spacing="10"
+                                      style="-fx-background-color: rgba(255,255,255,0.07); -fx-background-radius: 18;
+                                             -fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 1;
+                                             -fx-border-radius: 18; -fx-padding: 22 12 22 12;">
+                                    <Label text="15+" style="-fx-font-family: 'Georgia'; -fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                    <Label text="Annees d experience" style="-fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.45);" wrapText="true"/>
+                                </VBox>
+                            </GridPane>
+                            <HBox alignment="CENTER" spacing="10" style="-fx-padding: 26 0 0 0;">
+                                <Region prefWidth="28" prefHeight="1" style="-fx-background-color: rgba(255,255,255,0.18);"/>
+                                <Label text="Agence certifiee et recommandee"
+                                       style="-fx-font-family: 'Georgia'; -fx-font-size: 10px;
+                                              -fx-font-style: italic; -fx-text-fill: rgba(255,255,255,0.32);"/>
+                                <Region prefWidth="28" prefHeight="1" style="-fx-background-color: rgba(255,255,255,0.18);"/>
+                            </HBox>
                         </VBox>
                     </HBox>
-
-                    <!-- DESTINATIONS POPULAIRES -->
-                    <VBox styleClass="section" spacing="30">
-                        <padding>
-                            <Insets top="60" right="40" bottom="60" left="40"/>
-                        </padding>
-
-                        <VBox alignment="CENTER" spacing="10">
-                            <Label text="Destinations Populaires" styleClass="section-title"/>
-                            <Label text="Les endroits les plus demandés par nos voyageurs"
-                                   styleClass="section-subtitle"/>
-                        </VBox>
-
-                        <HBox spacing="30" alignment="CENTER">
-                            <!-- Destination 1 -->
-                            <VBox styleClass="destination-card" spacing="15">
-                                <VBox styleClass="destination-image destination-paris"
-                                      prefHeight="200" alignment="BOTTOM_LEFT">
-                                    <padding>
-                                        <Insets top="15" right="15" bottom="15" left="15"/>
-                                    </padding>
-                                    <Label text="Paris" styleClass="destination-name"/>
-                                </VBox>
-                                <VBox spacing="8">
-                                    <padding>
-                                        <Insets top="0" right="15" bottom="15" left="15"/>
-                                    </padding>
-                                    <Label text="La ville lumière vous attend" styleClass="destination-desc"/>
-                                    <Label text="À partir de 850€" styleClass="destination-price"/>
-                                </VBox>
+                    <VBox spacing="40" style="-fx-background-color: #EAF3FF; -fx-padding: 72 60 72 60;">
+                        <HBox alignment="CENTER_LEFT" spacing="24">
+                            <VBox spacing="6">
+                                <Label text="01  VOYAGES"
+                                       style="-fx-font-family: 'Georgia'; -fx-font-size: 11px;
+                                              -fx-letter-spacing: 4px; -fx-text-fill: #0A6CF1;"/>
+                                <Label text="Nos Incontournables"
+                                       style="-fx-font-family: 'Georgia'; -fx-font-size: 36px;
+                                              -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
                             </VBox>
-
-                            <!-- Destination 2 -->
-                            <VBox styleClass="destination-card" spacing="15">
-                                <VBox styleClass="destination-image destination-istanbul"
-                                      prefHeight="200" alignment="BOTTOM_LEFT">
-                                    <padding>
-                                        <Insets top="15" right="15" bottom="15" left="15"/>
-                                    </padding>
-                                    <Label text="Istanbul" styleClass="destination-name"/>
-                                </VBox>
-                                <VBox spacing="8">
-                                    <padding>
-                                        <Insets top="0" right="15" bottom="15" left="15"/>
-                                    </padding>
-                                    <Label text="Entre Orient et Occident" styleClass="destination-desc"/>
-                                    <Label text="À partir de 650€" styleClass="destination-price"/>
-                                </VBox>
-                            </VBox>
-
-                            <!-- Destination 3 -->
-                            <VBox styleClass="destination-card" spacing="15">
-                                <VBox styleClass="destination-image destination-dubai"
-                                      prefHeight="200" alignment="BOTTOM_LEFT">
-                                    <padding>
-                                        <Insets top="15" right="15" bottom="15" left="15"/>
-                                    </padding>
-                                    <Label text="Dubaï" styleClass="destination-name"/>
-                                </VBox>
-                                <VBox spacing="8">
-                                    <padding>
-                                        <Insets top="0" right="15" bottom="15" left="15"/>
-                                    </padding>
-                                    <Label text="Luxe et modernité" styleClass="destination-desc"/>
-                                    <Label text="À partir de 1200€" styleClass="destination-price"/>
-                                </VBox>
-                            </VBox>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="Voir tous les voyages" onAction="#showVoyages"
+                                    style="-fx-background-color: transparent; -fx-text-fill: #0A6CF1;
+                                           -fx-font-family: 'Georgia'; -fx-font-size: 12px;
+                                           -fx-border-color: #0A6CF1; -fx-border-width: 1;
+                                           -fx-padding: 9 20; -fx-background-radius: 6;
+                                           -fx-border-radius: 6; -fx-cursor: hand;"/>
                         </HBox>
+                        <HBox fx:id="hboxDestinations" spacing="16" alignment="CENTER"/>
                     </VBox>
-
-                    <!-- SERVICES -->
-                    <VBox styleClass="services-section" spacing="30">
-                        <padding>
-                            <Insets top="60" right="40" bottom="60" left="40"/>
-                        </padding>
-
-                        <VBox alignment="CENTER" spacing="10">
-                            <Label text="Nos Services" styleClass="section-title-white"/>
-                            <Label text="Un accompagnement complet pour votre voyage"
-                                   styleClass="section-subtitle-white"/>
+                    <HBox spacing="0" prefHeight="480" style="-fx-background-color: white;">
+                        <VBox prefWidth="340" alignment="CENTER" style="-fx-background-color: #0A6CF1; -fx-padding: 50;">
+                            <Label text="NOS" style="-fx-font-family: 'Georgia'; -fx-font-size: 42px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                            <Label text="SERVICES" style="-fx-font-family: 'Georgia'; -fx-font-size: 42px; -fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,0.4); -fx-padding: -10 0 24 0;"/>
+                            <Region prefHeight="2" prefWidth="60" style="-fx-background-color: rgba(255,255,255,0.4); -fx-background-radius: 2;"/>
+                            <Label text="Un accompagnement complet de A a Z"
+                                   style="-fx-font-family: 'Georgia'; -fx-font-size: 13px; -fx-font-style: italic;
+                                          -fx-text-fill: rgba(255,255,255,0.6); -fx-padding: 18 0 0 0;" wrapText="true"/>
                         </VBox>
-
-                        <HBox spacing="30" alignment="CENTER">
-                            <VBox styleClass="service-card" alignment="CENTER" spacing="15">
-                                <Label text="✈️" style="-fx-font-size: 48px;"/>
-                                <Label text="Vols" styleClass="service-title"/>
-                                <Label text="Réservation de vols aux meilleurs tarifs"
-                                       styleClass="service-desc" wrapText="true" alignment="CENTER"/>
+                        <VBox spacing="0" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" style="-fx-padding: 40 50 40 50;">
+                            <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 20 0; -fx-border-color: transparent transparent #EAF3FF transparent; -fx-border-width: 0 0 1 0;">
+                                <Label text="01" style="-fx-font-family: 'Georgia'; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #EAF3FF; -fx-min-width: 50;"/>
+                                <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                    <Label text="Vols" style="-fx-font-family: 'Georgia'; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
+                                    <Label text="Meilleurs tarifs sur toutes les compagnies internationales." style="-fx-font-family: 'Georgia'; -fx-font-size: 12px; -fx-text-fill: #6b7f99;"/>
+                                </VBox>
+                            </HBox>
+                            <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 20 0; -fx-border-color: transparent transparent #EAF3FF transparent; -fx-border-width: 0 0 1 0;">
+                                <Label text="02" style="-fx-font-family: 'Georgia'; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #EAF3FF; -fx-min-width: 50;"/>
+                                <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                    <Label text="Hebergement" style="-fx-font-family: 'Georgia'; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
+                                    <Label text="Hotels 5 etoiles et residences selectionnes avec soin." style="-fx-font-family: 'Georgia'; -fx-font-size: 12px; -fx-text-fill: #6b7f99;"/>
+                                </VBox>
+                            </HBox>
+                            <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 20 22; -fx-background-color: #EAF3FF; -fx-background-radius: 8;">
+                                <Label text="03" style="-fx-font-family: 'Georgia'; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #0A6CF1; -fx-min-width: 50;"/>
+                                <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                    <Label text="Circuits" style="-fx-font-family: 'Georgia'; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
+                                    <Label text="Itineraires personnalises et circuits guides exclusifs." style="-fx-font-family: 'Georgia'; -fx-font-size: 12px; -fx-text-fill: #6b7f99;"/>
+                                </VBox>
+                            </HBox>
+                            <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 20 0; -fx-border-color: transparent transparent #EAF3FF transparent; -fx-border-width: 0 0 1 0;">
+                                <Label text="04" style="-fx-font-family: 'Georgia'; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #EAF3FF; -fx-min-width: 50;"/>
+                                <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                    <Label text="Visa et Formalites" style="-fx-font-family: 'Georgia'; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
+                                    <Label text="Assistance complete pour toutes vos demarches administratives." style="-fx-font-family: 'Georgia'; -fx-font-size: 12px; -fx-text-fill: #6b7f99;"/>
+                                </VBox>
+                            </HBox>
+                            <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 20 0;">
+                                <Label text="05" style="-fx-font-family: 'Georgia'; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #EAF3FF; -fx-min-width: 50;"/>
+                                <VBox spacing="3" HBox.hgrow="ALWAYS">
+                                    <Label text="Omra et Hajj" style="-fx-font-family: 'Georgia'; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #083D77;"/>
+                                    <Label text="Sejours spirituels organises avec tout le soin requis." style="-fx-font-family: 'Georgia'; -fx-font-size: 12px; -fx-text-fill: #6b7f99;"/>
+                                </VBox>
+                            </HBox>
+                        </VBox>
+                    </HBox>
+                    <StackPane style="-fx-background-color: #083D77;">
+                        <HBox alignment="CENTER" spacing="60" style="-fx-padding: 58 80;">
+                            <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                <Label text="03  CONTACTEZ-NOUS" style="-fx-font-family: 'Georgia'; -fx-font-size: 10px; -fx-letter-spacing: 3px; -fx-text-fill: rgba(255,255,255,0.45);"/>
+                                <Label text="Pret a partir ?" style="-fx-font-family: 'Georgia'; -fx-font-size: 34px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                <Label text="Nos experts vous accompagnent a chaque etape de votre voyage." style="-fx-font-family: 'Georgia'; -fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.55);"/>
                             </VBox>
-
-                            <VBox styleClass="service-card" alignment="CENTER" spacing="15">
-                                <Label text="🏨" style="-fx-font-size: 48px;"/>
-                                <Label text="Hébergement" styleClass="service-title"/>
-                                <Label text="Hôtels sélectionnés pour votre confort"
-                                       styleClass="service-desc" wrapText="true" alignment="CENTER"/>
-                            </VBox>
-
-                            <VBox styleClass="service-card" alignment="CENTER" spacing="15">
-                                <Label text="🗺️" style="-fx-font-size: 48px;"/>
-                                <Label text="Circuits" styleClass="service-title"/>
-                                <Label text="Itinéraires personnalisés et guidés"
-                                       styleClass="service-desc" wrapText="true" alignment="CENTER"/>
-                            </VBox>
-
-                            <VBox styleClass="service-card" alignment="CENTER" spacing="15">
-                                <Label text="📋" style="-fx-font-size: 48px;"/>
-                                <Label text="Visa" styleClass="service-title"/>
-                                <Label text="Assistance pour vos formalités"
-                                       styleClass="service-desc" wrapText="true" alignment="CENTER"/>
-                            </VBox>
+                            <HBox spacing="12" alignment="CENTER">
+                                <Button text="Planifier mon voyage" onAction="#showContact"
+                                        style="-fx-background-color: white; -fx-text-fill: #083D77;
+                                               -fx-font-family: 'Georgia'; -fx-font-size: 13px; -fx-font-weight: bold;
+                                               -fx-padding: 13 28; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                                <Button text="Rechercher un vol" onAction="#ouvrirRechercheVols"
+                                        style="-fx-background-color: #0A6CF1; -fx-text-fill: white;
+                                               -fx-font-family: 'Georgia'; -fx-font-size: 13px;
+                                               -fx-padding: 13 28; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                            </HBox>
                         </HBox>
-                    </VBox>
-
-                    <!-- FOOTER -->
-                    <VBox styleClass="footer" spacing="20">
-                        <padding>
-                            <Insets top="40" right="40" bottom="40" left="40"/>
-                        </padding>
-
-                        <HBox spacing="80" alignment="CENTER">
-                            <VBox spacing="10">
-                                <Label text="À propos" styleClass="footer-title"/>
-                                <Label text="Notre histoire" styleClass="footer-link"/>
-                                <Label text="Notre équipe" styleClass="footer-link"/>
-                                <Label text="Nos valeurs" styleClass="footer-link"/>
-                            </VBox>
-
-                            <VBox spacing="10">
-                                <Label text="Services" styleClass="footer-title"/>
-                                <Label text="Voyages sur mesure" styleClass="footer-link"/>
-                                <Label text="Voyages organisés" styleClass="footer-link"/>
-                                <Label text="Omra et Hajj" styleClass="footer-link"/>
-                            </VBox>
-
-                            <VBox spacing="10">
-                                <Label text="Contact" styleClass="footer-title"/>
-                                <Label text="📧 contact@voyages-excellence.com" styleClass="footer-link"/>
-                                <Label text="📞 +216 XX XXX XXX" styleClass="footer-link"/>
-                                <Label text="📍 Tunis, Tunisie" styleClass="footer-link"/>
-                            </VBox>
-
-                            <VBox spacing="10">
-                                <Label text="Suivez-nous" styleClass="footer-title"/>
-                                <HBox spacing="15">
-                                    <Label text="📘" style="-fx-font-size: 24px; -fx-cursor: hand;"/>
-                                    <Label text="📷" style="-fx-font-size: 24px; -fx-cursor: hand;"/>
-                                    <Label text="🐦" style="-fx-font-size: 24px; -fx-cursor: hand;"/>
-                                    <Label text="💼" style="-fx-font-size: 24px; -fx-cursor: hand;"/>
+                    </StackPane>
+                    <VBox spacing="30" style="-fx-background-color: #062d5a; -fx-padding: 50 60 30 60;">
+                        <HBox spacing="70" alignment="TOP_LEFT">
+                            <VBox spacing="14" prefWidth="230">
+                                <HBox spacing="6" alignment="CENTER_LEFT">
+                                    <Label text="SMART" style="-fx-font-family: 'Georgia'; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                    <Label text="TRIP" style="-fx-font-family: 'Georgia'; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #0A6CF1;"/>
                                 </HBox>
+                                <Label text="Votre partenaire de confiance depuis 2009."
+                                       style="-fx-font-family: 'Georgia'; -fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.38);" wrapText="true"/>
+                            </VBox>
+                            <VBox spacing="10">
+                                <Label text="SERVICES" style="-fx-font-size: 9px; -fx-letter-spacing: 2px; -fx-text-fill: #0A6CF1; -fx-padding: 0 0 4 0;"/>
+                                <Label text="Voyages sur mesure" style="-fx-font-family: 'Georgia'; -fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.4);"/>
+                                <Label text="Omra et Hajj" style="-fx-font-family: 'Georgia'; -fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.4);"/>
+                                <Label text="Transferts" style="-fx-font-family: 'Georgia'; -fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.4);"/>
+                            </VBox>
+                            <VBox spacing="10">
+                                <Label text="CONTACT" style="-fx-font-size: 9px; -fx-letter-spacing: 2px; -fx-text-fill: #0A6CF1; -fx-padding: 0 0 4 0;"/>
+                                <Label text="contact@smarttrip.tn" style="-fx-font-family: 'Georgia'; -fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.4);"/>
+                                <Label text="+216 XX XXX XXX" style="-fx-font-family: 'Georgia'; -fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.4);"/>
+                                <Label text="Tunis, Tunisie" style="-fx-font-family: 'Georgia'; -fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.4);"/>
                             </VBox>
                         </HBox>
-
-                        <Separator/>
-
-                        <Label text="© 2024 Voyages Excellence. Tous droits réservés."
-                               styleClass="footer-copyright" alignment="CENTER"/>
+                        <Region prefHeight="1" maxWidth="Infinity" style="-fx-background-color: rgba(10,108,241,0.2);"/>
+                        <Label text="2024 Smart Trip  |  Agence Premium  |  Tunis, Tunisie  |  Tous droits reserves"
+                               alignment="CENTER" maxWidth="Infinity"
+                               style="-fx-font-family: 'Georgia'; -fx-font-size: 10px;
+                                      -fx-text-fill: rgba(255,255,255,0.2); -fx-letter-spacing: 1px;"/>
                     </VBox>
-
                 </VBox>
             </ScrollPane>
-
         </StackPane>
     </center>
-
 </BorderPane>

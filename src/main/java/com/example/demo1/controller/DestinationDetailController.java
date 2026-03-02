@@ -7,22 +7,33 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-/**
- * 🌍 DestinationDetailController
- * Popup affichant météo + points d'intérêt pour un voyage
- */
 public class DestinationDetailController {
 
     // ===== FXML =====
     @FXML private Label lblTitreDestination;
+
+    // ===== CARROUSEL =====
+    @FXML private AnchorPane carouselPane;
+    @FXML private VBox imagePreviewContainer;
+    @FXML private Button btnPrev;
+    @FXML private Button btnNext;
+    @FXML private HBox hboxIndicateurs;
+    @FXML private Label lblCompteur;
 
     // Météo
     @FXML private Label lblMeteoChargement;
@@ -48,6 +59,11 @@ public class DestinationDetailController {
     private final WeatherService weatherService = new WeatherService();
     private final TripMapService tripMapService  = new TripMapService();
 
+    // ===== ÉTAT CARROUSEL =====
+    private List<String> listeImages = new ArrayList<>();
+    private int indexImageCourant = 0;
+    private ImageView imageView;
+
     // ===== VOYAGE =====
     private Voyage voyage;
 
@@ -61,20 +77,233 @@ public class DestinationDetailController {
                 ? voyage.getDestinationObj().getNom()
                 : voyage.getDestination();
 
-
-        // ✅ Capitaliser : "dubai" → "Dubai"
         if (nomDest != null && !nomDest.isEmpty()) {
             nomDest = nomDest.substring(0, 1).toUpperCase() + nomDest.substring(1).toLowerCase();
         }
-        // Titre
+
         lblTitreDestination.setText("🌍 " + nomDest);
 
-        // Infos voyage
-        afficherInfosVoyage(voyage, nomDest);
+        // ✅ Initialiser le carrousel
+        initialiserCarrousel(voyage);
 
-        // Charger météo + points d'intérêt en arrière-plan
+        afficherInfosVoyage(voyage, nomDest);
         chargerMeteo(nomDest);
         chargerPointsInteret(nomDest);
+    }
+
+    // ============================================
+    // 🎠 INITIALISER LE CARROUSEL
+    // ============================================
+    private void initialiserCarrousel(Voyage voyage) {
+        // Préparer ImageView
+        imageView = new ImageView();
+        imageView.setFitHeight(250);
+        imageView.setFitWidth(560);
+        imageView.setPreserveRatio(false);
+
+        // Récupérer toutes les images de la destination
+        listeImages = recupererImages(voyage);
+        indexImageCourant = 0;
+
+        System.out.println("🖼️ Carrousel popup: " + listeImages.size() + " image(s)");
+
+        if (listeImages.isEmpty()) {
+            // Placeholder si aucune image
+            afficherPlaceholder(voyage);
+            cacherBoutons();
+            return;
+        }
+
+        // Afficher la première image
+        afficherImageIndex(0);
+
+        // Boutons visibles seulement si plusieurs images
+        boolean multi = listeImages.size() > 1;
+        btnPrev.setVisible(multi);
+        btnPrev.setManaged(multi);
+        btnNext.setVisible(multi);
+        btnNext.setManaged(multi);
+
+        mettreAJourIndicateurs();
+        mettreAJourCompteur();
+    }
+
+    // ============================================
+    // 🖼️ AFFICHER IMAGE À L'INDEX
+    // ============================================
+    private void afficherImageIndex(int index) {
+        imagePreviewContainer.getChildren().clear();
+
+        String imageUrl = listeImages.get(index);
+        System.out.println("📷 Image [" + index + "] : " + imageUrl);
+
+        // ✅ Lier la taille de l'ImageView au carouselPane
+        imageView.setFitHeight(260);
+        imageView.fitWidthProperty().bind(carouselPane.widthProperty());
+        imageView.setPreserveRatio(false);
+
+        try {
+            Image image = null;
+
+            if (imageUrl.startsWith("/images/")) {
+                // Essai 1 : chemin fichier
+                File f = new File("src/main/resources" + imageUrl);
+                System.out.println("📁 Fichier existe: " + f.exists() + " → " + f.getAbsolutePath());
+                if (f.exists()) {
+                    image = new Image(f.toURI().toString());
+                } else {
+                    // Essai 2 : classpath resource
+                    var res = getClass().getResource(imageUrl);
+                    System.out.println("🔗 Resource URL: " + res);
+                    if (res != null) image = new Image(res.toExternalForm());
+                }
+            } else if (imageUrl.startsWith("http")) {
+                image = new Image(imageUrl, true);
+            } else {
+                File f = new File(imageUrl);
+                if (f.exists()) image = new Image(f.toURI().toString());
+            }
+
+            if (image != null && !image.isError()) {
+                imageView.setImage(image);
+                imagePreviewContainer.getChildren().add(imageView);
+                System.out.println("✅ Image chargée avec succès !");
+            } else {
+                System.err.println("❌ Image null ou erreur pour: " + imageUrl);
+                afficherPlaceholderLabel();
+            }
+
+        } catch (Exception e) {
+            System.err.println("❌ Exception image: " + e.getMessage());
+            afficherPlaceholderLabel();
+        }
+    }
+
+    // ============================================
+    // ◀ PRÉCÉDENT
+    // ============================================
+    @FXML
+    private void handlePrev() {
+        if (listeImages.isEmpty()) return;
+        indexImageCourant = (indexImageCourant - 1 + listeImages.size()) % listeImages.size();
+        afficherImageIndex(indexImageCourant);
+        mettreAJourIndicateurs();
+        mettreAJourCompteur();
+    }
+
+    // ============================================
+    // ▶ SUIVANT
+    // ============================================
+    @FXML
+    private void handleNext() {
+        if (listeImages.isEmpty()) return;
+        indexImageCourant = (indexImageCourant + 1) % listeImages.size();
+        afficherImageIndex(indexImageCourant);
+        mettreAJourIndicateurs();
+        mettreAJourCompteur();
+    }
+
+    // ============================================
+    // 🔵 INDICATEURS POINTS
+    // ============================================
+    private void mettreAJourIndicateurs() {
+        hboxIndicateurs.getChildren().clear();
+        for (int i = 0; i < listeImages.size(); i++) {
+            Circle point = new Circle(5);
+            point.setFill(i == indexImageCourant
+                    ? Color.web("#667eea")
+                    : Color.web("#cccccc"));
+            point.setStyle("-fx-cursor: hand;");
+            final int idx = i;
+            point.setOnMouseClicked(e -> {
+                indexImageCourant = idx;
+                afficherImageIndex(indexImageCourant);
+                mettreAJourIndicateurs();
+                mettreAJourCompteur();
+            });
+            hboxIndicateurs.getChildren().add(point);
+        }
+    }
+
+    private void mettreAJourCompteur() {
+        if (listeImages.size() > 1) {
+            lblCompteur.setText((indexImageCourant + 1) + " / " + listeImages.size());
+        } else {
+            lblCompteur.setText("");
+        }
+    }
+
+    private void cacherBoutons() {
+        btnPrev.setVisible(false);
+        btnPrev.setManaged(false);
+        btnNext.setVisible(false);
+        btnNext.setManaged(false);
+        hboxIndicateurs.getChildren().clear();
+        lblCompteur.setText("");
+    }
+
+    // ============================================
+    // 📷 PLACEHOLDERS
+    // ============================================
+    private void afficherPlaceholder(Voyage voyage) {
+        imagePreviewContainer.getChildren().clear();
+        imagePreviewContainer.setStyle(
+                "-fx-background-color: linear-gradient(to right, #667eea, #764ba2);" +
+                        "-fx-background-radius: 12;");
+        String nom = voyage.getDestinationObj() != null
+                ? voyage.getDestinationObj().getNom() : voyage.getDestination();
+        String initiale = (nom != null && !nom.isEmpty())
+                ? String.valueOf(nom.charAt(0)).toUpperCase() : "✈";
+        Label li = new Label(initiale);
+        li.setStyle("-fx-font-size: 60px; -fx-font-weight: bold; -fx-text-fill: white;");
+        Label ln = new Label(nom != null ? nom : "Destination");
+        ln.setStyle("-fx-font-size: 16px; -fx-text-fill: rgba(255,255,255,0.85); -fx-font-weight: bold;");
+        VBox vb = new VBox(8, li, ln);
+        vb.setAlignment(Pos.CENTER);
+        imagePreviewContainer.getChildren().add(vb);
+    }
+
+    private void afficherPlaceholderLabel() {
+        imagePreviewContainer.getChildren().clear();
+        Label lbl = new Label("📷 Image non disponible");
+        lbl.setStyle("-fx-text-fill: #aaa; -fx-font-size: 13px;");
+        imagePreviewContainer.getChildren().add(lbl);
+    }
+
+    // ============================================
+    // ✅ RÉCUPÉRER LES IMAGES DU VOYAGE
+    // ============================================
+    private List<String> recupererImages(Voyage voyage) {
+        List<String> images = new ArrayList<>();
+
+        // Priorité 1 : images de la destination (déjà parsées)
+        if (voyage.getDestinationObj() != null) {
+            List<String> destImages = voyage.getDestinationObj().getImages();
+            if (destImages != null && !destImages.isEmpty()) {
+                images.addAll(destImages);
+                return images;
+            }
+            // Priorité 2 : parser imageUrl avec ";"
+            String destUrl = voyage.getDestinationObj().getImageUrl();
+            if (destUrl != null && !destUrl.isEmpty()) {
+                Arrays.stream(destUrl.split(";"))
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .forEach(images::add);
+                if (!images.isEmpty()) return images;
+            }
+        }
+
+        // Priorité 3 : imagePath du voyage
+        String imagePath = voyage.getImagePath();
+        if (imagePath != null && !imagePath.isEmpty()) {
+            Arrays.stream(imagePath.split(";"))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .forEach(images::add);
+        }
+
+        return images;
     }
 
     // ============================================
@@ -107,7 +336,7 @@ public class DestinationDetailController {
     }
 
     // ============================================
-    // 🌤️ CHARGER LA MÉTÉO
+    // 🌤️ MÉTÉO
     // ============================================
     private void chargerMeteo(String ville) {
         new Thread(() -> {
@@ -129,7 +358,6 @@ public class DestinationDetailController {
     private void afficherMeteo(WeatherService.WeatherData meteo) {
         lblMeteoChargement.setVisible(false);
         lblMeteoChargement.setManaged(false);
-
         lblMeteoEmoji.setText(meteo.emoji);
         lblMeteoDesc.setText(meteo.description);
         lblMeteoTemp.setText(String.format("%.0f°C", meteo.temperature));
@@ -137,32 +365,27 @@ public class DestinationDetailController {
                 + " / Max " + String.format("%.0f°C", meteo.temperatureMax));
         lblMeteoHumidite.setText("💧 Humidité : " + meteo.humidite + "%");
         lblMeteoVent.setText("💨 Vent : " + String.format("%.0f", meteo.vitesseVent) + " km/h");
-
         hboxMeteo.setVisible(true);
         hboxMeteo.setManaged(true);
     }
 
     // ============================================
-    // 🏛️ CHARGER LES POINTS D'INTÉRÊT
+    // 🏛️ POINTS D'INTÉRÊT
     // ============================================
     private void chargerPointsInteret(String ville) {
         new Thread(() -> {
             List<TripMapService.PointInteret> points =
                     tripMapService.getPointsInteret(ville, 8);
-
             Platform.runLater(() -> {
                 vboxPointsInteret.getChildren().clear();
-
                 if (points.isEmpty()) {
                     Label aucun = new Label("😕 Aucun point d'intérêt trouvé");
                     aucun.setStyle("-fx-font-size: 13px; -fx-text-fill: #999;");
                     vboxPointsInteret.getChildren().add(aucun);
                     return;
                 }
-
                 for (TripMapService.PointInteret point : points) {
-                    HBox item = creerItemPointInteret(point);
-                    vboxPointsInteret.getChildren().add(item);
+                    vboxPointsInteret.getChildren().add(creerItemPointInteret(point));
                 }
             });
         }).start();
@@ -172,40 +395,24 @@ public class DestinationDetailController {
         HBox item = new HBox(12);
         item.setAlignment(Pos.CENTER_LEFT);
         item.setPadding(new Insets(8, 12, 8, 12));
-        item.setStyle(
-                "-fx-background-color: #f8f9ff;" +
-                        "-fx-background-radius: 8;" +
-                        "-fx-border-color: #e8ecf4;" +
-                        "-fx-border-radius: 8;" +
-                        "-fx-border-width: 1;"
-        );
-
-        // Emoji catégorie
+        item.setStyle("-fx-background-color: #f8f9ff; -fx-background-radius: 8;" +
+                "-fx-border-color: #e8ecf4; -fx-border-radius: 8; -fx-border-width: 1;");
         Label lblEmoji = new Label(point.emoji);
         lblEmoji.setStyle("-fx-font-size: 22px;");
-
-        // Nom + catégorie
         VBox infos = new VBox(2);
         Label lblNom = new Label(point.nom);
         lblNom.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;");
-
         Label lblCategorie = new Label(point.categorie);
         lblCategorie.setStyle("-fx-font-size: 11px; -fx-text-fill: #888;");
-
         infos.getChildren().addAll(lblNom, lblCategorie);
-
-        // Étoiles rating
-        Label lblRating = new Label(getEtoiles(point.rating));
-        lblRating.setStyle("-fx-font-size: 12px; -fx-text-fill: #FFA726;");
-
         item.getChildren().addAll(lblEmoji, infos);
-
         if (point.rating > 0) {
-            javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
-            HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+            Label lblRating = new Label(getEtoiles(point.rating));
+            lblRating.setStyle("-fx-font-size: 12px; -fx-text-fill: #FFA726;");
             item.getChildren().addAll(spacer, lblRating);
         }
-
         return item;
     }
 

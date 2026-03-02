@@ -16,8 +16,6 @@
           <compilerArgs>
             <arg>--add-reads</arg>
             <arg>com.example.demo1=ALL-UNNAMED</arg>
-            <arg>--add-opens</arg>
-            <arg>com.example.demo1/org.mindrot.jbcrypt</arg>
           </compilerArgs>
         </configuration>
       </plugin>
@@ -39,8 +37,6 @@
               <jvmArgs>
                 <jvmArg>--add-reads</jvmArg>
                 <jvmArg>com.example.demo1=ALL-UNNAMED</jvmArg>
-                <jvmArg>--add-opens</jvmArg>
-                <jvmArg>com.example.demo1/org.mindrot.jbcrypt</jvmArg>
               </jvmArgs>
             </configuration>
           </execution>
@@ -59,7 +55,7 @@
         </executions>
         <configuration>
           <mainClass>com.example.demo1.HelloApplication</mainClass>
-          <commandlineArgs>--add-reads com.example.demo1=ALL-UNNAMED --add-opens com.example.demo1/org.mindrot.jbcrypt</commandlineArgs>
+          <commandlineArgs>--add-reads com.example.demo1=ALL-UNNAMED</commandlineArgs>
         </configuration>
       </plugin>
       <plugin>
