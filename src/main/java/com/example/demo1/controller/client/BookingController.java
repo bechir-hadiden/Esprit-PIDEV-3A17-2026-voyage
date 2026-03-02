@@ -15,9 +15,12 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import java.io.File;
 import java.time.LocalDate;
 import java.sql.Date;
 
+import org.example.services.PdfService;
 import org.example.services.StripeService;
 import org.example.services.PaiementService;
 import org.example.entities.Paiement;
@@ -70,6 +73,8 @@ public class BookingController {
     private TextField cvvField;
     @FXML
     private Button continueButton;
+    @FXML
+    private Button downloadPdfButton;
 
     // Payment Selection Fields
     @FXML private Label walletBalanceLabel;
@@ -95,6 +100,7 @@ public class BookingController {
     private final SessionManager sessionManager = SessionManager.getInstance();
     private final BookingService bookingService = BookingService.getInstance();
     private final PaiementService paiementService = new PaiementService();
+    private final PdfService pdfService = new PdfService();
     
     private Hotel hotel;
     private RoomType room;
@@ -102,6 +108,9 @@ public class BookingController {
     private String currentStripeSessionId;
     private boolean isPaymentVerified = false;
     private double bookingTotalAmount = 0.0;
+    private boolean bookingFinalized = false;
+    private Booking lastConfirmedBooking;
+    private Paiement lastConfirmedPayment;
 
     @FXML
     public void initialize() {
@@ -230,11 +239,14 @@ public class BookingController {
 
         confirmationView.setVisible(step == 3);
         confirmationView.setManaged(step == 3);
+        if (downloadPdfButton != null) {
+            downloadPdfButton.setDisable(!bookingFinalized);
+        }
 
         if (step == 2) {
             updatePaymentDetails();
         } else if (step == 3) {
-            continueButton.setText("Confirm Booking");
+            continueButton.setText(bookingFinalized ? "Go to My Bookings" : "Confirm Booking");
         } else {
             continueButton.setText("Continue");
         }
@@ -279,6 +291,10 @@ public class BookingController {
                 return;
             }
             ToggleButton sel = (ToggleButton)paymentGroup.getSelectedToggle();
+            if (sel == null) {
+                showAlert("Choose a payment method.");
+                return;
+            }
             if (sel == stripeToggle) {
                 if (currentStripeSessionId == null) processStripePayment();
                 else verifyStripePayment();
@@ -288,7 +304,11 @@ public class BookingController {
                 processExternalPayment(sel.getText());
             }
         } else if (step == 3) {
-            confirmBooking();
+            if (bookingFinalized) {
+                HelloApplication.showView(SessionManager.View.MY_BOOKINGS);
+            } else {
+                confirmBooking();
+            }
         }
     }
 
@@ -440,9 +460,17 @@ public class BookingController {
     }
 
     private void confirmBooking() {
+        if (!isPaymentVerified) {
+            showAlert("Payment is not verified yet.");
+            step = 2;
+            updateStepUI();
+            return;
+        }
+
         LocalDate checkIn = sessionManager.getSearchFilters().getCheckIn();
         LocalDate checkOut = sessionManager.getSearchFilters().getCheckOut();
         int guests = sessionManager.getSearchFilters().getGuestCount();
+        Paiement confirmedPayment = null;
 
         if (checkIn == null)
             checkIn = LocalDate.now().plusDays(1);
@@ -473,47 +501,54 @@ public class BookingController {
                 phoneField.getText().trim(),
                 requestsArea.getText().trim());
 
-        if (booking != null && isPaymentVerified) {
-            // Record payment in database
-            Paiement p = new Paiement();
-            p.setMontant(total);
-            p.setDatePaiement(Date.valueOf(LocalDate.now()));
-            p.setStatut_paiement("Effectu\u00E9");
-            
-            ToggleButton sel = (ToggleButton)paymentGroup.getSelectedToggle();
-            if (sel == stripeToggle) {
-                p.setMethodePaiement("Carte Bancaire (Stripe)");
-                p.setStripeSessionId(currentStripeSessionId);
-            } else if (sel == walletToggle) {
-                p.setMethodePaiement("Portefeuille Interne");
-            } else {
-                p.setMethodePaiement(sel.getText());
-            }
-            
-            try {
-                p.setBookingId(Integer.parseInt(booking.getId()));
-            } catch (Exception e) {
-                // Ignore if ID is not numeric
-            }
-            
-            // Link to user if available
-            var currentUser = AuthService.getInstance().getCurrentUser();
-            if (currentUser != null) {
-                try {
-                    p.setUserId(Integer.parseInt(currentUser.getId()));
-                } catch (NumberFormatException e) {
-                    showAlert("Payment record warning: invalid user id format.");
-                }
-            }
+        if (booking == null) {
+            showAlert("Booking creation failed. Please try again.");
+            return;
+        }
 
-            boolean paymentSaved = paiementService.ajouter(p);
-            if (!paymentSaved) {
-                showAlert("Payment was completed but could not be saved to database.");
+        // Record payment in database
+        Paiement p = new Paiement();
+        p.setMontant(total);
+        p.setDatePaiement(Date.valueOf(LocalDate.now()));
+        p.setStatut_paiement("Effectu\u00E9");
+
+        ToggleButton sel = (ToggleButton) paymentGroup.getSelectedToggle();
+        if (sel == stripeToggle) {
+            p.setMethodePaiement("Carte Bancaire (Stripe)");
+            p.setStripeSessionId(currentStripeSessionId);
+        } else if (sel == walletToggle) {
+            p.setMethodePaiement("Portefeuille Interne");
+        } else {
+            p.setMethodePaiement(sel.getText());
+        }
+
+        try {
+            p.setBookingId(Integer.parseInt(booking.getId()));
+        } catch (Exception e) {
+            // Ignore if ID is not numeric
+        }
+
+        // Link to user if available
+        var currentUser = AuthService.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            try {
+                p.setUserId(Integer.parseInt(currentUser.getId()));
+            } catch (NumberFormatException e) {
+                showAlert("Payment record warning: invalid user id format.");
             }
         }
 
+        boolean paymentSaved = paiementService.ajouter(p);
+        if (!paymentSaved) {
+            showAlert("Payment was completed but could not be saved to database.");
+        }
+
+        confirmedPayment = p;
+        bookingFinalized = true;
+        lastConfirmedBooking = booking;
+        lastConfirmedPayment = confirmedPayment;
+        updateStepUI();
         showSuccessAlert();
-        HelloApplication.showView(SessionManager.View.MY_BOOKINGS);
     }
 
     private void showAlert(String message) {
@@ -550,7 +585,7 @@ public class BookingController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Booking Confirmed");
         alert.setHeaderText("Your reservation has been confirmed!");
-        alert.setContentText("You can view all your bookings in the My Bookings section.");
+        alert.setContentText("Use 'Download Payment PDF' button, then click 'Go to My Bookings'.");
         alert.showAndWait();
     }
 
@@ -569,5 +604,52 @@ public class BookingController {
             message = throwable.getMessage();
         }
         return (message == null || message.isBlank()) ? cursor.getClass().getSimpleName() : message;
+    }
+
+    @FXML
+    private void handleDownloadPaymentPdf() {
+        if (!bookingFinalized || lastConfirmedBooking == null || lastConfirmedPayment == null) {
+            showAlert("Confirm the booking first, then download the PDF.");
+            return;
+        }
+        savePaymentConfirmationPdf(lastConfirmedBooking, lastConfirmedPayment);
+    }
+
+    private void savePaymentConfirmationPdf(Booking booking, Paiement payment) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Payment Confirmation");
+        String bookingId = (booking.getId() != null && !booking.getId().isBlank()) ? booking.getId() : "payment";
+        fileChooser.setInitialFileName("Payment_Confirmation_" + bookingId + ".pdf");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF files", "*.pdf"));
+
+        File selectedFile = fileChooser.showSaveDialog(continueButton.getScene().getWindow());
+        if (selectedFile == null) {
+            return;
+        }
+
+        String fullName = (firstNameField.getText().trim() + " " + lastNameField.getText().trim()).trim();
+        if (fullName.isBlank()) {
+            var currentUser = AuthService.getInstance().getCurrentUser();
+            if (currentUser != null && currentUser.getFullName() != null && !currentUser.getFullName().isBlank()) {
+                fullName = currentUser.getFullName();
+            } else {
+                fullName = "Client";
+            }
+        }
+
+        String email = emailField.getText() != null ? emailField.getText().trim() : "";
+        boolean generated = pdfService.generatePaymentConfirmationPdf(
+                payment,
+                booking,
+                fullName,
+                email,
+                selectedFile.getAbsolutePath()
+        );
+
+        if (generated) {
+            showInfo("Payment confirmation PDF generated successfully.");
+        } else {
+            showAlert("Failed to generate payment confirmation PDF.");
+        }
     }
 }

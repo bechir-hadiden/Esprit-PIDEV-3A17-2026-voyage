@@ -8,6 +8,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.time.format.DateTimeFormatter;
+
 public class MyWalletController {
 
     @FXML
@@ -17,6 +19,12 @@ public class MyWalletController {
     @FXML
     private Label walletStatusLabel;
     @FXML
+    private Label forecastSummaryLabel;
+    @FXML
+    private Label forecastDateLabel;
+    @FXML
+    private Label forecastRateLabel;
+    @FXML
     private TextField topUpAmountField;
     @FXML
     private TextField transferRecipientField;
@@ -25,6 +33,7 @@ public class MyWalletController {
 
     private final AuthService authService = AuthService.getInstance();
     private final WalletService walletService = new WalletService();
+    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @FXML
     public void initialize() {
@@ -114,12 +123,54 @@ public class MyWalletController {
             balanceLabel.setText("0.00 DT");
             pointsLabel.setText("0 pts");
             walletStatusLabel.setText("Please sign in to use wallet features.");
+            forecastSummaryLabel.setText("Forecast unavailable.");
+            forecastDateLabel.setText("Estimated empty date: --");
+            forecastRateLabel.setText("Average net burn/day: --");
             return;
         }
 
         balanceLabel.setText(formatAmount(user.getWalletBalance()) + " DT");
         pointsLabel.setText(user.getLoyaltyPoints() + " pts");
         walletStatusLabel.setText("Recharge to earn points. Transfer money to friends and earn loyalty rewards.");
+
+        int userId = parseUserId(user);
+        WalletService.WalletForecastResult forecast = walletService.predictBalanceDepletion(userId, user.getWalletBalance());
+        updateForecastUI(forecast);
+    }
+
+    private void updateForecastUI(WalletService.WalletForecastResult forecast) {
+        if (forecast == null) {
+            forecastSummaryLabel.setText("Forecast unavailable.");
+            forecastDateLabel.setText("Estimated empty date: --");
+            forecastRateLabel.setText("Average net burn/day: --");
+            return;
+        }
+
+        if (!forecast.isPredictionAvailable()) {
+            forecastSummaryLabel.setText(forecast.getMessage());
+            forecastDateLabel.setText("Estimated empty date: --");
+            forecastRateLabel.setText("Average net burn/day: --");
+            return;
+        }
+
+        if (forecast.getEstimatedDaysToEmpty() <= 0) {
+            forecastSummaryLabel.setText("Wallet is already empty.");
+            forecastDateLabel.setText("Estimated empty date: Today");
+            forecastRateLabel.setText("Average net burn/day: " + formatAmount(forecast.getAverageDailyOutflow()) + " DT");
+            return;
+        }
+
+        forecastSummaryLabel.setText("Estimated depletion in " + forecast.getEstimatedDaysToEmpty() + " day(s).");
+        if (forecast.getEstimatedEmptyDate() != null) {
+            forecastDateLabel.setText("Estimated empty date: " + DATE_FMT.format(forecast.getEstimatedEmptyDate()));
+        } else {
+            forecastDateLabel.setText("Estimated empty date: --");
+        }
+        forecastRateLabel.setText(
+                "Average net burn/day (" + forecast.getWindowDays() + "d): "
+                        + formatAmount(forecast.getAverageDailyOutflow()) + " DT"
+                        + " | actions: " + forecast.getActionCount()
+        );
     }
 
     private static int parseUserId(User user) {

@@ -1,5 +1,6 @@
 package org.example.services;
 
+import com.example.demo1.entity.Booking;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -10,6 +11,7 @@ import org.example.entities.User;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /** Service for generating PDF documents for reservations and payments. */
@@ -112,6 +114,99 @@ public class PdfService {
         } catch (Exception e) {
             System.err.println("❌ Erreur lors de la génération du PDF : " + e.getMessage());
         }
+    }
+
+    public boolean generatePaymentConfirmationPdf(
+            Paiement payment,
+            Booking booking,
+            String customerName,
+            String customerEmail,
+            String outputPath
+    ) {
+        Document document = new Document(PageSize.A4);
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(outputPath));
+            document.open();
+
+            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20, new BaseColor(14, 165, 233));
+            Paragraph title = new Paragraph("Payment Confirmation", titleFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            title.setSpacingAfter(16);
+            document.add(title);
+
+            Font textFont = FontFactory.getFont(FontFactory.HELVETICA, 11, BaseColor.DARK_GRAY);
+            document.add(new Paragraph("SmartTrip - Booking Payment Receipt", textFont));
+            document.add(new Chunk("\n"));
+
+            PdfPTable table = new PdfPTable(2);
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(8);
+            table.setSpacingAfter(8);
+
+            addTableCellStatic(table, "Customer", safeText(customerName));
+            addTableCellStatic(table, "Email", safeText(customerEmail));
+
+            String paymentRef = (payment != null && payment.getIdPaiement() > 0)
+                    ? "#" + payment.getIdPaiement()
+                    : "N/A";
+            addTableCellStatic(table, "Payment Ref", paymentRef);
+            addTableCellStatic(
+                    table,
+                    "Payment Date",
+                    payment != null && payment.getDatePaiement() != null ? payment.getDatePaiement().toString() : "N/A"
+            );
+            addTableCellStatic(
+                    table,
+                    "Payment Method",
+                    payment != null ? safeText(payment.getMethodePaiement()) : "N/A"
+            );
+            addTableCellStatic(
+                    table,
+                    "Payment Status",
+                    payment != null ? safeText(payment.getStatut_paiement()) : "N/A"
+            );
+            addTableCellStatic(
+                    table,
+                    "Amount",
+                    payment != null ? String.format("%.2f DT", payment.getMontant()) : "N/A"
+            );
+
+            if (booking != null) {
+                addTableCellStatic(table, "Booking Ref", safeText(booking.getId()));
+                addTableCellStatic(table, "Hotel", safeText(booking.getHotelName()));
+                addTableCellStatic(table, "Room Type", safeText(booking.getRoomType()));
+                addTableCellStatic(table, "Check-in", booking.getCheckIn() != null ? booking.getCheckIn().toString() : "N/A");
+                addTableCellStatic(table, "Check-out", booking.getCheckOut() != null ? booking.getCheckOut().toString() : "N/A");
+                addTableCellStatic(table, "Guests", String.valueOf(booking.getGuestCount()));
+                addTableCellStatic(table, "Nights", String.valueOf(booking.getNumberOfNights()));
+                addTableCellStatic(table, "Booking Total", String.format("%.2f DT", booking.getTotalPrice()));
+            }
+
+            document.add(table);
+            document.add(new Chunk("\n"));
+
+            String generatedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            Paragraph footer = new Paragraph(
+                    "Generated on " + generatedAt + " - Thank you for choosing SmartTrip.",
+                    FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 10, BaseColor.GRAY)
+            );
+            footer.setAlignment(Element.ALIGN_CENTER);
+            document.add(footer);
+
+            document.close();
+            return true;
+        } catch (Exception e) {
+            System.err.println("Payment confirmation PDF error: " + e.getMessage());
+            return false;
+        } finally {
+            if (document.isOpen()) {
+                document.close();
+            }
+        }
+    }
+
+    private String safeText(String value) {
+        return (value == null || value.trim().isEmpty()) ? "N/A" : value.trim();
     }
 
     private void addTableCell(PdfPTable table, String label, String value) {

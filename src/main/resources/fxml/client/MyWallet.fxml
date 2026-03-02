@@ -30,6 +30,14 @@
             <Label text="Earn points on recharge and transfer actions."
                    styleClass="text-muted"/>
         </VBox>
+
+        <VBox HBox.hgrow="ALWAYS" styleClass="card" spacing="8">
+            <Label text="Balance Forecast (AI)" styleClass="text-muted"/>
+            <Label fx:id="forecastSummaryLabel" text="Forecast unavailable."
+                   style="-fx-font-size: 16; -fx-font-weight: 700; -fx-text-fill: #0F172A;" wrapText="true"/>
+            <Label fx:id="forecastDateLabel" text="Estimated empty date: --" styleClass="text-muted"/>
+            <Label fx:id="forecastRateLabel" text="Average net burn/day: --" styleClass="text-muted" wrapText="true"/>
+        </VBox>
     </HBox>
 
     <HBox spacing="16">

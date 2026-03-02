@@ -148,6 +148,11 @@
                     <Label text="Ready to Book?" styleClass="card-title"/>
                     <Label text="Please review your details on the right before confirming."
                            textAlignment="CENTER" wrapText="true" textFill="#64748B"/>
+                    <Button fx:id="downloadPdfButton"
+                            text="Download Payment PDF"
+                            onAction="#handleDownloadPaymentPdf"
+                            styleClass="outline-button"
+                            disable="true"/>
                 </VBox>
             </StackPane>
 
