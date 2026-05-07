@@ -9,9 +9,13 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
+
 import java.io.IOException;
 
 public class MainLayoutController {
@@ -75,10 +79,15 @@ public class MainLayoutController {
     private Button plansBtn;
     @FXML
     private Button bookingsBtn;
-
     @FXML
     private Button DecartionBtn;
 
+    // ========== BOUTON AVIS ==========
+    @FXML
+    private Button avisBtn;
+    @FXML
+    private Label avisLabel;
+    // ================================
 
     private final SessionManager sessionManager = SessionManager.getInstance();
     private final AuthService authService = AuthService.getInstance();
@@ -170,7 +179,9 @@ public class MainLayoutController {
             case MY_BOOKINGS:
                 return "My Bookings";
             case Decartion:
-                return " Decartion";
+                return "Decoration";
+            case AVIS:
+                return "Gestion des Avis";
             case SETTINGS:
                 return "Settings";
             default:
@@ -198,8 +209,10 @@ public class MainLayoutController {
                 return "/fxml/client/TicketPlans.fxml";
             case MY_BOOKINGS:
                 return "/fxml/client/MyBookings.fxml";
-            case  Decartion:
+            case Decartion:
                 return "/fxml/gestion-reclamation.fxml";
+            case AVIS:
+                return "/fxml/client/client-avis.fxml";  // ← Charge dans le même conteneur
             case SETTINGS:
                 return "/fxml/client/Settings.fxml";
             default:
@@ -215,6 +228,9 @@ public class MainLayoutController {
         transportBtn.getStyleClass().remove("nav-button-active");
         plansBtn.getStyleClass().remove("nav-button-active");
         bookingsBtn.getStyleClass().remove("nav-button-active");
+        if (avisBtn != null) {
+            avisBtn.getStyleClass().remove("nav-button-active");
+        }
 
         // Set active button
         switch (view) {
@@ -238,14 +254,25 @@ public class MainLayoutController {
             case MY_BOOKINGS:
                 bookingsBtn.getStyleClass().add("nav-button-active");
                 break;
-            case SETTINGS:
-                // Optionally highlight a settings button if it exists in nav
+            case AVIS:
+                if (avisBtn != null) {
+                    avisBtn.getStyleClass().add("nav-button-active");
+                }
                 break;
-            case FORGOT_PASSWORD:
-                // Not in sidebar
+            case SETTINGS:
+                break;
+            default:
                 break;
         }
     }
+
+    // ========== MÉTHODE POUR OUVRIR AVIS (si appelée depuis le bouton) ==========
+    @FXML
+    private void openAvis() {
+        // Au lieu d'ouvrir une nouvelle fenêtre, charger dans le conteneur
+        loadView(View.AVIS);
+    }
+    // ============================================================================
 
     @FXML
     private void showDashboard() {
@@ -334,8 +361,12 @@ public class MainLayoutController {
             transportLabel.setVisible(false);
             plansLabel.setVisible(false);
             bookingsLabel.setVisible(false);
+            if (avisLabel != null) {
+                avisLabel.setVisible(false);
+                avisLabel.setManaged(false);
+            }
             logoutLabel.setVisible(false);
-            collapseIcon.setText("\uf054"); // Chevron Right
+            collapseIcon.setText("❯");
         } else {
             sidebar.setPrefWidth(280);
             sidebar.setMaxWidth(280);
@@ -349,8 +380,12 @@ public class MainLayoutController {
             transportLabel.setVisible(true);
             plansLabel.setVisible(true);
             bookingsLabel.setVisible(true);
+            if (avisLabel != null) {
+                avisLabel.setVisible(true);
+                avisLabel.setManaged(true);
+            }
             logoutLabel.setVisible(true);
-            collapseIcon.setText("\uf053"); // Chevron Left
+            collapseIcon.setText("❮");
         }
     }
 }

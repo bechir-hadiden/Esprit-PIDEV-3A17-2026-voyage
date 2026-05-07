@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public classWalletService {
+public class WalletService {
 
     public static class WalletActionResult {
         private final boolean success;

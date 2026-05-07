@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<VBox spacing="24" styleClass="content-container" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.demo1.controller.client.ClientAvisController">
+
+    <!-- Page Header -->
+    <HBox alignment="CENTER_LEFT">
+        <VBox>
+            <Label styleClass="welcome-title" text="Gestion des Avis ⭐" wrapText="true">
+                <font>
+                    <Font name="System Bold" size="28"/>
+                </font>
+            </Label>
+            <Label styleClass="welcome-subtitle" text="Partagez votre expérience et consultez les avis des autres voyageurs" textFill="#64748B"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <!-- Barre de recherche -->
+    <HBox spacing="16">
+        <TextField fx:id="txtRecherche" styleClass="search-field" HBox.hgrow="ALWAYS" promptText="Rechercher par nom..."/>
+        <ComboBox fx:id="comboFiltre" styleClass="combo-box" prefWidth="150"/>
+        <Button fx:id="btnRechercher" text="Rechercher" styleClass="primary-button"/>
+        <Button fx:id="btnReset" text="Réinitialiser" styleClass="secondary-button"/>
+    </HBox>
+
+    <!-- Contenu principal : Liste des avis (gauche) + Formulaire (droite) -->
+    <HBox spacing="24" VBox.vgrow="ALWAYS">
+
+        <!-- PARTIE GAUCHE : Liste des avis -->
+        <VBox spacing="16" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT">
+                <Label styleClass="section-title" text="📝 Tous les avis"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblNombreAvis" styleClass="tag" text="0 avis"/>
+            </HBox>
+
+            <ScrollPane fitToWidth="true" styleClass="content-scroll" VBox.vgrow="ALWAYS">
+                <VBox fx:id="containerAvis" spacing="16" style="-fx-padding: 8;">
+                    <Label text="Chargement des avis..." style="-fx-text-fill: #64748B; -fx-padding: 20;"/>
+                </VBox>
+            </ScrollPane>
+        </VBox>
+
+        <!-- PARTIE DROITE : Formulaire d'ajout d'avis -->
+        <VBox spacing="16" prefWidth="400" minWidth="350" maxWidth="450">
+
+            <!-- Formulaire -->
+            <VBox spacing="16" styleClass="card" VBox.vgrow="NEVER">
+                <Label styleClass="card-title" text="✍️ Donner mon avis"/>
+
+                <VBox spacing="12">
+                    <VBox spacing="4">
+                        <Label text="Nom complet" styleClass="field-label"/>
+                        <TextField fx:id="txtNom" styleClass="auth-input" promptText="Votre nom complet"/>
+                    </VBox>
+
+                    <VBox spacing="4">
+                        <Label text="Email" styleClass="field-label"/>
+                        <TextField fx:id="txtEmail" styleClass="auth-input" promptText="votre@email.com"/>
+                    </VBox>
+
+                    <VBox spacing="4">
+                        <Label text="Note" styleClass="field-label"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <ChoiceBox fx:id="choiceNote" styleClass="combo-box" prefWidth="100"/>
+                            <Label text="(1 à 5 étoiles)" style="-fx-text-fill: #64748B; -fx-font-size: 12;"/>
+                        </HBox>
+                    </VBox>
+
+                    <VBox spacing="4">
+                        <Label text="ID du Voyage" styleClass="field-label"/>
+                        <TextField fx:id="txtVoyageId" styleClass="auth-input" promptText="Ex: 101"/>
+                    </VBox>
+
+                    <VBox spacing="4">
+                        <Label text="Commentaire" styleClass="field-label"/>
+                        <TextArea fx:id="txtCommentaire" styleClass="auth-input" prefRowCount="5" promptText="Décrivez votre expérience..."/>
+                    </VBox>
+
+                    <Button fx:id="btnSoumettre" text="Publier l'avis" styleClass="primary-button" maxWidth="Infinity"/>
+                </VBox>
+            </VBox>
+
+            <!-- Message d'information utilisateur -->
+            <VBox spacing="12" styleClass="card" VBox.vgrow="NEVER">
+                <Label styleClass="card-title" text="ℹ️ Information"/>
+                <Label text="Pour modifier ou supprimer un avis, cliquez sur les boutons sous chaque carte." wrapText="true" style="-fx-text-fill: #64748B; -fx-font-size: 13;"/>
+                <Label text="Seuls vos propres avis peuvent être modifiés/supprimés." wrapText="true" style="-fx-text-fill: #64748B; -fx-font-size: 13;"/>
+            </VBox>
+
+            <!-- Petit conseil -->
+            <VBox styleClass="tip-card, purple-gradient" spacing="10" VBox.vgrow="NEVER">
+                <padding>
+                    <Insets bottom="16" left="16" right="16" top="16"/>
+                </padding>
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <StackPane styleClass="tip-icon-bg">
+                        <Region prefHeight="40" prefWidth="40"/>
+                        <Label styleClass="tip-icon" text="💡"/>
+                    </StackPane>
+                    <VBox>
+                        <Label styleClass="tip-title" text="Conseil" textFill="white"/>
+                        <Label styleClass="tip-text" text="Votre avis compte ! Partagez votre expérience pour aider les autres voyageurs." textFill="white" wrapText="true"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </VBox>
+
+    </HBox>
+
+</VBox>

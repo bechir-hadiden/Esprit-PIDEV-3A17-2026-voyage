@@ -36,13 +36,18 @@
                 <Button fx:id="paymentsButton" maxWidth="Infinity" styleClass="admin-nav-item"
                         text="💳 Paiements" onAction="#showPayments"/>
                 <Button fx:id="reclamtionButton" maxWidth="Infinity" styleClass="admin-nav-item"
-                        text="💳 Reclamtion" onAction="#showReclmation"/>
+                        text="📋 Réclamation" onAction="#showReclmation"/>
+
+                <!-- ========== NOUVEAU BOUTON AVIS ========== -->
+                <Button fx:id="avisButton" maxWidth="Infinity" styleClass="admin-nav-item"
+                        text="⭐ Gestion des Avis" onAction="#showAvis"/>
+                <!-- ========================================= -->
 
                 <!-- Spacer -->
                 <Region VBox.vgrow="ALWAYS"/>
             </VBox>
 
-            <!-- Logout Section - Redesigned -->
+            <!-- Logout Section -->
             <VBox styleClass="logout-section" spacing="12">
                 <padding>
                     <Insets bottom="24" left="16" right="16"/>
@@ -50,7 +55,6 @@
                 <Separator styleClass="sidebar-separator"/>
                 <Button maxWidth="Infinity" styleClass="admin-nav-item, logout-button"
                         text="🚪 Déconnexion" onAction="#handleLogout"/>
-
             </VBox>
         </VBox>
     </left>
@@ -69,10 +73,10 @@
                 <Region HBox.hgrow="ALWAYS"/>
 
                 <!-- Profile Button -->
-                <Button onAction="#showSettings" styleClass=" top-bar-button">
+                <Button onAction="#showSettings" styleClass="top-bar-button">
                     <graphic>
                         <HBox alignment="CENTER" spacing="8">
-                            <Label styleClass="top-bar-icon" text="👤"/> <!-- Profile -->
+                            <Label styleClass="top-bar-icon" text="👤"/>
                             <Label text="Profile"/>
                         </HBox>
                     </graphic>

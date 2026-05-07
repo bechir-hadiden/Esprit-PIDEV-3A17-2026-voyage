@@ -37,6 +37,11 @@ public class AdminMainController {
     @FXML
     private Button reclamtionButton;
 
+    // ========== NOUVEAU BOUTON AVIS ==========
+    @FXML
+    private Button avisButton;
+    // ========================================
+
     private final AuthService authService = AuthService.getInstance();
 
     @FXML
@@ -54,41 +59,38 @@ public class AdminMainController {
     private void showDashboard() {
         loadContent("/fxml/admin/AdminDashboard.fxml");
         setActiveButton(dashboardButton);
+        contentTitle.setText("Tableaux de bord");
     }
 
     @FXML
     private void showHotels() {
         loadContent("/fxml/admin/AdminHotels.fxml");
         setActiveButton(hotelsButton);
+        contentTitle.setText("Hébergements");
     }
 
     @FXML
     private void showTransport() {
         loadContent("/fxml/admin/AdminTransport.fxml");
         setActiveButton(transportButton);
+        contentTitle.setText("Flotte & Déplacements");
     }
 
     @FXML
     private void showReclmation() {
         loadContent("/fxml/gestion-reclamation.fxml");
-        setActiveButton(transportButton);
+        setActiveButton(reclamtionButton);
+        contentTitle.setText("Réclamation");
     }
 
     @FXML
     private void showOffers() {
         try {
-            // 1. Charger ton fichier FXML de gestion des offres
-            // Assure-toi que le fichier est bien dans ce dossier dans resources
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/admin/AfficherOffres.fxml"));
             Node node = loader.load();
-
-            // 2. Mettre à jour le titre en haut de la page (si applicable)
-            // pageTitle.setText("Promotion Management");
-
-            // 3. Remplacer le contenu central par ton interface
-            // Remplace 'contentArea' par le nom exact du conteneur dans leur code
             contentArea.getChildren().setAll(node);
-
+            setActiveButton(offersButton);
+            contentTitle.setText("Offres de Voyage");
         } catch (IOException e) {
             System.err.println("Erreur lors du chargement de la gestion des offres : " + e.getMessage());
             e.printStackTrace();
@@ -99,13 +101,24 @@ public class AdminMainController {
     private void showPlans() {
         loadComingSoon("Plans");
         setActiveButton(plansButton);
+        contentTitle.setText("Abonnements");
     }
 
     @FXML
     private void showPayments() {
         loadContent("/fxml/admin/AdminPayments.fxml");
         setActiveButton(paymentsButton);
+        contentTitle.setText("Paiements");
     }
+
+    // ========== NOUVELLE MÉTHODE POUR AVIS ==========
+    @FXML
+    private void showAvis() {
+        loadContent("/fxml/admin/admin-avis.fxml");
+        setActiveButton(avisButton);
+        contentTitle.setText("Gestion des Avis");
+    }
+    // ===============================================
 
     @FXML
     private void showSettings() {
@@ -128,7 +141,6 @@ public class AdminMainController {
         } catch (Exception e) {
             System.err.println("Error loading content: " + fxmlPath);
             e.printStackTrace();
-            // Show error message or fallback content
         }
     }
 
@@ -138,7 +150,6 @@ public class AdminMainController {
                     getClass().getResource("/fxml/admin/AdminComingSoon.fxml"));
             Parent content = loader.load();
 
-            // Set section name in controller
             AdminComingSoonController controller = loader.getController();
             if (controller != null) {
                 controller.setSectionName(sectionName);
@@ -160,9 +171,11 @@ public class AdminMainController {
         offersButton.getStyleClass().remove("active");
         plansButton.getStyleClass().remove("active");
         if (paymentsButton != null) paymentsButton.getStyleClass().remove("active");
+        if (reclamtionButton != null) reclamtionButton.getStyleClass().remove("active");
+        if (avisButton != null) avisButton.getStyleClass().remove("active");
 
         // Add active class to the selected button
-        if (!activeButton.getStyleClass().contains("active")) {
+        if (activeButton != null && !activeButton.getStyleClass().contains("active")) {
             activeButton.getStyleClass().add("active");
         }
     }

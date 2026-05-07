@@ -35,8 +35,8 @@ public class SessionManager {
         TICKET_PLANS,
         MY_BOOKINGS,
         SETTINGS,
-        Decartion,   // ← make sure this exists exactly as used in switch
-
+        Decartion,
+        AVIS          // ← AJOUTER CETTE LIGNE
     }
 
     private SessionManager() {}
