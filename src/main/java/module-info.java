@@ -53,6 +53,7 @@ module com.example.demo1 {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
+    requires mysql.connector.j;
 
     // ================================================
     // OPENS — JavaFX FXML accès aux controllers

@@ -46,8 +46,10 @@ public class UserDAO {
                 }
 
                 // Verify password using BCrypt (works for properly hashed passwords)
+                // Normalize $2y$ / $2b$ prefixes to $2a$ because jbcrypt 0.4 only supports $2a$
+                String normalizedHash = passwordHash.replaceFirst("^\\$2[by]\\$", "\\$2a\\$");
                 try {
-                    if (BCryptWrapper.checkpw(password, passwordHash)) {
+                    if (BCryptWrapper.checkpw(password, normalizedHash)) {
                         return extractUserFromResultSet(rs);
                     }
                 } catch (IllegalArgumentException e) {
