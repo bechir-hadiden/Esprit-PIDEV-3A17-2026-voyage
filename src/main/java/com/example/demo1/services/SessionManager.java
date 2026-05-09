@@ -22,6 +22,7 @@ public class SessionManager {
     private final BooleanProperty sidebarCollapsed = new SimpleBooleanProperty(false);
 
     public enum View {
+        HOME,
         SIGN_IN,
         SIGN_UP,
         FORGOT_PASSWORD,
@@ -36,7 +37,7 @@ public class SessionManager {
         MY_BOOKINGS,
         SETTINGS,
         Decartion,
-        AVIS          // ← AJOUTER CETTE LIGNE
+        AVIS
     }
 
     private SessionManager() {}

@@ -36,6 +36,8 @@ public class AdminMainController {
     private Button paymentsButton;
     @FXML
     private Button reclamtionButton;
+    @FXML
+    private Button usersButton;
 
     // ========== NOUVEAU BOUTON AVIS ==========
     @FXML
@@ -111,6 +113,13 @@ public class AdminMainController {
         contentTitle.setText("Paiements");
     }
 
+    @FXML
+    private void showUsers() {
+        loadContent("/fxml/admin/AdminUsers.fxml");
+        setActiveButton(usersButton);
+        contentTitle.setText("Gestion Utilisateurs");
+    }
+
     // ========== NOUVELLE MÉTHODE POUR AVIS ==========
     @FXML
     private void showAvis() {
@@ -172,6 +181,7 @@ public class AdminMainController {
         plansButton.getStyleClass().remove("active");
         if (paymentsButton != null) paymentsButton.getStyleClass().remove("active");
         if (reclamtionButton != null) reclamtionButton.getStyleClass().remove("active");
+        if (usersButton != null) usersButton.getStyleClass().remove("active");
         if (avisButton != null) avisButton.getStyleClass().remove("active");
 
         // Add active class to the selected button

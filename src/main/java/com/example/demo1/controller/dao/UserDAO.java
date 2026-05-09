@@ -66,6 +66,30 @@ public class UserDAO {
     }
 
     /**
+     * Get all users.
+     *
+     * @return List of all User objects
+     */
+    public java.util.List<User> getAllUsers() {
+        java.util.List<User> users = new java.util.ArrayList<>();
+        String sql = "SELECT * FROM users ORDER BY id DESC";
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                users.add(extractUserFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching all users: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+    /**
      * Get user by ID.
      *
      * @param userId User ID
@@ -240,6 +264,27 @@ public class UserDAO {
     }
 
     /**
+     * Update user blocked status.
+     *
+     * @param userId  User ID
+     * @param blocked true to block, false to unblock
+     * @return true if update successful
+     */
+    public boolean updateBlockedStatus(int userId, boolean blocked) {
+        String sql = "UPDATE users SET est_bloque = ? WHERE id = ?";
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setBoolean(1, blocked);
+            pstmt.setInt(2, userId);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating blocked status: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
      * Delete user by ID.
      *
      * @param userId User ID
@@ -280,6 +325,11 @@ public class UserDAO {
         user.setPasswordHash(rs.getString("password_hash"));
         user.setWalletBalance(rs.getDouble("wallet_balance"));
         user.setLoyaltyPoints(rs.getInt("loyalty_points"));
+        try {
+            user.setBlocked(rs.getBoolean("est_bloque"));
+        } catch (SQLException ignored) {
+            // Column may not exist yet
+        }
         return user;
     }
 }

@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Database {
-    private static final String URL = "jdbc:mysql://localhost:3306/smarttrip_db3";
+    private static final String URL = "jdbc:mysql://localhost:3306/smarttrip_db6";
     private static final String USER = "root"; // Changez selon votre config
     private static final String PASSWORD = ""; // Changez selon votre config
 

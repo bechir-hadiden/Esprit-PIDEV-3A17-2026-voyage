@@ -123,6 +123,8 @@ public class HelloApplication extends Application {
 
     private static String getFxmlFile(SessionManager.View view) {
         switch (view) {
+            case HOME:
+                return "/fxml/home.fxml";
             case SIGN_IN:
                 return "/fxml/authentification/SignIn.fxml";
             case SIGN_UP:
