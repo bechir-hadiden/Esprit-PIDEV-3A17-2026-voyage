@@ -111,9 +111,9 @@ public class TypeListController {
         priceRow.setAlignment(Pos.BASELINE_LEFT);
         Label priceVal = new Label(String.format("%.2f DT", t.getPrixDepart()));
         priceVal.setStyle("-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #1e293b;");
-        Label priceUnit = new Label("de départ");
-        priceUnit.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748b; -fx-font-weight: 600;");
-        priceRow.getChildren().addAll(priceVal, priceUnit);
+        Label priceIntro = new Label("À partir de ");
+        priceIntro.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748b; -fx-font-weight: 600;");
+        priceRow.getChildren().addAll(priceIntro, priceVal);
         body.getChildren().add(priceRow);
 
         // ── Action Bar ────────────────────────────────────────────────

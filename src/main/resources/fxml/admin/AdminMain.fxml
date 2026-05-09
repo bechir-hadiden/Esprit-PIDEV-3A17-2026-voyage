@@ -32,7 +32,9 @@
                 <Button fx:id="offersButton" maxWidth="Infinity" styleClass="admin-nav-item"
                         text="🌴 Offres de Voyage" onAction="#showOffers"/>
                 <Button fx:id="plansButton" maxWidth="Infinity" styleClass="admin-nav-item"
-                        text="📋  Plans" onAction="#showPlans"/>
+                        text="⭐ Abonnements" onAction="#showPlans"/>
+                <Button fx:id="paymentsButton" maxWidth="Infinity" styleClass="admin-nav-item"
+                        text="💳 Paiements" onAction="#showPayments"/>
                 <Button fx:id="usersButton" maxWidth="Infinity" styleClass="admin-nav-item"
                         text="👥  Users" onAction="#showUsers"/>
 

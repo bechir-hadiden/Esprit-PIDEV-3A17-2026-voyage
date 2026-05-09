@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="24" styleClass="animate-fade" stylesheets="@../../css/main.css"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.demo1.controller.client.MyWalletController">
+
+    <VBox spacing="6">
+        <Label text="My Wallet" styleClass="section-title"/>
+        <Label text="Recharge your balance, transfer money, and collect loyalty points."
+               styleClass="text-muted"/>
+    </VBox>
+
+    <HBox spacing="16">
+        <VBox HBox.hgrow="ALWAYS" styleClass="card" spacing="8">
+            <Label text="Available Balance" styleClass="text-muted"/>
+            <Label fx:id="balanceLabel" text="0.00 DT"
+                   style="-fx-font-size: 30; -fx-font-weight: 800; -fx-text-fill: #16A34A;"/>
+            <Label text="Use your wallet for instant booking payments."
+                   styleClass="text-muted"/>
+        </VBox>
+
+        <VBox HBox.hgrow="ALWAYS" styleClass="card" spacing="8">
+            <Label text="Loyalty Points" styleClass="text-muted"/>
+            <Label fx:id="pointsLabel" text="0 pts"
+                   style="-fx-font-size: 30; -fx-font-weight: 800; -fx-text-fill: #7C3AED;"/>
+            <Label text="Earn points on recharge and transfer actions."
+                   styleClass="text-muted"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="16">
+        <VBox HBox.hgrow="ALWAYS" styleClass="card" spacing="14">
+            <Label text="Recharge Wallet" styleClass="card-title"/>
+            <Label text="Add funds and earn +1 point per 10 DT recharged." styleClass="text-muted"/>
+
+            <VBox spacing="8">
+                <Label text="Amount (DT)" styleClass="field-label"/>
+                <TextField fx:id="topUpAmountField" promptText="e.g. 50.00" styleClass="auth-input"/>
+            </VBox>
+
+            <Button text="Recharge Now" onAction="#handleTopUp" styleClass="primary-button" maxWidth="Infinity"/>
+        </VBox>
+
+        <VBox HBox.hgrow="ALWAYS" styleClass="card" spacing="14">
+            <Label text="Transfer Money" styleClass="card-title"/>
+            <Label text="Send funds to another user and earn transfer points." styleClass="text-muted"/>
+
+            <VBox spacing="8">
+                <Label text="Recipient (email or username)" styleClass="field-label"/>
+                <TextField fx:id="transferRecipientField" promptText="recipient@email.com or username"
+                           styleClass="auth-input"/>
+            </VBox>
+
+            <VBox spacing="8">
+                <Label text="Amount (DT)" styleClass="field-label"/>
+                <TextField fx:id="transferAmountField" promptText="e.g. 20.00" styleClass="auth-input"/>
+            </VBox>
+
+            <Button text="Send Transfer" onAction="#handleTransfer" styleClass="outline-button" maxWidth="Infinity"/>
+        </VBox>
+    </HBox>
+
+    <VBox styleClass="card" spacing="8">
+        <Label text="Wallet Activity" styleClass="card-title"/>
+        <Label fx:id="walletStatusLabel" text="Wallet ready."
+               styleClass="text-muted" wrapText="true"/>
+    </VBox>
+</VBox>

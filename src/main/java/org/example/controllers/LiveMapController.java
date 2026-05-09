@@ -87,7 +87,7 @@ public class LiveMapController {
     private void handleBack() {
         try {
             String targetFxml = "/fxml/user_menu.fxml";
-            if (currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole())) {
+            if (currentUser != null && currentUser.isAdmin()) {
                 targetFxml = "/fxml/admin.fxml";
             }
 

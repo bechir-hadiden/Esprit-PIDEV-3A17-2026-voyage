@@ -34,6 +34,8 @@ public class AdminMainController {
     private Button plansButton;
     @FXML
     private Button usersButton;
+    @FXML
+    private Button paymentsButton;
 
     private final AuthService authService = AuthService.getInstance();
 
@@ -100,6 +102,12 @@ public class AdminMainController {
     }
 
     @FXML
+    private void showPayments() {
+        loadContent("/fxml/admin/AdminPayments.fxml");
+        setActiveButton(paymentsButton);
+    }
+
+    @FXML
     private void showSettings() {
         loadContent("/fxml/admin/AdminSettings.fxml");
         contentTitle.setText("Settings");
@@ -151,6 +159,7 @@ public class AdminMainController {
         transportButton.getStyleClass().remove("active");
         offersButton.getStyleClass().remove("active");
         plansButton.getStyleClass().remove("active");
+        if (paymentsButton != null) paymentsButton.getStyleClass().remove("active");
         usersButton.getStyleClass().remove("active");
 
         // Add active class to the selected button

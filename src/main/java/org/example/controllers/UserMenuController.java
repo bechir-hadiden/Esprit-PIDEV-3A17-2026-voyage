@@ -36,8 +36,8 @@ public class UserMenuController {
             }
             this.currentUser.setUsername(auth.getCurrentUser().getUsername());
             this.currentUser.setEmail(auth.getCurrentUser().getEmail());
-            this.currentUser.setRole(auth.getCurrentUser().getRole());
             this.currentUser.setTelephone(auth.getCurrentUser().getTelephone());
+            this.currentUser.setRole_string(auth.getCurrentUser().getRole());
         }
     }
 

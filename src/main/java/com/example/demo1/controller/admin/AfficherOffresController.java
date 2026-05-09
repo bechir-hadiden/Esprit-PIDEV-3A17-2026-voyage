@@ -3,6 +3,7 @@ package com.example.demo1.controller.admin;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -27,6 +28,8 @@ public class AfficherOffresController {
     @FXML private TableColumn<Offre, String> colStatut;
     @FXML private TableColumn<Offre, Boolean> colODD;
     @FXML private TextField txtRecherche;
+    @FXML private PieChart statChart;
+    @FXML private Label lblTotal, lblODDCount;
 
     private OffreService os = new OffreService();
     private ObservableList<Offre> masterData = FXCollections.observableArrayList();
@@ -100,7 +103,14 @@ public class AfficherOffresController {
         }
     }
     public void refreshTable() throws SQLException {
+        // 1. Charger les données de la BDD
         masterData.setAll(os.afficher());
+
+        // 2. METTRE À JOUR LE DASHBOARD (KPIs + Graphique)
+        // On appelle cette méthode dès que les données changent
+        updateDashboard();
+
+        // 3. Logique de filtrage (reste inchangée)
         FilteredList<Offre> filteredData = new FilteredList<>(masterData, b -> true);
 
         txtRecherche.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -115,6 +125,31 @@ public class AfficherOffresController {
         sortedData.comparatorProperty().bind(tableOffres.comparatorProperty());
         tableOffres.setItems(sortedData);
     }
+    private void updateDashboard() {
+        // 1. Mise à jour des chiffres simples
+        int total = masterData.size();
+        long oddCount = masterData.stream().filter(Offre::isIs_local_support).count();
+
+        lblTotal.setText(String.valueOf(total));
+        lblODDCount.setText(String.valueOf(oddCount));
+
+        // 2. Calcul des parts du PieChart
+        long hotels = masterData.stream().filter(o -> "HOTEL".equals(o.getCategory())).count();
+        long vols = masterData.stream().filter(o -> "VOL".equals(o.getCategory())).count();
+        long transp = masterData.stream().filter(o -> "TRANSPORT".equals(o.getCategory())).count();
+        long voyages = masterData.stream().filter(o -> "VOYAGE".equals(o.getCategory()) || o.getCategory() == null).count();
+
+        // 3. Injection des données dans le graphique
+        ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
+        if (hotels > 0) pieData.add(new PieChart.Data("Hôtels", hotels));
+        if (vols > 0) pieData.add(new PieChart.Data("Vols", vols));
+        if (transp > 0) pieData.add(new PieChart.Data("Transports", transp));
+        if (voyages > 0) pieData.add(new PieChart.Data("Voyages", voyages));
+
+        statChart.setData(pieData);
+        statChart.setLegendVisible(true);
+    }
+
 
     @FXML
     private void handleGererCodes() {

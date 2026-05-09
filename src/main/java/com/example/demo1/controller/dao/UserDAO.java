@@ -147,8 +147,8 @@ public class UserDAO {
      * @return true if user created successfully, false otherwise
      */
     public boolean createUser(User user, String plainPassword) {
-        String sql = "INSERT INTO users (username, password_hash, full_name, email, phone, avatar, role) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, password_hash, full_name, email, phone, avatar, role, wallet_balance, loyalty_points) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -176,6 +176,35 @@ public class UserDAO {
             }
         } catch (SQLException e) {
             System.err.println("Error creating user: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
+     * Update existing user.
+     *
+     * @param user User object with updated data
+     * @return true if update successful, false otherwise
+     */
+    public boolean updateUser(User user) {
+        String sql = "UPDATE users SET full_name = ?, email = ?, phone = ?, avatar = ?, wallet_balance = ?, loyalty_points = ? WHERE id = ?";
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, user.getFullName());
+            pstmt.setString(2, user.getEmail());
+            pstmt.setString(3, user.getPhone());
+            pstmt.setString(4, user.getAvatar());
+            pstmt.setDouble(5, user.getWalletBalance());
+            pstmt.setInt(6, user.getLoyaltyPoints());
+            pstmt.setInt(7, Integer.parseInt(user.getId()));
+
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating user: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -272,40 +301,29 @@ public class UserDAO {
 
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Error updating blocked status: " + e.getMessage());
-            e.printStackTrace();
+            // Si la colonne n'existe pas, afficher un message clair
+            String msg = e.getMessage();
+            if (msg != null && msg.toLowerCase().contains("blocked") && msg.toLowerCase().contains("unknown column")) {
+                System.err.println("⚠️ ERREUR: Colonne 'blocked' non trouvée dans la table users.");
+                System.err.println("   Exécutez cette commande SQL: ALTER TABLE users ADD COLUMN blocked TINYINT(1) DEFAULT 0;");
+            } else {
+                System.err.println("Error updating blocked status: " + msg);
+            }
         }
 
         return false;
     }
 
     /**
-     * Update existing user information.
-     *
-     * @param user User object with updated data
-     * @return true if update successful, false otherwise
+     * Vérifie si une colonne existe dans une table
      */
-    public boolean updateUser(User user) {
-        String sql = "UPDATE users SET full_name = ?, email = ?, phone = ?, role = ?, blocked = ? " +
-                "WHERE id = ?";
-
+    private boolean columnExists(String tableName, String columnName) {
         try (Connection conn = dbConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, user.getFullName());
-            pstmt.setString(2, user.getEmail());
-            pstmt.setString(3, user.getPhone());
-            pstmt.setString(4, user.getRole());
-            pstmt.setBoolean(5, user.isBlocked());
-            pstmt.setInt(6, Integer.parseInt(user.getId()));
-
-            return pstmt.executeUpdate() > 0;
+             ResultSet rs = conn.getMetaData().getColumns(null, null, tableName, columnName)) {
+            return rs.next();
         } catch (SQLException e) {
-            System.err.println("Error updating user: " + e.getMessage());
-            e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
 
     /**
@@ -348,6 +366,8 @@ public class UserDAO {
             // Field doesn't exist, default to false
             user.setBlocked(false);
         }
+        user.setWalletBalance(rs.getDouble("wallet_balance"));
+        user.setLoyaltyPoints(rs.getInt("loyalty_points"));
         return user;
     }
 }

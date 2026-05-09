@@ -6,27 +6,21 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import com.example.demo1.services.SessionManager;
 import java.io.IOException;
-import java.util.Objects;
+import java.net.URI;
 import javafx.scene.Parent;
+import java.awt.Desktop;
 public class HelloApplication extends Application {
 
+    private static HelloApplication instance;
     private static Stage primaryStage;
 
     @Override
     public void start(Stage stage) throws IOException {
+        instance = this;
         primaryStage = stage;
 
         FXMLLoader loader = new FXMLLoader(
-                Objects.requireNonNull(
-//                        getClass().getResource("/fxml/gestion-reclamation.fxml"),
-//                        "home.fxml introuvable"
-
-                                                getClass().getResource("/fxml/home.fxml"),
-                        "home.fxml introuvable"
-//
-//                   getClass().getResource("/fxml/destination.fxml"),
-//                        "destination.fxml introuvable"
-                )
+                getClass().getResource("/fxml/home.fxml")
         );
 
         Scene scene = new Scene(loader.load(), 1200, 800);
@@ -35,6 +29,30 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.show();
+    }
+
+    public static boolean openExternalUrl(String url) {
+        if (url == null || url.isBlank()) {
+            return false;
+        }
+
+        try {
+            if (instance != null) {
+                instance.getHostServices().showDocument(url);
+                return true;
+            }
+        } catch (Exception ignored) {
+        }
+
+        try {
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(new URI(url));
+                return true;
+            }
+        } catch (Exception ignored) {
+        }
+
+        return false;
     }
 
     public static void showView(SessionManager.View view) {
@@ -134,6 +152,7 @@ public class HelloApplication extends Application {
             case FORGOT_PASSWORD:
                 return "/fxml/authentification/ForgetPassword.fxml";
             case DASHBOARD:
+            case MY_WALLET:
             case HOTELS:
             case HOTEL_DETAILS:
             case BOOKING:

@@ -49,8 +49,8 @@ public class TransportTypeSelectorController {
                 }
                 this.currentUser.setUsername(auth.getCurrentUser().getUsername());
                 this.currentUser.setEmail(auth.getCurrentUser().getEmail());
-                this.currentUser.setRole(auth.getCurrentUser().getRole());
                 this.currentUser.setTelephone(auth.getCurrentUser().getTelephone());
+                this.currentUser.setRole_string(auth.getCurrentUser().getRole());
             }
         }
     }
@@ -140,9 +140,9 @@ public class TransportTypeSelectorController {
             priceRow.setAlignment(Pos.BASELINE_LEFT);
             Label priceVal = new Label(String.format("%.2f DT", type.getPrixDepart()));
             priceVal.setStyle("-fx-font-size: 20px; -fx-font-weight: 800; -fx-text-fill: #0ea5e9;");
-            Label priceUnit = new Label("de départ");
-            priceUnit.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748b; -fx-font-weight: 600;");
-            priceRow.getChildren().addAll(priceVal, priceUnit);
+            Label priceIntro = new Label("À partir de ");
+            priceIntro.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748b; -fx-font-weight: 600;");
+            priceRow.getChildren().addAll(priceIntro, priceVal);
             body.getChildren().add(priceRow);
         } else {
             Label subLabel = new Label("Voir tout le catalogue");

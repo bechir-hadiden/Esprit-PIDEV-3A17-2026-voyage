@@ -36,12 +36,6 @@
             <artifactId>javafx-web</artifactId>
             <version>17.0.6</version>
         </dependency>
-        <!-- JavaMail for SMTP (forgot password emails) -->
-        <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>jakarta.mail</artifactId>
-            <version>2.0.1</version>
-        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
@@ -150,9 +144,19 @@
              EMAIL
         ================================================ -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-email</artifactId>
-            <version>1.5</version>
+            <groupId>com.sendgrid</groupId>
+            <artifactId>sendgrid-java</artifactId>
+            <version>4.10.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>24.21.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
         </dependency>
 
         <!-- ================================================
@@ -277,12 +281,16 @@
                             <noHeaderFiles>true</noHeaderFiles>
                             <!-- ✅ JVM options pour autoriser Twilio (unnamed module) -->
                             <options>
+                                <option>--add-modules</option>
+                                <option>jakarta.mail</option>
                                 <option>--add-reads</option>
                                 <option>com.example.demo1=ALL-UNNAMED</option>
                                 <option>--add-opens</option>
                                 <option>com.example.demo1/com.example.demo1.services=ALL-UNNAMED</option>
                                 <option>--add-opens</option>
                                 <option>com.example.demo1/com.example.demo1.controller=ALL-UNNAMED</option>
+                                <option>--add-opens</option>
+                                <option>java.base/java.lang=ALL-UNNAMED</option>
                             </options>
                         </configuration>
                     </execution>

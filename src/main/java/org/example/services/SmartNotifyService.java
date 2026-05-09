@@ -4,9 +4,9 @@ import org.example.entities.Reservation;
 import org.example.entities.Transport;
 import org.example.entities.User;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.*;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -112,7 +112,7 @@ public class SmartNotifyService {
             // Send in a separate thread to avoid UI freeze
             new Thread(() -> {
                 try {
-                    javax.mail.Transport.send(message);
+                    jakarta.mail.Transport.send(message);
                     System.out.println("LOG [SmartNotify]: REAL EMAIL SENT successfully to " + toEmail);
                 } catch (MessagingException e) {
                     System.err.println("LOG [SmartNotify]: EMAIL ERROR: " + e.getMessage());
@@ -166,7 +166,7 @@ public class SmartNotifyService {
 
             new Thread(() -> {
                 try {
-                    javax.mail.Transport.send(message);
+                    jakarta.mail.Transport.send(message);
                 } catch (MessagingException e) {
                     System.err.println("LOG [SmartNotify]: AI EMAIL ERROR: " + e.getMessage());
                 }
@@ -220,7 +220,7 @@ public class SmartNotifyService {
                         dateStr);
 
                 message.setText(content);
-                javax.mail.Transport.send(message);
+                jakarta.mail.Transport.send(message);
 
                 // --- ADDED: DATABASE STORAGE ---
                 org.example.entities.Notification n = new org.example.entities.Notification(

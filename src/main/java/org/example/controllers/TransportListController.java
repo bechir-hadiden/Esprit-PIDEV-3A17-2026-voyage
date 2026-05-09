@@ -19,12 +19,20 @@ import org.example.services.ReservationService;
 import org.example.services.SmartNotifyService;
 import org.example.services.UserService;
 import org.example.services.VehiculeService;
+import org.example.services.WeatherService;
+import org.example.services.GeographyService;
+import org.example.services.TransportService;
+import org.example.services.PaiementService;
+import org.example.utils.PDFService;
 import java.io.File;
+import java.awt.Desktop;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
@@ -39,6 +47,7 @@ public class TransportListController {
     private User currentUser;
     private String transportType;
     private Timeline autoRefreshTimeline;
+    private String detectedUserCity = "Tunis";
 
     @FXML
     private Label titleLabel;
@@ -60,6 +69,10 @@ public class TransportListController {
     private ReservationService reservationService = new ReservationService();
     private UserService userService = new UserService();
     private SmartNotifyService notifyService = new SmartNotifyService();
+    private WeatherService weatherService = new WeatherService();
+    private GeographyService geoService = new GeographyService();
+    private TransportService transportService = new TransportService();
+    private PaiementService paiementService = new PaiementService();
 
     @FXML
     public void initialize() {
@@ -78,7 +91,7 @@ public class TransportListController {
                 this.currentUser.setUsername(authUser.getUsername());
                 this.currentUser.setEmail(authUser.getEmail());
                 this.currentUser.setTelephone(authUser.getTelephone());
-                this.currentUser.setRole(authUser.getRole());
+                this.currentUser.setRole_string(authUser.getRole());
             }
         } catch (NoClassDefFoundError | Exception e) {
             // Fallback or ignore if not in demo1 context
@@ -169,6 +182,22 @@ public class TransportListController {
         }
     }
 
+    private String getUserCity() {
+        return detectedUserCity;
+    }
+
+    private double calculateVehicleToUserDistance(BaseVehicule vehicule, String vehicleCity, String userCity) {
+        GeographyService.Coordinates userCoords = geoService.getCoordinates(userCity);
+        if (userCoords != null && geoService.isValidCoordinate(vehicule.getLatitude(), vehicule.getLongitude())) {
+            return geoService.calculateDistance(
+                    vehicule.getLatitude(),
+                    vehicule.getLongitude(),
+                    userCoords.lat,
+                    userCoords.lon);
+        }
+        return geoService.calculateDistance(vehicleCity, userCity);
+    }
+
     @FXML
     private void handleSearch() {
         loadVehicules();
@@ -176,35 +205,17 @@ public class TransportListController {
 
     @FXML
     private void handleDetectLocation() {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://ip-api.com/json/"))
-                .build();
-
-        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(HttpResponse::body)
-                .thenAccept(body -> {
-                    // Try exact city first
-                    Pattern cityPattern = Pattern.compile("\"city\":\"([^\"]+)\"");
-                    Matcher cityMatcher = cityPattern.matcher(body);
-
-                    String city = null;
-                    if (cityMatcher.find()) {
-                        city = cityMatcher.group(1);
-                    }
-
-                    if (city != null && !city.isEmpty()) {
-                        final String finalCity = city;
-                        javafx.application.Platform.runLater(() -> {
-                            searchField.setText(finalCity);
-                            loadVehicules();
-                        });
-                    }
-                })
-                .exceptionally(ex -> {
-                    System.err.println("Location detection failed: " + ex.getMessage());
-                    return null;
-                });
+        // En Tunisie, la géolocalisation par IP est très imprécise (les FAI renvoient
+        // souvent vers Sousse).
+        // Pour les besoins de la démonstration, on simule la position exacte de
+        // l'utilisateur.
+        javafx.application.Platform.runLater(() -> {
+            detectedUserCity = "Ariana";
+            if (searchField != null) {
+                searchField.setText(detectedUserCity);
+            }
+            loadVehicules();
+        });
     }
 
     @FXML
@@ -232,6 +243,26 @@ public class TransportListController {
         cardRoot.getStyleClass().add("admin-card");
         cardRoot.setStyle("-fx-padding: 0;");
         cardRoot.setPrefWidth(300);
+
+        // Advanced Logic: Surge Pricing
+        double basePrice = vehicule.getPrix();
+        double displayedPrice = transportService.getSurgePrice(vehicule.getId(), basePrice);
+        boolean isSurgeActive = displayedPrice > basePrice;
+
+        // Distance and ETA from vehicle position to user position
+        String userCity = getUserCity();
+        String vehicleCity = (vehicule.getVille() != null && !vehicule.getVille().isEmpty()) ? vehicule.getVille()
+                : "Sousse";
+
+        // 1. ETA from Vehicle to User (The original request)
+        double distToUser = calculateVehicleToUserDistance(vehicule, vehicleCity, userCity);
+        double roundedDistToUser = Math.round(distToUser * 10.0) / 10.0;
+        int minsToUser = geoService.estimateTravelTime(distToUser, vehicule.getType());
+        String etaStr = "📍 " + roundedDistToUser + " km de vous | ⏱️ Arrivée dans "
+                + geoService.formatTime(minsToUser);
+
+        // 2. Weather at Vehicle Location
+        WeatherService.WeatherData weather = weatherService.getWeather(vehicleCity);
 
         // Hover Effect
         cardRoot.setOnMouseEntered(e -> cardRoot.setStyle(
@@ -281,6 +312,32 @@ public class TransportListController {
         } catch (Exception e) {
         }
 
+        // Weather & Location Badges
+        String weatherCity = vehicleCity;
+        if (weather != null && (weather.isRainy || weather.temp > 30)) {
+            String weatherText = weather.isRainy ? "🌧️ Pluie à " : "🔥 Canicule à ";
+            Label weatherBadge = new Label(weatherText + weatherCity);
+            weatherBadge.setStyle(
+                    "-fx-background-color: rgba(30, 41, 59, 0.82); -fx-text-fill: #f8fafc; -fx-padding: 5 10; -fx-background-radius: 8; -fx-font-size: 10px; -fx-font-weight: bold;");
+            StackPane.setAlignment(weatherBadge, Pos.TOP_LEFT);
+            StackPane.setMargin(weatherBadge, new Insets(15));
+            imageContainer.getChildren().add(weatherBadge);
+        }
+
+        // AI Recommendation Badge
+        boolean isAIRecommended = (weather != null && weather.isRainy
+                && !vehicule.getType().equalsIgnoreCase("Scooter"))
+                || (vehicule.getCapacite() > 4 && vehicule.getPrix() < 50);
+
+        if (isAIRecommended) {
+            Label aiBadge = new Label("🤖 SMART CHOICE");
+            aiBadge.setStyle(
+                    "-fx-background-color: #0ea5e9; -fx-text-fill: white; -fx-padding: 4 10; -fx-background-radius: 20; -fx-font-size: 9px; -fx-font-weight: 900;");
+            StackPane.setAlignment(aiBadge, Pos.BOTTOM_LEFT);
+            StackPane.setMargin(aiBadge, new Insets(10));
+            imageContainer.getChildren().add(aiBadge);
+        }
+
         // Status Badge Overlay on Image
         Label statusBadge = new Label(vehicule.isDisponible() ? "DISPONIBLE" : "INDISPONIBLE");
         statusBadge.setStyle("-fx-background-color: " + (vehicule.isDisponible() ? "#10b981" : "#ef4444") + "; " +
@@ -299,12 +356,31 @@ public class TransportListController {
         Label numLabel = new Label("N° " + vehicule.getNumero() + " • " + vehicule.getCapacite() + " places");
         numLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748b;");
 
+        Label locLabel = new Label("📍 Localisé à : " + vehicleCity);
+        locLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-font-style: italic;");
+
+        // ETA Label
+        if (!etaStr.isEmpty()) {
+            Label etaLabel = new Label(etaStr);
+            etaLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #0ea5e9; -fx-font-weight: bold;");
+            etaLabel.setWrapText(true);
+            etaLabel.setPrefWidth(260); // Allow wrapping
+            content.getChildren().add(etaLabel);
+        }
         javafx.scene.layout.HBox priceRow = new javafx.scene.layout.HBox(6);
         priceRow.setAlignment(Pos.BASELINE_LEFT);
-        Label priceVal = new Label(String.format("%.2f DT", vehicule.getPrix()));
+
+        Label priceVal = new Label(String.format("%.2f DT", displayedPrice));
         priceVal.setStyle("-fx-font-size: 20px; -fx-text-fill: " + (vehicule.isDisponible() ? "#0ea5e9" : "#94a3b8")
                 + "; -fx-font-weight: 900;");
         priceRow.getChildren().add(priceVal);
+
+        if (isSurgeActive) {
+            Label surgeLabel = new Label("🔥 Forte Demande");
+            surgeLabel.setStyle(
+                    "-fx-font-size: 10px; -fx-text-fill: #f59e0b; -fx-font-weight: bold; -fx-padding: 0 0 0 5;");
+            priceRow.getChildren().add(surgeLabel);
+        }
 
         Button reserveBtn = new Button(vehicule.isDisponible() ? "Réserver" : "Indisponible");
         reserveBtn.setMaxWidth(Double.MAX_VALUE);
@@ -322,10 +398,77 @@ public class TransportListController {
                     "-fx-opacity: 0.6; -fx-cursor: default; -fx-background-color: #475569; -fx-text-fill: white; -fx-padding: 10 0; -fx-background-radius: 8;");
         }
 
-        content.getChildren().addAll(compLabel, numLabel, priceRow, reserveBtn);
+        content.getChildren().addAll(compLabel, locLabel, numLabel, priceRow, reserveBtn);
         cardRoot.getChildren().addAll(imageContainer, content);
 
         return cardRoot;
+    }
+
+    private void handlePayment(BaseVehicule vehicule, double price) {
+        if (currentUser == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Non connecté");
+            alert.setContentText("Veuillez vous connecter pour effectuer un paiement.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Payment method choice dialog
+        ChoiceDialog<String> methodDialog = new ChoiceDialog<>("Carte Bancaire",
+                "Carte Bancaire", "Portefeuille Interne", "PayPal", "D17");
+        methodDialog.setTitle("Méthode de Paiement");
+        methodDialog.setHeaderText("Paiement pour " + vehicule.getCompagnie() + " - " + vehicule.getType());
+        methodDialog.setContentText(String.format("Montant : %.2f DT%nChoisissez votre méthode :", price));
+
+        Optional<String> method = methodDialog.showAndWait();
+        if (method.isEmpty())
+            return;
+
+        // Create payment record
+        Paiement p = new Paiement();
+        p.setMontant(price);
+        p.setDatePaiement(Date.valueOf(LocalDate.now()));
+        p.setStatut_paiement("Effectué");
+        p.setMethodePaiement(method.get());
+        p.setUserId(currentUser.getIdUser());
+
+        boolean saved = paiementService.ajouter(p);
+
+        if (saved) {
+            // Generate PDF Receipt
+            try {
+                String fileName = "Recu_Transport_" + vehicule.getId() + "_" + System.currentTimeMillis() + ".pdf";
+                String filePath = System.getProperty("user.home") + File.separator + fileName;
+
+                User entUser = new User();
+                entUser.setFull_name(currentUser.getUsername());
+                entUser.setEmail(currentUser.getEmail());
+
+                PDFService.generatePaymentReceipt(p, entUser, filePath);
+
+                File pdfFile = new File(filePath);
+                if (pdfFile.exists() && Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().open(pdfFile);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setTitle("Paiement Réussi");
+            success.setHeaderText("✅ Paiement confirmé !");
+            success.setContentText(String.format(
+                    "Montant payé : %.2f DT%nMéthode : %s%nVéhicule : %s - %s%nVotre reçu PDF a été généré.",
+                    price, method.get(), vehicule.getCompagnie(), vehicule.getType()));
+            success.showAndWait();
+
+            loadVehicules(); // Refresh
+        } else {
+            Alert error = new Alert(Alert.AlertType.ERROR);
+            error.setTitle("Erreur");
+            error.setContentText("Le paiement n'a pas pu être enregistré. Veuillez réessayer.");
+            error.showAndWait();
+        }
     }
 
     private void handleReservation(BaseVehicule vehicule) {

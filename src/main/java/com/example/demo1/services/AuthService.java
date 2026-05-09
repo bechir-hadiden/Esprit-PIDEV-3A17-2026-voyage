@@ -5,6 +5,9 @@ import com.example.demo1.*;
 
 import java.util.List;
 
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+
 /**
  * Authentication Service for SmartTrip application.
  * Handles user authentication using database-backed storage.
@@ -40,6 +43,13 @@ public class AuthService {
             // Check if user is blocked
             if (user.isBlocked()) {
                 System.out.println("Blocked user attempted login: " + user.getUsername());
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Account Blocked");
+                    alert.setHeaderText("Your account has been blocked");
+                    alert.setContentText("Please contact the administrator for assistance.");
+                    alert.showAndWait();
+                });
                 return false; // User is blocked, cannot login
             }
             currentUser = user;

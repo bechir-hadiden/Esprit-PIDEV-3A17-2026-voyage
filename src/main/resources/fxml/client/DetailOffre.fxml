@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="680.0" prefWidth="500.0" style="-fx-background-color: #F4F7FB;" stylesheets="@../../css/style2.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.controller.client.DetailOffreController">
+<AnchorPane prefHeight="700.0" prefWidth="500.0" style="-fx-background-color: #F4F7FB;" stylesheets="@../../css/style2.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.controller.client.DetailOffreController">
     <children>
         <VBox spacing="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" style="-fx-background-color: white; -fx-background-radius: 20;">
             <children>
@@ -40,8 +40,7 @@
 
                         <Label text="À propos de cette offre" style="-fx-font-weight: bold; -fx-font-size: 14;" />
 
-                        <!-- SOLUTION AU TEXTE COUPE : ScrollPane + Label avec wrapText -->
-                        <ScrollPane fitToWidth="true" prefHeight="120.0" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
+                        <ScrollPane fitToWidth="true" prefHeight="100.0" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
                             <content>
                                 <Label fx:id="lblDescription"
                                        text="Description détaillée..."
@@ -54,16 +53,22 @@
 
                         <Separator />
 
-                        <!-- Action Box -->
+                        <!-- Action Box (GÉNÉRATION + PDF + EMAIL) -->
                         <VBox spacing="15" alignment="CENTER" style="-fx-background-color: #F8FAFC; -fx-padding: 15; -fx-background-radius: 15; -fx-border-color: #E2E8F0; -fx-border-radius: 15;">
                             <children>
                                 <Label text="Obtenez votre coupon maintenant" style="-fx-font-weight: bold;" />
-                                <Button fx:id="btnGenerer" onAction="#handleGenererPromo" styleClass="btn-add" text="Générer mon Code de réduction 🎁" prefWidth="300" />
+                                <Button fx:id="btnGenerer" onAction="#handleGenererPromo" styleClass="btn-add" text="Générer mon Code de réduction 🎁" prefWidth="320" />
 
-                                <HBox spacing="10" alignment="CENTER">
+                                <HBox spacing="8" alignment="CENTER">
                                     <children>
-                                        <TextField fx:id="txtCodeGenere" editable="false" prefHeight="40.0" prefWidth="200.0" promptText="Code généré" style="-fx-alignment: center; -fx-font-family: 'Monospaced'; -fx-font-weight: bold; -fx-font-size: 16;" />
-                                        <Button fx:id="btnPDF" disable="true" onAction="#handleExportPDF" prefHeight="40.0" style="-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-background-radius: 8;" text="Export PDF" />
+                                        <!-- Champ Code -->
+                                        <TextField fx:id="txtCodeGenere" editable="false" prefHeight="40.0" prefWidth="160.0" promptText="Code généré" style="-fx-alignment: center; -fx-font-family: 'Monospaced'; -fx-font-weight: bold; -fx-font-size: 14;" />
+
+                                        <!-- Bouton PDF (API 1) -->
+                                        <Button fx:id="btnPDF" disable="true" onAction="#handleExportPDF" prefHeight="40.0" prefWidth="85.0" style="-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-background-radius: 8;" text="PDF 📄" />
+
+                                        <!-- Bouton EMAIL (API 2 - Nouveau) -->
+                                        <Button fx:id="btnEmail" disable="true" onAction="#handleSendEmail" prefHeight="40.0" prefWidth="85.0" style="-fx-background-color: #3498DB; -fx-text-fill: white; -fx-background-radius: 8;" text="Mail 📧" />
                                     </children>
                                 </HBox>
                             </children>
