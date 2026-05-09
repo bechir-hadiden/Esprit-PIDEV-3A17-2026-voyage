@@ -16,6 +16,12 @@ public class BCryptWrapper {
             Class<?> bcryptClass = Class.forName(BCRYPT_CLASS);
             return (String) bcryptClass.getMethod("hashpw", String.class, String.class)
                     .invoke(null, password, salt);
+        } catch (java.lang.reflect.InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException("Erreur lors du hachage BCrypt", cause);
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors du hachage BCrypt", e);
         }
@@ -28,6 +34,12 @@ public class BCryptWrapper {
         try {
             Class<?> bcryptClass = Class.forName(BCRYPT_CLASS);
             return (String) bcryptClass.getMethod("gensalt").invoke(null);
+        } catch (java.lang.reflect.InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException("Erreur lors de la génération du salt BCrypt", cause);
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors de la génération du salt BCrypt", e);
         }
@@ -41,6 +53,12 @@ public class BCryptWrapper {
             Class<?> bcryptClass = Class.forName(BCRYPT_CLASS);
             return (boolean) bcryptClass.getMethod("checkpw", String.class, String.class)
                     .invoke(null, password, hashed);
+        } catch (java.lang.reflect.InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException("Erreur lors de la vérification BCrypt", cause);
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors de la vérification BCrypt", e);
         }

@@ -128,7 +128,7 @@ public class HelloApplication extends Application {
             case SIGN_UP:
                 return "/fxml/authentification/SignUp.fxml";
             case FORGOT_PASSWORD:
-                return "/fxml/authentification/SignIn.fxml"; // TODO: Create ForgotPassword.fxml
+                return "/fxml/authentification/ForgetPassword.fxml";
             case DASHBOARD:
             case MY_WALLET:
             case HOTELS:
