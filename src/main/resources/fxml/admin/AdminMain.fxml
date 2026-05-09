@@ -37,6 +37,8 @@
                         text="💳 Paiements" onAction="#showPayments"/>
                 <Button fx:id="reclamtionButton" maxWidth="Infinity" styleClass="admin-nav-item"
                         text="📋 Réclamation" onAction="#showReclmation"/>
+                <Button fx:id="usersButton" maxWidth="Infinity" styleClass="admin-nav-item"
+                        text="👤 Gestion Utilisateurs" onAction="#showUsers"/>
 
                 <!-- ========== NOUVEAU BOUTON AVIS ========== -->
                 <Button fx:id="avisButton" maxWidth="Infinity" styleClass="admin-nav-item"

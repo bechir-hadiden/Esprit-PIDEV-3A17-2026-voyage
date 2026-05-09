@@ -73,7 +73,15 @@ public class SignInController {
                             HelloApplication.showView(SessionManager.View.DASHBOARD);
                         }
                     } else {
-                        showError("Invalid username or password");
+                        if ("BLOCKED".equals(authService.getLastLoginError())) {
+                            Alert alert = new Alert(Alert.AlertType.WARNING);
+                            alert.setTitle("Account Blocked");
+                            alert.setHeaderText("You are blocked");
+                            alert.setContentText("You are blocked. You need to contact the admin.");
+                            alert.showAndWait();
+                        } else {
+                            showError("Invalid username or password");
+                        }
                         signInButton.setText("Sign In");
                         signInButton.setDisable(false);
                     }
@@ -92,6 +100,11 @@ public class SignInController {
     @FXML
     private void handleForgotPassword() {
         HelloApplication.showView(SessionManager.View.FORGOT_PASSWORD);
+    }
+
+    @FXML
+    private void handleReturnHome() {
+        HelloApplication.showView(SessionManager.View.HOME);
     }
 
     private void showError(String message) {

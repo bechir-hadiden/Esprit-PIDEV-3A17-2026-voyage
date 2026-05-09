@@ -19,6 +19,7 @@ public class User {
     private StringProperty telephone = new SimpleStringProperty();
     private DoubleProperty walletBalance = new SimpleDoubleProperty(0.0);
     private IntegerProperty loyaltyPoints = new SimpleIntegerProperty(0);
+    private BooleanProperty blocked = new SimpleBooleanProperty(false);
 
     public User() {
     }
@@ -174,6 +175,18 @@ public class User {
 
     public IntegerProperty loyaltyPointsProperty() {
         return loyaltyPoints;
+    }
+
+    public boolean isBlocked() {
+        return blocked.get();
+    }
+
+    public void setBlocked(boolean value) {
+        this.blocked.set(value);
+    }
+
+    public BooleanProperty blockedProperty() {
+        return blocked;
     }
 
     public boolean isAdmin() {
