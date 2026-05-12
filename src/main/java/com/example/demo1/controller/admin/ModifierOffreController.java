@@ -31,7 +31,8 @@ public class ModifierOffreController {
             case "HOTEL": query = "SELECT id, name FROM hotels"; break;
             case "VOL": query = "SELECT id, arrivee FROM vols"; break;
             case "TRANSPORT": query = "SELECT idVehicule, type, ville FROM vehicule"; break;
-            default: query = "SELECT id_voyage, destination FROM voyage"; break;
+            // 🌟 CORRECTION 4 : La table est "voyages" et la colonne est "id"
+            default: query = "SELECT id, destination FROM voyages"; break;
         }
 
         try (Connection conn = Database.getInstance().getConnection();
@@ -49,7 +50,8 @@ public class ModifierOffreController {
                     id = rs.getInt("id");
                     itemText = id + " - Vers " + rs.getString("arrivee");
                 } else {
-                    id = rs.getInt("id_voyage");
+                    // 🌟 CORRECTION 5 : id au lieu de id_voyage
+                    id = rs.getInt("id");
                     itemText = id + " - " + rs.getString("destination");
                 }
                 cbItem.getItems().add(itemText);
@@ -66,7 +68,7 @@ public class ModifierOffreController {
         if (o.getDate_debut() != null) {
             dpDebut.setValue(o.getDate_debut().toLocalDate());
         } else {
-            dpDebut.setValue(null); // Ou une date par défaut
+            dpDebut.setValue(null);
         }
 
         if (o.getDate_fin() != null) {
@@ -96,7 +98,9 @@ public class ModifierOffreController {
 
             int idPart = Integer.parseInt(cbItem.getValue().split(" - ")[0]);
             String category = cbCategorie.getValue();
-            Integer idV = 1, idH = null, idVeh = null;
+
+            // 🌟 CORRECTION 6 : idV DOIT être null par défaut !
+            Integer idV = null, idH = null, idVeh = null;
             Long idVol = null;
 
             if ("HOTEL".equals(category)) idH = idPart;
@@ -104,7 +108,6 @@ public class ModifierOffreController {
             else if ("TRANSPORT".equals(category)) idVeh = idPart;
             else idV = idPart;
 
-            // ON APPELLE LE CONSTRUCTEUR À 14 PARAMÈTRES
             Offre o = new Offre(
                     idOffreActuelle, txtTitre.getText(), txtDescription.getText(),
                     Integer.parseInt(txtRemise.getText()),
