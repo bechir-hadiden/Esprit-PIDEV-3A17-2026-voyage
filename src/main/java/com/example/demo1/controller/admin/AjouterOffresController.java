@@ -6,9 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import com.example.demo1.Utils.Database;
 import java.sql.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AjouterOffresController {
 
@@ -18,7 +15,6 @@ public class AjouterOffresController {
     @FXML private DatePicker dpDebut;
     @FXML private DatePicker dpFin;
 
-    // Les deux ComboBox dynamiques
     @FXML private ComboBox<String> cbCategorie;
     @FXML private ComboBox<String> cbItem;
 
@@ -26,18 +22,12 @@ public class AjouterOffresController {
 
     @FXML
     public void initialize() {
-        // 1. Remplir la liste des catégories
         cbCategorie.getItems().addAll("VOYAGE", "HOTEL", "VOL", "TRANSPORT");
-
-        // 2. Écouteur : Charger les éléments dès qu'on change de catégorie
         cbCategorie.setOnAction(event -> {
             chargerItems(cbCategorie.getValue());
         });
     }
 
-    /**
-     * Charge les données depuis la table correspondante (Hôtels, Vols, etc.)
-     */
     private void chargerItems(String categorie) {
         cbItem.getItems().clear();
         String query = "";
@@ -53,7 +43,8 @@ public class AjouterOffresController {
                 query = "SELECT idVehicule, type, ville FROM vehicule";
                 break;
             case "VOYAGE":
-                query = "SELECT id_voyage, destination FROM voyage";
+                // 🌟 CORRECTION 1 : La table est "voyages" et la colonne est "id"
+                query = "SELECT id, destination FROM voyages";
                 break;
         }
 
@@ -69,7 +60,8 @@ public class AjouterOffresController {
                 else if ("TRANSPORT".equals(categorie))
                     cbItem.getItems().add(rs.getInt("idVehicule") + " - " + rs.getString("type") + " (" + rs.getString("ville") + ")");
                 else
-                    cbItem.getItems().add(rs.getInt("id_voyage") + " - " + rs.getString("destination"));
+                    // 🌟 CORRECTION 2 : On récupère "id" et non "id_voyage"
+                    cbItem.getItems().add(rs.getInt("id") + " - " + rs.getString("destination"));
             }
         } catch (SQLException e) {
             System.err.println("Erreur chargement items : " + e.getMessage());
@@ -111,18 +103,16 @@ public class AjouterOffresController {
     private void handleEnregistrer() {
         if (isSaisieValide()) {
             try {
-                // Extraction de l'ID depuis la chaîne "ID - Nom"
                 String selectedItem = cbItem.getValue();
                 String idPart = selectedItem.split(" - ")[0];
                 String category = cbCategorie.getValue();
 
-                // Initialisation des IDs à null
-                Integer idVoyage = 1; // Valeur par défaut si NOT NULL dans ta DB
+                // 🌟 CORRECTION 3 : idVoyage DOIT être null par défaut, JAMAIS 1 !
+                Integer idVoyage = null;
                 Integer idHotel = null;
                 Long idVol = null;
                 Integer idVehicule = null;
 
-                // Affectation selon la catégorie choisie
                 if ("HOTEL".equals(category)) {
                     idHotel = Integer.parseInt(idPart);
                 } else if ("VOL".equals(category)) {
@@ -145,7 +135,7 @@ public class AjouterOffresController {
                         idVol,
                         idVehicule,
                         category,
-                        false, // is_local_support par défaut
+                        false,
                         "default.jpg"
                 );
 

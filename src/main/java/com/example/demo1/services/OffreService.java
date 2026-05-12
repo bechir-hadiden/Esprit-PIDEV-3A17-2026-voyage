@@ -28,7 +28,7 @@ public class OffreService implements IService<Offre> {
             ps.setDate(4, o.getDate_debut());
             ps.setDate(5, o.getDate_fin());
             ps.setString(6, o.getStatut());
-            ps.setInt(7, o.getId_voyage());
+            ps.setObject(7, o.getId_voyage(), Types.INTEGER);
             ps.setObject(8, o.getId_hotel(), Types.INTEGER);
             ps.setObject(9, o.getId_vol(), Types.BIGINT);
             ps.setObject(10, o.getId_vehicule(), Types.INTEGER);

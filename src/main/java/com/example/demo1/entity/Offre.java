@@ -12,7 +12,7 @@ public class Offre {
     private String statut;
 
     // Clés étrangères vers les autres modules
-    private int id_voyage;      // Membre 1
+    private Integer id_voyage;      // Membre 1
     private Integer id_hotel;    // Membre 2 (Integer pour accepter null)
     private Long id_vol;         // Membre 6 (Long car BigInt en SQL)
     private Integer id_vehicule; // Membre 6 (Integer pour accepter null)
@@ -104,8 +104,8 @@ public class Offre {
     public String getStatut() { return statut; }
     public void setStatut(String statut) { this.statut = statut; }
 
-    public int getId_voyage() { return id_voyage; }
-    public void setId_voyage(int id_voyage) { this.id_voyage = id_voyage; }
+    public Integer getId_voyage() { return id_voyage; }
+    public void setId_voyage(Integer id_voyage) { this.id_voyage = id_voyage; }
 
     public Integer getId_hotel() { return id_hotel; }
     public void setId_hotel(Integer id_hotel) { this.id_hotel = id_hotel; }
