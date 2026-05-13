@@ -20,6 +20,8 @@ public class AvisDAO {
         return database.getConnection();
     }
 
+    // ==================== LECTURE ====================
+
     public List<Avis> getAllAvis() {
         List<Avis> avisList = new ArrayList<>();
         String sql = "SELECT * FROM avis ORDER BY date_avis DESC";
@@ -73,8 +75,11 @@ public class AvisDAO {
         return avisList;
     }
 
+    // ==================== ECRITURE (SYNCHRONISÉ SYMFONY) ====================
+
     public boolean addAvis(Avis avis) {
-        String sql = "INSERT INTO avis (nom_client, email, note, commentaire, date_avis, voyage_id) VALUES (?, ?, ?, ?, ?, ?)";
+        // AJOUT DE LA COLONNE 'status'
+        String sql = "INSERT INTO avis (nom_client, email, note, commentaire, date_avis, voyage_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -85,6 +90,10 @@ public class AvisDAO {
             ps.setString(4, avis.getCommentaire());
             ps.setDate(5, Date.valueOf(avis.getDateAvis()));
             ps.setInt(6, avis.getVoyageId());
+
+            // On force "approved" si le status est nul pour que Symfony l'affiche
+            String status = (avis.getStatus() != null) ? avis.getStatus() : "approved";
+            ps.setString(7, status);
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -94,7 +103,8 @@ public class AvisDAO {
     }
 
     public boolean updateAvis(Avis avis) {
-        String sql = "UPDATE avis SET nom_client = ?, email = ?, note = ?, commentaire = ?, date_avis = ?, voyage_id = ? WHERE id = ?";
+        // MISE À JOUR INCLUANT LE STATUS
+        String sql = "UPDATE avis SET nom_client = ?, email = ?, note = ?, commentaire = ?, date_avis = ?, voyage_id = ?, status = ? WHERE id = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -105,7 +115,8 @@ public class AvisDAO {
             ps.setString(4, avis.getCommentaire());
             ps.setDate(5, Date.valueOf(avis.getDateAvis()));
             ps.setInt(6, avis.getVoyageId());
-            ps.setInt(7, avis.getId());
+            ps.setString(7, (avis.getStatus() != null ? avis.getStatus() : "approved"));
+            ps.setInt(8, avis.getId());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -127,6 +138,8 @@ public class AvisDAO {
             return false;
         }
     }
+
+    // ==================== UTILITAIRES ====================
 
     public boolean hasUserReviewed(int voyageId, String email) {
         String sql = "SELECT COUNT(*) FROM avis WHERE voyage_id = ? AND email = ?";
@@ -165,6 +178,7 @@ public class AvisDAO {
         return 0;
     }
 
+    // Mapping incluant le champ status
     private Avis mapResultSetToAvis(ResultSet rs) throws SQLException {
         Avis avis = new Avis();
         avis.setId(rs.getInt("id"));
@@ -172,8 +186,17 @@ public class AvisDAO {
         avis.setEmail(rs.getString("email"));
         avis.setNote(rs.getInt("note"));
         avis.setCommentaire(rs.getString("commentaire"));
-        avis.setDateAvis(rs.getDate("date_avis").toLocalDate());
+
+        Date dbDate = rs.getDate("date_avis");
+        if (dbDate != null) {
+            avis.setDateAvis(dbDate.toLocalDate());
+        }
+
         avis.setVoyageId(rs.getInt("voyage_id"));
+
+        // RECUPERATION DU STATUS DEPUIS LA BASE
+        avis.setStatus(rs.getString("status"));
+
         return avis;
     }
 }
