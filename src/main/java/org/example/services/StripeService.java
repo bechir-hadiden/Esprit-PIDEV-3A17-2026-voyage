@@ -20,6 +20,10 @@ public class StripeService {
         return Config.get("stripe.api.key");
     }
 
+    public static String getStripePublicKey() {
+        return Config.get("stripe.public.key");
+    }
+
     private static RequestOptions buildRequestOptions() {
         String apiKey = getStripeSecretKey();
         if (apiKey == null || apiKey.trim().isEmpty() || "YOUR_API_KEY_HERE".equals(apiKey.trim())) {

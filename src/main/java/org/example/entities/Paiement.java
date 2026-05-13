@@ -12,6 +12,14 @@ public class Paiement {
     private String stripeSessionId;
     private int userId;
     private Integer bookingId; // Link to hotel booking
+    private Integer planId;    // Link to subscription plan
+
+    // Billing Details
+    private String nomFacturation;
+    private String prenomFacturation;
+    private String emailFacturation;
+    private String telephoneFacturation;
+    private String description;
 
     public Paiement() {
     }
@@ -111,6 +119,24 @@ public class Paiement {
 
     public Integer getBookingId() { return bookingId; }
     public void setBookingId(Integer bookingId) { this.bookingId = bookingId; }
+
+    public Integer getPlanId() { return planId; }
+    public void setPlanId(Integer planId) { this.planId = planId; }
+
+    public String getNomFacturation() { return nomFacturation; }
+    public void setNomFacturation(String nomFacturation) { this.nomFacturation = nomFacturation; }
+
+    public String getPrenomFacturation() { return prenomFacturation; }
+    public void setPrenomFacturation(String prenomFacturation) { this.prenomFacturation = prenomFacturation; }
+
+    public String getEmailFacturation() { return emailFacturation; }
+    public void setEmailFacturation(String emailFacturation) { this.emailFacturation = emailFacturation; }
+
+    public String getTelephoneFacturation() { return telephoneFacturation; }
+    public void setTelephoneFacturation(String telephoneFacturation) { this.telephoneFacturation = telephoneFacturation; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
     // Compatibility getters/setters
     @Override

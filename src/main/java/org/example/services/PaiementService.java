@@ -38,7 +38,7 @@ public class PaiementService {
     }
 
     public boolean ajouter(Paiement p) {
-        String req = "INSERT INTO paiements (montant, date_paiement, statut_paiement, methode_paiement, stripe_session_id, user_id, booking_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO paiements (montant, date_paiement, statut_paiement, methode_paiement, stripe_session_id, user_id, booking_id, plan_id, nom_facturation, prenom_facturation, email_facturation, telephone_facturation, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = getConn()) {
             if (conn == null)
                 return false;
@@ -49,11 +49,19 @@ public class PaiementService {
                 ps.setString(4, p.getMethodePaiement());
                 ps.setString(5, p.getStripeSessionId());
                 ps.setInt(6, p.getUserId());
-                if (p.getBookingId() != null) {
-                    ps.setInt(7, p.getBookingId());
-                } else {
-                    ps.setNull(7, Types.INTEGER);
-                }
+                
+                if (p.getBookingId() != null) ps.setInt(7, p.getBookingId());
+                else ps.setNull(7, Types.INTEGER);
+                
+                if (p.getPlanId() != null) ps.setInt(8, p.getPlanId());
+                else ps.setNull(8, Types.INTEGER);
+
+                ps.setString(9, p.getNomFacturation());
+                ps.setString(10, p.getPrenomFacturation());
+                ps.setString(11, p.getEmailFacturation());
+                ps.setString(12, p.getTelephoneFacturation());
+                ps.setString(13, p.getDescription());
+
                 int rows = ps.executeUpdate();
                 System.out.println("Payment inserted: " + rows + " row(s).");
                 return rows > 0;
@@ -81,7 +89,7 @@ public class PaiementService {
     }
 
     public void modifier(Paiement p) {
-        String req = "UPDATE paiements SET montant = ?, date_paiement = ?, statut_paiement = ?, methode_paiement = ?, stripe_session_id = ?, user_id = ?, booking_id = ? WHERE id_paiement = ?";
+        String req = "UPDATE paiements SET montant = ?, date_paiement = ?, statut_paiement = ?, methode_paiement = ?, stripe_session_id = ?, user_id = ?, booking_id = ?, plan_id = ?, nom_facturation = ?, prenom_facturation = ?, email_facturation = ?, telephone_facturation = ?, description = ? WHERE id_paiement = ?";
         try (Connection conn = getConn()) {
             if (conn == null)
                 return;
@@ -102,12 +110,20 @@ public class PaiementService {
                 ps.setString(4, p.getMethodePaiement());
                 ps.setString(5, p.getStripeSessionId());
                 ps.setInt(6, p.getUserId());
-                if (p.getBookingId() != null) {
-                    ps.setInt(7, p.getBookingId());
-                } else {
-                    ps.setNull(7, Types.INTEGER);
-                }
-                ps.setInt(8, p.getIdPaiement());
+                
+                if (p.getBookingId() != null) ps.setInt(7, p.getBookingId());
+                else ps.setNull(7, Types.INTEGER);
+
+                if (p.getPlanId() != null) ps.setInt(8, p.getPlanId());
+                else ps.setNull(8, Types.INTEGER);
+
+                ps.setString(9, p.getNomFacturation());
+                ps.setString(10, p.getPrenomFacturation());
+                ps.setString(11, p.getEmailFacturation());
+                ps.setString(12, p.getTelephoneFacturation());
+                ps.setString(13, p.getDescription());
+                
+                ps.setInt(14, p.getIdPaiement());
                 ps.executeUpdate();
             }
 
@@ -171,10 +187,19 @@ public class PaiementService {
                     p.setMethodePaiement(rs.getString("methode_paiement"));
                     p.setStripeSessionId(rs.getString("stripe_session_id"));
                     p.setUserId(rs.getInt("user_id"));
+                    
                     int bookingId = rs.getInt("booking_id");
-                    if (!rs.wasNull()) {
-                        p.setBookingId(bookingId);
-                    }
+                    if (!rs.wasNull()) p.setBookingId(bookingId);
+                    
+                    int planId = rs.getInt("plan_id");
+                    if (!rs.wasNull()) p.setPlanId(planId);
+
+                    p.setNomFacturation(rs.getString("nom_facturation"));
+                    p.setPrenomFacturation(rs.getString("prenom_facturation"));
+                    p.setEmailFacturation(rs.getString("email_facturation"));
+                    p.setTelephoneFacturation(rs.getString("telephone_facturation"));
+                    p.setDescription(rs.getString("description"));
+
                     paiements.add(p);
                 }
             }
@@ -194,7 +219,13 @@ public class PaiementService {
                     "methode_paiement VARCHAR(100)," +
                     "stripe_session_id VARCHAR(255)," +
                     "user_id INT," +
-                    "booking_id INT" +
+                    "booking_id INT," +
+                    "plan_id INT," +
+                    "nom_facturation VARCHAR(100)," +
+                    "prenom_facturation VARCHAR(100)," +
+                    "email_facturation VARCHAR(150)," +
+                    "telephone_facturation VARCHAR(20)," +
+                    "description TEXT" +
                     ")");
         } catch (SQLException e) {
             System.err.println("Payment table creation error: " + e.getMessage());
@@ -205,6 +236,12 @@ public class PaiementService {
                 "ALTER TABLE paiements ADD COLUMN stripe_session_id VARCHAR(255)");
         addColumnIfMissing(conn, "user_id", "ALTER TABLE paiements ADD COLUMN user_id INT");
         addColumnIfMissing(conn, "booking_id", "ALTER TABLE paiements ADD COLUMN booking_id INT");
+        addColumnIfMissing(conn, "plan_id", "ALTER TABLE paiements ADD COLUMN plan_id INT");
+        addColumnIfMissing(conn, "nom_facturation", "ALTER TABLE paiements ADD COLUMN nom_facturation VARCHAR(100)");
+        addColumnIfMissing(conn, "prenom_facturation", "ALTER TABLE paiements ADD COLUMN prenom_facturation VARCHAR(100)");
+        addColumnIfMissing(conn, "email_facturation", "ALTER TABLE paiements ADD COLUMN email_facturation VARCHAR(150)");
+        addColumnIfMissing(conn, "telephone_facturation", "ALTER TABLE paiements ADD COLUMN telephone_facturation VARCHAR(20)");
+        addColumnIfMissing(conn, "description", "ALTER TABLE paiements ADD COLUMN description TEXT");
     }
 
     private void addColumnIfMissing(Connection conn, String columnName, String alterSql) {

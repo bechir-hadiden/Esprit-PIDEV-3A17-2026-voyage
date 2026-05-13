@@ -13,11 +13,18 @@
     <!-- Header -->
     <HBox styleClass="admin-header" alignment="CENTER_LEFT" spacing="20">
         <VBox HBox.hgrow="ALWAYS">
-            <Label styleClass="admin-title" text="Payment Management"/>
-            <Label styleClass="admin-subtitle-header" text="Review and verify user transactions"/>
+            <Label styleClass="admin-title" text="Journal des paiements"/>
+            <Label styleClass="admin-subtitle-header" text="Consultation et gestion des transactions financi&#232;res"/>
         </VBox>
+        <Button styleClass="admin-button-secondary" text="Refresh" onAction="#handleRefresh"/>
         <Button styleClass="admin-button-secondary" text="Afficher paiements r&#233;alis&#233;s" onAction="#handleShowRealizedPayments"/>
         <Button styleClass="admin-button-secondary" text="Open Stripe Dashboard" onAction="#handleOpenStripe"/>
+    </HBox>
+
+    <!-- Bulk Actions Bar -->
+    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="admin-card" style="-fx-padding: 10;">
+        <ComboBox promptText="-- S&#233;lectionner une action --" prefWidth="200"/>
+        <Button styleClass="admin-button-primary" text="Appliquer &#8594;" style="-fx-background-color: #0f172a; -fx-text-fill: white;"/>
     </HBox>
 
     <!-- Search and Filter Bar -->
@@ -32,14 +39,15 @@
     <VBox styleClass="admin-card" VBox.vgrow="ALWAYS">
         <TableView fx:id="paymentsTable" styleClass="admin-table" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="idColumn" text="ID" prefWidth="60"/>
-                <TableColumn fx:id="userColumn" text="User" prefWidth="120"/>
-                <TableColumn fx:id="amountColumn" text="Amount" prefWidth="100"/>
-                <TableColumn fx:id="dateColumn" text="Date" prefWidth="120"/>
-                <TableColumn fx:id="methodColumn" text="Method" prefWidth="150"/>
-                <TableColumn fx:id="statusColumn" text="Status" prefWidth="120"/>
-                <TableColumn fx:id="bookingColumn" text="Booking" prefWidth="80"/>
-                <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="300"/>
+                <TableColumn fx:id="selectColumn" prefWidth="40" text="&#9744;"/>
+                <TableColumn fx:id="dateColumn" text="DATE" prefWidth="150"/>
+                <TableColumn fx:id="userColumn" text="CLIENT" prefWidth="200"/>
+                <TableColumn fx:id="bookingColumn" text="R&#201;SERVATION #" prefWidth="120"/>
+                <TableColumn fx:id="amountColumn" text="MONTANT" prefWidth="120"/>
+                <TableColumn fx:id="methodColumn" text="M&#201;THODE" prefWidth="180"/>
+                <TableColumn fx:id="statusColumn" text="STATUT" prefWidth="100"/>
+                <TableColumn fx:id="aiColumn" text="ANALYSE IA" prefWidth="150"/>
+                <TableColumn fx:id="actionsColumn" text="ACTIONS" prefWidth="150"/>
             </columns>
             <placeholder>
                 <Label text="No payments found."/>
