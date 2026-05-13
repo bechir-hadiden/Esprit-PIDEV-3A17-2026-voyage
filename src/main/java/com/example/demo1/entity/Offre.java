@@ -28,7 +28,7 @@ public class Offre {
     }
 
     // 1. Constructeur COMPLET (Utile pour le Service.afficher avec JOIN) - 16 paramètres
-    public Offre(int id_offre, String titre, String description, int taux_remise, Date date_debut, Date date_fin, String statut, int id_voyage, Integer id_hotel, Long id_vol, Integer id_vehicule, String category, boolean is_local_support, String image_url, String destination, double prix_initial) {
+    public Offre(int id_offre, String titre, String description, int taux_remise, Date date_debut, Date date_fin, String statut, Integer id_voyage, Integer id_hotel, Long id_vol, Integer id_vehicule, String category, boolean is_local_support, String image_url, String destination, double prix_initial) {
         this.id_offre = id_offre;
         this.titre = titre;
         this.description = description;
@@ -48,7 +48,7 @@ public class Offre {
     }
 
     // 2. Constructeur pour l'AJOUT (Sans ID et sans champs de join) - 13 paramètres
-    public Offre(String titre, String description, int taux_remise, Date date_debut, Date date_fin, String statut, int id_voyage, Integer id_hotel, Long id_vol, Integer id_vehicule, String category, boolean is_local_support, String image_url) {
+    public Offre(String titre, String description, int taux_remise, Date date_debut, Date date_fin, String statut, Integer id_voyage, Integer id_hotel, Long id_vol, Integer id_vehicule, String category, boolean is_local_support, String image_url) {
         this.titre = titre;
         this.description = description;
         this.taux_remise = taux_remise;
@@ -64,7 +64,7 @@ public class Offre {
         this.image_url = image_url;
     }
 
-    public Offre(int id_offre, String titre, String description, int taux_remise, Date date_debut, Date date_fin, String statut, int id_voyage, Integer id_hotel, Long id_vol, Integer id_vehicule, String category, boolean is_local_support, String image_url) {
+    public Offre(int id_offre, String titre, String description, int taux_remise, Date date_debut, Date date_fin, String statut, Integer id_voyage, Integer id_hotel, Long id_vol, Integer id_vehicule, String category, boolean is_local_support, String image_url) {
         this.id_offre = id_offre;
         this.titre = titre;
         this.description = description;
