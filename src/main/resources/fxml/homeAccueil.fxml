@@ -83,23 +83,24 @@
 
             <HBox spacing="30" alignment="CENTER">
                 <!-- Destination Card 1 -->
+                <!-- Destination Card 1 -->
                 <VBox styleClass="destination-card" spacing="15">
-                    <VBox styleClass="destination-image destination-paris"
-                          prefHeight="200" alignment="BOTTOM_LEFT">
-                        <padding>
-                            <Insets top="15" right="15" bottom="15" left="15"/>
-                        </padding>
-                        <Label text="Paris" styleClass="destination-name"/>
-                    </VBox>
+                    <StackPane prefHeight="200">
+                        <ImageView fx:id="imgDestination1" fitWidth="300" fitHeight="200"
+                                   preserveRatio="false"/>
+                        <Label text="Paris" styleClass="destination-name"
+                               StackPane.alignment="BOTTOM_LEFT">
+                            <StackPane.margin>
+                                <Insets bottom="15" left="15"/>
+                            </StackPane.margin>
+                        </Label>
+                    </StackPane>
                     <VBox spacing="8">
-                        <padding>
-                            <Insets top="0" right="15" bottom="15" left="15"/>
-                        </padding>
+                        <padding><Insets top="0" right="15" bottom="15" left="15"/></padding>
                         <Label text="La ville lumière vous attend" styleClass="destination-desc"/>
                         <Label text="À partir de 850€" styleClass="destination-price"/>
                     </VBox>
                 </VBox>
-
                 <!-- Destination Card 2 -->
                 <VBox styleClass="destination-card" spacing="15">
                     <VBox styleClass="destination-image destination-istanbul"

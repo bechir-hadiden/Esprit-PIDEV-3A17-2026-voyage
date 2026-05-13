@@ -1,0 +1,178 @@
+/* SmartTrip Theme for JavaFX based on Symfony design */
+
+.root {
+    -fx-base-navy: #0d1b2a;
+    -fx-base-navy-2: #112236;
+    -fx-base-gold: #c9a84c;
+    -fx-base-gold-l: #e8c97a;
+    -fx-base-cream: #f5f0e8;
+    -fx-base-white: #ffffff;
+    -fx-base-muted: #7a8a99;
+    
+    -fx-font-family: "Segoe UI", "Plus Jakarta Sans", sans-serif;
+    -fx-background-color: -fx-base-cream;
+}
+
+/* Base backgrounds */
+.bg-navy {
+    -fx-background-color: -fx-base-navy;
+}
+.bg-navy-2 {
+    -fx-background-color: -fx-base-navy-2;
+}
+.bg-cream {
+    -fx-background-color: -fx-base-cream;
+}
+
+/* Buttons */
+.btn-primary {
+    -fx-background-color: linear-gradient(to bottom right, #c9a84c, #e8c97a);
+    -fx-text-fill: #0d1b2a;
+    -fx-background-radius: 50px;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 24px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(201,168,76,0.3), 10, 0, 0, 4);
+}
+
+.btn-primary:hover {
+    -fx-translate-y: -2px;
+    -fx-effect: dropshadow(three-pass-box, rgba(201,168,76,0.5), 15, 0, 0, 6);
+}
+
+.btn-outline-light {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(255,255,255,0.35);
+    -fx-border-radius: 50px;
+    -fx-border-width: 1px;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: normal;
+    -fx-padding: 10px 24px;
+    -fx-cursor: hand;
+}
+
+.btn-outline-light:hover {
+    -fx-border-color: #c9a84c;
+    -fx-background-color: rgba(201,168,76,0.1);
+    -fx-text-fill: #c9a84c;
+}
+
+.btn-gold {
+    -fx-background-color: linear-gradient(to bottom right, #c9a84c, #e8c97a);
+    -fx-text-fill: #0d1b2a;
+    -fx-background-radius: 50px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 18px;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.btn-navy {
+    -fx-background-color: #0d1b2a;
+    -fx-border-color: rgba(201,168,76,0.3);
+    -fx-border-radius: 50px;
+    -fx-border-width: 1px;
+    -fx-text-fill: #c9a84c;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 18px;
+    -fx-cursor: hand;
+}
+
+.btn-navy:hover {
+    -fx-background-color: #c9a84c;
+    -fx-text-fill: #0d1b2a;
+}
+
+/* Typography */
+.section-title {
+    -fx-font-family: "Playfair Display", "Times New Roman", serif;
+    -fx-font-size: 32px;
+    -fx-text-fill: #0d1b2a;
+}
+
+.section-title-light {
+    -fx-font-family: "Playfair Display", "Times New Roman", serif;
+    -fx-font-size: 32px;
+    -fx-text-fill: #ffffff;
+}
+
+.section-label {
+    -fx-text-fill: #c9a84c;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.section-sub {
+    -fx-text-fill: #7a8a99;
+    -fx-font-size: 14px;
+}
+
+/* Navbar */
+.navbar {
+    -fx-background-color: rgba(13,27,42,0.96);
+    -fx-border-color: transparent transparent rgba(201,168,76,0.2) transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.nav-logo {
+    -fx-font-family: "Playfair Display", "Times New Roman", serif;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #c9a84c;
+}
+.nav-logo-span {
+    -fx-text-fill: #ffffff;
+}
+
+/* Cards (Packages/Destinations) */
+.pkg-card {
+    -fx-background-color: #112236;
+    -fx-border-color: rgba(201,168,76,0.12);
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+.pkg-name {
+    -fx-font-family: "Playfair Display", serif;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+.pkg-desc {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(255,255,255,0.65);
+}
+
+.pkg-price {
+    -fx-text-fill: #c9a84c;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* Form Inputs */
+.form-input-dark {
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-border-color: rgba(201,168,76,0.15);
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 8px 12px;
+}
+.form-input-dark:focused {
+    -fx-border-color: #c9a84c;
+}
+
+.form-input-light {
+    -fx-background-color: #ffffff;
+    -fx-border-color: rgba(201,168,76,0.3);
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-text-fill: #0d1b2a;
+    -fx-padding: 8px 12px;
+}
+.form-input-light:focused {
+    -fx-border-color: #c9a84c;
+}

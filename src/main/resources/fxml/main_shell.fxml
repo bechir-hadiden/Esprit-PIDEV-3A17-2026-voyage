@@ -13,13 +13,14 @@
     <stylesheets>
         <URL value="@../css/style.css" />
         <URL value="@../css/sidebar.css" />
+        <URL value="@../css/smarttrip_theme.css" />
     </stylesheets>
 
     <!-- Sidebar -->
     <VBox styleClass="sidebar" spacing="10">
         <VBox spacing="5" style="-fx-padding: 0 0 20 0;">
-            <Label text="SmartTrip Transport" style="-fx-font-size: 24px; -fx-text-fill: white; -fx-font-weight: 900; -fx-letter-spacing: 1px;"/>
-            <Label fx:id="roleBadge" text="USER" style="-fx-background-color: rgba(255,255,255,0.1); -fx-text-fill: #94a3b8; -fx-padding: 2 10; -fx-background-radius: 5; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+            <Label text="SmartTrip Transport" style="-fx-font-family: 'Playfair Display'; -fx-font-size: 24px; -fx-text-fill: white; -fx-font-weight: 900; -fx-letter-spacing: 1px;"/>
+            <Label fx:id="roleBadge" text="USER" style="-fx-font-family: 'Plus Jakarta Sans', sans-serif; -fx-background-color: rgba(201,168,76,0.2); -fx-text-fill: #c9a84c; -fx-padding: 2 10; -fx-background-radius: 5; -fx-font-size: 10px; -fx-font-weight: bold;"/>
         </VBox>
         
         <VBox spacing="5" VBox.vgrow="ALWAYS">

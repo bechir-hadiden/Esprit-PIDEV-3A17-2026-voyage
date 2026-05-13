@@ -154,13 +154,20 @@ public class HomeController {
                 imgView.setPreserveRatio(false);
 
                 Image img;
-                if (imageUrl.startsWith("/images/") || imageUrl.startsWith("/")) {
-                    File f = new File("src/main/resources" + imageUrl);
-                    img = f.exists()
-                            ? new Image(f.toURI().toString())
-                            : new Image(imageUrl, true);
+                String finalUrl = imageUrl;
+                if (!imageUrl.startsWith("/") && !imageUrl.startsWith("http")) {
+                    finalUrl = "/images/" + imageUrl;
+                }
+                
+                File f = new File("src/main/resources" + finalUrl);
+                if (f.exists()) {
+                    img = new Image(f.toURI().toString());
                 } else {
-                    img = new Image(imageUrl, true);
+                    try {
+                        img = new Image(getClass().getResource(finalUrl).toExternalForm(), true);
+                    } catch (Exception e) {
+                        img = new Image(imageUrl, true); // Fallback
+                    }
                 }
                 imgView.setImage(img);
 

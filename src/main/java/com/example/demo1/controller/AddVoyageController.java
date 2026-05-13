@@ -60,14 +60,12 @@ public class AddVoyageController {
     public void initialize() {
         System.out.println("🚀 Initialisation AddVoyageController...");
 
-        // Préparer l'ImageView du carrousel
         imagePreview = new ImageView();
         imagePreview.setFitWidth(480);
         imagePreview.setFitHeight(200);
         imagePreview.setPreserveRatio(false);
         imagePreview.setStyle("-fx-background-radius: 12;");
 
-        // Cacher les boutons au départ
         btnPrev.setVisible(false);
         btnPrev.setManaged(false);
         btnNext.setVisible(false);
@@ -76,13 +74,37 @@ public class AddVoyageController {
         chargerDestinations();
         tfPaysDepart.setText("Tunisie");
 
-        // Quand on choisit une destination → afficher son carrousel
         cbDestination.setOnAction(e -> {
             Destination dest = cbDestination.getValue();
             if (dest != null) afficherCarrousel(dest);
         });
 
         System.out.println("✅ AddVoyageController initialisé");
+    }
+
+    // ============================================
+    // ✅ UTILITAIRE : première image seulement
+    // Évite "Data too long for column imagePath"
+    // ============================================
+    private String getPremiereImage(Destination dest) {
+        if (dest == null) return "/images/default.jpg";
+
+        // Priorité 1 : liste d'images parsées
+        List<String> images = dest.getImages();
+        if (images != null && !images.isEmpty()) {
+            return images.get(0).trim();
+        }
+
+        // Priorité 2 : imageUrl (peut contenir plusieurs URLs séparées par ";")
+        String url = dest.getImageUrl();
+        if (url == null || url.isEmpty()) return "/images/default.jpg";
+
+        // Prendre uniquement la première
+        if (url.contains(";")) {
+            url = url.split(";")[0].trim();
+        }
+
+        return url.isEmpty() ? "/images/default.jpg" : url;
     }
 
     // ============================================
@@ -127,7 +149,6 @@ public class AddVoyageController {
     // 🎠 AFFICHER LE CARROUSEL
     // ============================================
     private void afficherCarrousel(Destination dest) {
-        // ✅ Récupérer la liste complète des images
         listeImages = new ArrayList<>(dest.getImages());
         indexImageCourant = 0;
 
@@ -139,23 +160,21 @@ public class AddVoyageController {
             return;
         }
 
-        // Afficher la première image
         afficherImageIndex(0);
 
-        // ✅ Afficher les boutons seulement si plusieurs images
         boolean multipleImages = listeImages.size() > 1;
         btnPrev.setVisible(multipleImages);
         btnPrev.setManaged(multipleImages);
         btnNext.setVisible(multipleImages);
         btnNext.setManaged(multipleImages);
 
-        // Mettre à jour les indicateurs et le compteur
         mettreAJourIndicateurs();
         mettreAJourCompteur();
     }
 
     // ============================================
     // 🖼️ AFFICHER L'IMAGE À L'INDEX DONNÉ
+    // ✅ HttpURLConnection + User-Agent pour Pexels/CDN
     // ============================================
     private void afficherImageIndex(int index) {
         imagePreviewContainer.getChildren().clear();
@@ -165,36 +184,72 @@ public class AddVoyageController {
         String imageUrl = listeImages.get(index);
         System.out.println("📷 Affichage image [" + index + "] : " + imageUrl);
 
-        try {
-            Image image;
+        Label loading = new Label("⏳ Chargement...");
+        loading.setStyle("-fx-font-size: 14px; -fx-text-fill: #aaa; -fx-padding: 50;");
+        imagePreviewContainer.getChildren().add(loading);
 
-            if (imageUrl.startsWith("/images/")) {
-                // Image locale dans les ressources
-                File fichier = new File("src/main/resources" + imageUrl);
-                if (fichier.exists()) {
-                    image = new Image(fichier.toURI().toString());
-                } else {
-                    // Essayer depuis le classpath
-                    var stream = getClass().getResourceAsStream(imageUrl);
-                    if (stream != null) {
-                        image = new Image(stream);
+        new Thread(() -> {
+            try {
+                String urlComplete;
+
+                if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+                    urlComplete = imageUrl;
+
+                } else if (imageUrl.startsWith("/uploads/")) {
+                    urlComplete = "http://localhost:8000" + imageUrl;
+
+                } else if (imageUrl.startsWith("/images/") || imageUrl.startsWith("/")) {
+                    File fichier = new File("src/main/resources" + imageUrl);
+                    if (fichier.exists()) {
+                        urlComplete = fichier.toURI().toString();
                     } else {
-                        afficherPlaceholder("Image introuvable");
-                        return;
+                        var res = getClass().getResource(imageUrl);
+                        urlComplete = res != null ? res.toExternalForm() : null;
+                    }
+                } else {
+                    var res = getClass().getResource("/" + imageUrl);
+                    urlComplete = res != null ? res.toExternalForm() : imageUrl;
+                }
+
+                if (urlComplete == null) {
+                    javafx.application.Platform.runLater(() -> afficherPlaceholder("Image introuvable"));
+                    return;
+                }
+
+                java.net.HttpURLConnection conn =
+                        (java.net.HttpURLConnection) new java.net.URL(urlComplete).openConnection();
+                conn.setRequestProperty("User-Agent",
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+                                "Chrome/120.0.0.0 Safari/537.36");
+                conn.setRequestProperty("Accept", "image/webp,image/apng,image/*,*/*;q=0.8");
+                conn.setConnectTimeout(8000);
+                conn.setReadTimeout(15000);
+                conn.connect();
+
+                if (conn.getResponseCode() != java.net.HttpURLConnection.HTTP_OK) {
+                    javafx.application.Platform.runLater(() -> afficherPlaceholder("Image indisponible"));
+                    return;
+                }
+
+                try (java.io.InputStream is = conn.getInputStream()) {
+                    Image image = new Image(is);
+                    if (!image.isError()) {
+                        javafx.application.Platform.runLater(() -> {
+                            imagePreview.setImage(image);
+                            imagePreviewContainer.getChildren().clear();
+                            imagePreviewContainer.getChildren().add(imagePreview);
+                            System.out.println("✅ Image affichée : " + imageUrl);
+                        });
+                    } else {
+                        javafx.application.Platform.runLater(() -> afficherPlaceholder("Erreur image"));
                     }
                 }
-            } else {
-                // URL externe (http/https)
-                image = new Image(imageUrl, true);
+
+            } catch (Exception e) {
+                System.err.println("❌ Erreur chargement image: " + e.getMessage());
+                javafx.application.Platform.runLater(() -> afficherPlaceholder("Erreur image"));
             }
-
-            imagePreview.setImage(image);
-            imagePreviewContainer.getChildren().add(imagePreview);
-
-        } catch (Exception e) {
-            System.err.println("❌ Erreur chargement image: " + e.getMessage());
-            afficherPlaceholder("Erreur image");
-        }
+        }).start();
     }
 
     // ============================================
@@ -222,7 +277,7 @@ public class AddVoyageController {
     }
 
     // ============================================
-    // 🔵 INDICATEURS (points cliquables en bas)
+    // 🔵 INDICATEURS
     // ============================================
     private void mettreAJourIndicateurs() {
         hboxIndicateurs.getChildren().clear();
@@ -230,8 +285,8 @@ public class AddVoyageController {
         for (int i = 0; i < listeImages.size(); i++) {
             Circle point = new Circle(5);
             point.setFill(i == indexImageCourant
-                    ? Color.web("#667eea")  // actif  → violet
-                    : Color.web("#cccccc")); // inactif → gris
+                    ? Color.web("#667eea")
+                    : Color.web("#cccccc"));
             point.setStyle("-fx-cursor: hand;");
 
             final int idx = i;
@@ -247,7 +302,7 @@ public class AddVoyageController {
     }
 
     // ============================================
-    // 🔢 COMPTEUR  ex: 2 / 5
+    // 🔢 COMPTEUR
     // ============================================
     private void mettreAJourCompteur() {
         if (listeImages.size() > 1) {
@@ -270,7 +325,7 @@ public class AddVoyageController {
     }
 
     // ============================================
-    // 📷 PLACEHOLDER (aucune image)
+    // 📷 PLACEHOLDER
     // ============================================
     private void afficherPlaceholder(String nom) {
         imagePreviewContainer.getChildren().clear();
@@ -281,6 +336,7 @@ public class AddVoyageController {
 
     // ============================================
     // 💾 ENREGISTRER (AJOUT OU MODIFICATION)
+    // ✅ getPremiereImage() utilisé partout → plus de "Data too long"
     // ============================================
     @FXML
     private void handleSave() {
@@ -288,6 +344,8 @@ public class AddVoyageController {
 
         try {
             Destination destChoisie = cbDestination.getValue();
+            // ✅ Toujours prendre seulement la première image
+            String imagePath = getPremiereImage(destChoisie);
 
             if (voyageAModifier != null) {
                 // MODE MODIFICATION
@@ -298,8 +356,7 @@ public class AddVoyageController {
                 voyageAModifier.setDateFin(dateFin.getValue());
                 voyageAModifier.setPrix(Double.parseDouble(txtPrix.getText().trim()));
                 voyageAModifier.setDescription(txtDescription.getText().trim());
-                voyageAModifier.setImagePath(destChoisie.getImageUrl() != null
-                        ? destChoisie.getImageUrl() : "/images/default.jpg");
+                voyageAModifier.setImagePath(imagePath); // ✅ première image seulement
                 voyageAModifier.setPaysDepart(tfPaysDepart.getText().trim());
 
                 boolean success = voyageService.updateVoyage(voyageAModifier);
@@ -321,8 +378,7 @@ public class AddVoyageController {
                 voyage.setDateFin(dateFin.getValue());
                 voyage.setPrix(Double.parseDouble(txtPrix.getText().trim()));
                 voyage.setDescription(txtDescription.getText().trim());
-                voyage.setImagePath(destChoisie.getImageUrl() != null
-                        ? destChoisie.getImageUrl() : "/images/default.jpg");
+                voyage.setImagePath(imagePath); // ✅ première image seulement
                 voyage.setPaysDepart(tfPaysDepart.getText().trim());
 
                 boolean success = voyageService.addVoyage(voyage);

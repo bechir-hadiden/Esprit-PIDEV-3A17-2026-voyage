@@ -93,42 +93,69 @@ public class EditVoyageController {
     }
 
     private void loadCurrentImage(String imagePath) {
-        try {
-            if (imagePath != null && !imagePath.isEmpty()) {
-                // Essayer de charger l'image depuis les ressources
-                URL imageUrl = getClass().getResource(imagePath);
+        if (imagePath == null || imagePath.isEmpty()) return;
 
-                if (imageUrl != null) {
-                    Image image = new Image(imageUrl.toExternalForm());
-                    imagePreview.setImage(image);
-                    imagePreview.setVisible(true);
-                    lblNoImage.setVisible(false);
+        // Prendre seulement la première si plusieurs séparées par ";"
+        String firstImage = imagePath.split(";")[0].trim();
+        if (firstImage.isEmpty()) return;
 
-                    if (!imagePreviewContainer.getChildren().contains(imagePreview)) {
-                        imagePreviewContainer.getChildren().add(imagePreview);
+        new Thread(() -> {
+            try {
+                String urlComplete;
+
+                if (firstImage.startsWith("http://") || firstImage.startsWith("https://")) {
+                    urlComplete = firstImage;
+
+                } else if (firstImage.startsWith("/uploads/")) {
+                    urlComplete = "http://localhost:8000" + firstImage;
+
+                } else if (firstImage.startsWith("/images/") || firstImage.startsWith("/")) {
+                    var res = getClass().getResource(firstImage);
+                    if (res != null) {
+                        urlComplete = res.toExternalForm();
+                    } else {
+                        String projectPath = System.getProperty("user.dir");
+                        java.nio.file.Path p = java.nio.file.Paths.get(
+                                projectPath, "src", "main", "resources", firstImage);
+                        urlComplete = p.toUri().toString();
                     }
                 } else {
-                    // Essayer de charger depuis le système de fichiers
-                    String projectPath = System.getProperty("user.dir");
-                    Path targetPath = Paths.get(projectPath, "target", "classes", "images",
-                            imagePath.replace("/images/", ""));
+                    var res = getClass().getResource("/" + firstImage);
+                    urlComplete = res != null ? res.toExternalForm() : firstImage;
+                }
 
-                    if (Files.exists(targetPath)) {
-                        Image image = new Image(targetPath.toUri().toString());
-                        imagePreview.setImage(image);
-                        imagePreview.setVisible(true);
-                        lblNoImage.setVisible(false);
+                // ✅ HttpURLConnection + User-Agent comme DestinationController
+                java.net.HttpURLConnection conn =
+                        (java.net.HttpURLConnection) new java.net.URL(urlComplete).openConnection();
+                conn.setRequestProperty("User-Agent",
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+                                "Chrome/120.0.0.0 Safari/537.36");
+                conn.setRequestProperty("Accept", "image/webp,image/apng,image/*,*/*;q=0.8");
+                conn.setConnectTimeout(8000);
+                conn.setReadTimeout(15000);
+                conn.connect();
 
-                        if (!imagePreviewContainer.getChildren().contains(imagePreview)) {
-                            imagePreviewContainer.getChildren().add(imagePreview);
-                        }
+                if (conn.getResponseCode() != java.net.HttpURLConnection.HTTP_OK) return;
+
+                try (java.io.InputStream is = conn.getInputStream()) {
+                    Image image = new Image(is);
+                    if (!image.isError()) {
+                        javafx.application.Platform.runLater(() -> {
+                            imagePreview.setImage(image);
+                            imagePreview.setVisible(true);
+                            if (lblNoImage != null) lblNoImage.setVisible(false);
+                            if (!imagePreviewContainer.getChildren().contains(imagePreview)) {
+                                imagePreviewContainer.getChildren().add(imagePreview);
+                            }
+                            System.out.println("✅ Aperçu chargé : " + firstImage);
+                        });
                     }
                 }
+
+            } catch (Exception e) {
+                System.err.println("⚠️ Impossible de charger l'aperçu : " + e.getMessage());
             }
-        } catch (Exception e) {
-            System.err.println("⚠️ Impossible de charger l'image actuelle");
-            e.printStackTrace();
-        }
+        }).start();
     }
 
     @FXML

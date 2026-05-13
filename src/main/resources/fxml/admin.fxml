@@ -13,6 +13,7 @@
 
     <stylesheets>
         <URL value="@../css/style.css" />
+        <URL value="@../css/smarttrip_theme.css" />
     </stylesheets>
 
     <padding>
@@ -22,8 +23,8 @@
 
     <!-- Welcome Message -->
     <VBox spacing="5" style="-fx-padding: 0 0 30 0;">
-        <Label text="Bienvenue dans l'Administration" styleClass="title-label" style="-fx-font-size: 32px;"/>
-        <Label text="Gérez votre plateforme de transport en toute simplicité." styleClass="subtitle-label" style="-fx-font-size: 16px;"/>
+        <Label text="Bienvenue dans l'Administration" styleClass="title-label" style="-fx-font-family: 'Playfair Display'; -fx-font-size: 32px;"/>
+        <Label text="Gérez votre plateforme de transport en toute simplicité." styleClass="subtitle-label" style="-fx-font-family: 'Plus Jakarta Sans', sans-serif; -fx-font-size: 16px;"/>
     </VBox>
 
     <!-- Dashboard Hub -->
@@ -31,51 +32,51 @@
         
         <!-- Vehicles Card -->
         <VBox spacing="30" alignment="CENTER" styleClass="card-hub" onMouseClicked="#ouvrirListe" prefWidth="400">
-            <StackPane styleClass="icon-bg">
-                <Region styleClass="icon, icon-add" prefWidth="35" prefHeight="35" style="-fx-background-color: -primary-blue;"/>
+            <StackPane styleClass="icon-bg" style="-fx-background-color: rgba(201,168,76,0.1); -fx-background-radius: 20;">
+                <Region styleClass="icon, icon-add" prefWidth="35" prefHeight="35" style="-fx-background-color: #c9a84c;"/>
             </StackPane>
             <VBox spacing="10" alignment="CENTER">
-                <Label text="Gestion du Parc" styleClass="title-label" style="-fx-font-size: 24px;"/>
+                <Label text="Gestion du Parc" styleClass="title-label" style="-fx-font-family: 'Plus Jakarta Sans', sans-serif; -fx-font-size: 24px;"/>
                 <Label text="Gérez vos véhicules, bus, taxis et voitures" styleClass="subtitle-label" wrapText="true" style="-fx-text-alignment: center;"/>
             </VBox>
-            <Button text="Accéder à l'inventaire" onAction="#ouvrirListe" styleClass="button-primary" prefWidth="250"/>
+            <Button text="Accéder à l'inventaire" onAction="#ouvrirListe" styleClass="btn-primary" prefWidth="250"/>
         </VBox>
 
         <!-- Categories Card -->
         <VBox spacing="30" alignment="CENTER" styleClass="card-hub" onMouseClicked="#ouvrirListeTypes" prefWidth="350">
-            <StackPane styleClass="icon-bg">
-                <Region styleClass="icon, icon-edit" prefWidth="35" prefHeight="35" style="-fx-background-color: -primary-blue;"/>
+            <StackPane styleClass="icon-bg" style="-fx-background-color: rgba(201,168,76,0.1); -fx-background-radius: 20;">
+                <Region styleClass="icon, icon-edit" prefWidth="35" prefHeight="35" style="-fx-background-color: #c9a84c;"/>
             </StackPane>
             <VBox spacing="10" alignment="CENTER">
-                <Label text="Configuration" styleClass="title-label" style="-fx-font-size: 20px;"/>
+                <Label text="Configuration" styleClass="title-label" style="-fx-font-family: 'Plus Jakarta Sans', sans-serif; -fx-font-size: 20px;"/>
                 <Label text="Types et tarifs" styleClass="subtitle-label" wrapText="true" style="-fx-text-alignment: center;"/>
             </VBox>
-            <Button text="Gérer les catégories" onAction="#ouvrirListeTypes" styleClass="button-primary" prefWidth="200"/>
+            <Button text="Gérer les catégories" onAction="#ouvrirListeTypes" styleClass="btn-primary" prefWidth="200"/>
         </VBox>
         
 
         <!-- SmartNotify Card -->
         <VBox spacing="30" alignment="CENTER" styleClass="card-hub" prefWidth="350">
-            <StackPane styleClass="icon-bg">
-                <Region styleClass="icon, icon-email" prefWidth="35" prefHeight="35" style="-fx-background-color: -primary-blue;"/>
+            <StackPane styleClass="icon-bg" style="-fx-background-color: rgba(201,168,76,0.1); -fx-background-radius: 20;">
+                <Region styleClass="icon, icon-email" prefWidth="35" prefHeight="35" style="-fx-background-color: #c9a84c;"/>
             </StackPane>
             <VBox spacing="10" alignment="CENTER">
-                <Label text="SmartNotify" styleClass="title-label" style="-fx-font-size: 20px;"/>
+                <Label text="SmartNotify" styleClass="title-label" style="-fx-font-family: 'Plus Jakarta Sans', sans-serif; -fx-font-size: 20px;"/>
                 <Label text="Système Email de confirmation" styleClass="subtitle-label" wrapText="true" style="-fx-text-alignment: center;"/>
             </VBox>
-            <Button text="Monitoring Email" onAction="#handleMonitoringEmail" styleClass="button-primary" prefWidth="200"/>
+            <Button text="Monitoring Email" onAction="#handleMonitoringEmail" styleClass="btn-primary" prefWidth="200"/>
         </VBox>
 
         <!-- Stats AI Card -->
         <VBox spacing="30" alignment="CENTER" styleClass="card-hub" prefWidth="350" onMouseClicked="#ouvrirStats">
-            <StackPane styleClass="icon-bg">
-                <Region styleClass="icon, icon-chart" prefWidth="35" prefHeight="35" style="-fx-background-color: -primary-blue;"/>
+            <StackPane styleClass="icon-bg" style="-fx-background-color: rgba(201,168,76,0.1); -fx-background-radius: 20;">
+                <Region styleClass="icon, icon-chart" prefWidth="35" prefHeight="35" style="-fx-background-color: #c9a84c;"/>
             </StackPane>
             <VBox spacing="10" alignment="CENTER">
-                <Label text="Statistiques AI" styleClass="title-label" style="-fx-font-size: 20px;"/>
+                <Label text="Statistiques AI" styleClass="title-label" style="-fx-font-family: 'Plus Jakarta Sans', sans-serif; -fx-font-size: 20px;"/>
                 <Label text="Analyses et prévisions ChatGPT" styleClass="subtitle-label" wrapText="true" style="-fx-text-alignment: center;"/>
             </VBox>
-            <Button text="Voir les analyses" onAction="#ouvrirStats" styleClass="button-primary" prefWidth="200"/>
+            <Button text="Voir les analyses" onAction="#ouvrirStats" styleClass="btn-primary" prefWidth="200"/>
         </VBox>
 
     </HBox>

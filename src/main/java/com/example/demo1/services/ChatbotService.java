@@ -12,7 +12,6 @@ import java.net.http.HttpResponse;
 public class ChatbotService {
 
     // 🔑 VOTRE CLÉ API GROQ (obtenez-la sur https://console.groq.com)
-    private static final String GROQ_API_KEY = "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";
 
     // 🌐 URL de l'API Groq
     private static final String GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";

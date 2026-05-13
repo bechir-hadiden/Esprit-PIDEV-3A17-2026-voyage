@@ -276,28 +276,32 @@ public class DestinationDetailController {
     private List<String> recupererImages(Voyage voyage) {
         List<String> images = new ArrayList<>();
 
-        // Priorité 1 : images de la destination (déjà parsées)
         if (voyage.getDestinationObj() != null) {
-            List<String> destImages = voyage.getDestinationObj().getImages();
-            if (destImages != null && !destImages.isEmpty()) {
-                images.addAll(destImages);
-                return images;
-            }
-            // Priorité 2 : parser imageUrl avec ";"
             String destUrl = voyage.getDestinationObj().getImageUrl();
             if (destUrl != null && !destUrl.isEmpty()) {
-                Arrays.stream(destUrl.split(";"))
-                        .map(String::trim)
-                        .filter(s -> !s.isEmpty())
-                        .forEach(images::add);
+
+                // ✅ Format JSON ["url1","url2"]
+                if (destUrl.trim().startsWith("[")) {
+                    destUrl = destUrl.replaceAll("[\\[\\]\"]", "");
+                    Arrays.stream(destUrl.split(","))
+                            .map(String::trim)
+                            .filter(s -> !s.isEmpty())
+                            .forEach(images::add);
+                } else {
+                    // ✅ Séparateur | OU ;
+                    Arrays.stream(destUrl.split("[|;]"))
+                            .map(String::trim)
+                            .filter(s -> !s.isEmpty())
+                            .forEach(images::add);
+                }
                 if (!images.isEmpty()) return images;
             }
         }
 
-        // Priorité 3 : imagePath du voyage
+        // Fallback : imagePath du voyage
         String imagePath = voyage.getImagePath();
         if (imagePath != null && !imagePath.isEmpty()) {
-            Arrays.stream(imagePath.split(";"))
+            Arrays.stream(imagePath.split("[|;]"))
                     .map(String::trim)
                     .filter(s -> !s.isEmpty())
                     .forEach(images::add);

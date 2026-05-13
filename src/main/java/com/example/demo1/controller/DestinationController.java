@@ -18,6 +18,9 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -96,6 +99,74 @@ public class DestinationController {
     }
 
     // ============================================
+    // 🖼️ CHARGEMENT ASYNC UNIVERSEL DES IMAGES
+    // ✅ Gère : Pexels (https), Symfony (/uploads/), local (/images/)
+    // ✅ User-Agent navigateur pour contourner le blocage Pexels
+    // ============================================
+    private void chargerImageAsync(String imageUrl, ImageView imgView) {
+        if (imageUrl == null || imageUrl.isEmpty()) return;
+
+        new Thread(() -> {
+            try {
+                String url;
+
+                if (imageUrl.startsWith("http")) {
+                    // ✅ URL complète (Pexels, etc.)
+                    url = imageUrl;
+
+                } else if (imageUrl.startsWith("/uploads/")) {
+                    // ✅ Image uploadée depuis Symfony
+                    url = "http://localhost:8000" + imageUrl;
+
+                } else if (imageUrl.startsWith("/images/")) {
+                    // ✅ Image locale dans les resources JavaFX
+                    var res = getClass().getResource(imageUrl);
+                    if (res != null) {
+                        url = res.toExternalForm();
+                    } else {
+                        File f = new File("src/main/resources" + imageUrl);
+                        url = f.exists() ? f.toURI().toString() : imageUrl;
+                    }
+
+                } else {
+                    url = imageUrl;
+                }
+
+                System.out.println("🌐 Chargement: " + url);
+
+                // ✅ Connexion HTTP avec User-Agent navigateur (Pexels bloque sinon)
+                HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+                conn.setRequestProperty("User-Agent",
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+                                "Chrome/120.0.0.0 Safari/537.36");
+                conn.setRequestProperty("Accept", "image/webp,image/apng,image/*,*/*;q=0.8");
+                conn.setConnectTimeout(8000);
+                conn.setReadTimeout(15000);
+                conn.connect();
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode != HttpURLConnection.HTTP_OK) {
+                    System.err.println("❌ HTTP " + responseCode + " pour: " + url);
+                    return;
+                }
+
+                try (InputStream is = conn.getInputStream()) {
+                    Image image = new Image(is);
+                    if (!image.isError()) {
+                        Platform.runLater(() -> imgView.setImage(image));
+                        System.out.println("✅ Image chargée: " + imageUrl);
+                    } else {
+                        System.err.println("❌ Erreur image: " + imageUrl);
+                    }
+                }
+
+            } catch (Exception e) {
+                System.err.println("❌ Exception [" + imageUrl + "]: " + e.getMessage());
+            }
+        }).start();
+    }
+
+    // ============================================
     // 🃏 CRÉER UNE CARTE
     // ============================================
     private VBox creerCarte(Destination destination) {
@@ -116,24 +187,9 @@ public class DestinationController {
         List<String> images = destination.getImages();
         String imageUrl = images.isEmpty() ? destination.getImageUrl() : images.get(0);
 
+        // ✅ Chargement asynchrone avec User-Agent
         if (imageUrl != null && !imageUrl.isEmpty()) {
-            try {
-                Image img;
-                if (imageUrl.startsWith("/images/")) {
-                    var resource = getClass().getResource(imageUrl);
-                    if (resource != null) {
-                        img = new Image(resource.toExternalForm(), true);
-                    } else {
-                        File fichier = new File("src/main/resources" + imageUrl);
-                        img = fichier.exists() ? new Image(fichier.toURI().toString(), true) : null;
-                    }
-                } else {
-                    img = new Image(imageUrl, true);
-                }
-                if (img != null) imgView.setImage(img);
-            } catch (Exception e) {
-                System.err.println("❌ Image non chargée: " + imageUrl);
-            }
+            chargerImageAsync(imageUrl, imgView);
         }
 
         StackPane imageContainer = new StackPane(imgView);
@@ -151,7 +207,6 @@ public class DestinationController {
             imageContainer.getChildren().add(badge);
         }
 
-        // ✅ Badge nombre d'images
         if (images.size() > 1) {
             Label badgeImages = new Label("📸 " + images.size());
             badgeImages.setStyle(
@@ -221,17 +276,13 @@ public class DestinationController {
 
     // ============================================
     // ➕ AJOUTER UNE DESTINATION
-    // ✅ FIX : save() ne doit PAS appeler saveImages() en interne
-    //          On gère les images ici APRÈS avoir obtenu l'ID
     // ============================================
     @FXML
     private void handleAjouter() {
         Dialog<Destination> dialog = creerDialogFormulaire(null);
         Optional<Destination> result = dialog.showAndWait();
         result.ifPresent(destination -> {
-            // ✅ save() stocke directement toutes les images dans image_url
             boolean success = destinationService.save(destination);
-
             if (success) {
                 afficherAlert(Alert.AlertType.INFORMATION, "Succès",
                         "✅ Destination ajoutée avec " + destination.getImages().size() + " image(s) !");
@@ -244,15 +295,12 @@ public class DestinationController {
 
     // ============================================
     // ✏️ MODIFIER UNE DESTINATION
-    // ✅ FIX : supprimer les anciennes images PUIS insérer les nouvelles
     // ============================================
     private void handleModifier(Destination destination) {
         Dialog<Destination> dialog = creerDialogFormulaire(destination);
         Optional<Destination> result = dialog.showAndWait();
         result.ifPresent(dest -> {
             dest.setId(destination.getId());
-
-            // ✅ update() stocke directement toutes les images dans image_url
             boolean success = destinationService.update(dest);
             if (success) {
                 afficherAlert(Alert.AlertType.INFORMATION, "Succès",
@@ -327,7 +375,6 @@ public class DestinationController {
         dialog.getDialogPane().getButtonTypes().addAll(btnSauvegarder, ButtonType.CANCEL);
         dialog.getDialogPane().setStyle("-fx-background-color: #f8f9ff;");
 
-        // HEADER
         VBox header = new VBox(5);
         header.setPadding(new Insets(25, 25, 15, 25));
         header.setStyle("-fx-background-color: linear-gradient(to right, #667eea, #764ba2);");
@@ -383,13 +430,12 @@ public class DestinationController {
         iataBox.getChildren().addAll(lblIata, tfIata);
         paysIataBox.getChildren().addAll(paysBox, iataBox);
 
-        // ============================================
-        // ✅ SECTION IMAGES MULTIPLES
-        // ============================================
+        // IMAGES
         List<String> imagesPaths = new ArrayList<>();
         if (existante != null && !existante.getImages().isEmpty()) {
             imagesPaths.addAll(existante.getImages());
-        } else if (existante != null && existante.getImageUrl() != null && !existante.getImageUrl().isEmpty()) {
+        } else if (existante != null && existante.getImageUrl() != null
+                && !existante.getImageUrl().isEmpty()) {
             imagesPaths.add(existante.getImageUrl());
         }
 
@@ -427,7 +473,6 @@ public class DestinationController {
         flowApercu.setPrefWrapLength(490);
         flowApercu.setMinHeight(80);
 
-        // Afficher aperçus initiaux
         rebuildMiniatures(flowApercu, imagesPaths);
         if (imagesPaths.isEmpty()) {
             Label lblVide = new Label("📷 Aucune image — cliquez sur '+ Ajouter images'");
@@ -435,7 +480,6 @@ public class DestinationController {
             flowApercu.getChildren().add(lblVide);
         }
 
-        // ✅ Ajouter plusieurs images via FileChooser
         btnAjouterImg.setOnAction(e -> {
             FileChooser fc = new FileChooser();
             fc.setTitle("Sélectionner des images");
@@ -452,10 +496,8 @@ public class DestinationController {
                         imagesPaths.add(chemin);
                     }
                 }
-                // Mettre à jour le compteur
                 lblImages.setText("📸  Images (" + imagesPaths.size() + " sélectionnée(s))");
                 rebuildMiniatures(flowApercu, imagesPaths);
-                System.out.println("📸 Images sélectionnées: " + imagesPaths.size());
             }
         });
 
@@ -505,7 +547,6 @@ public class DestinationController {
                         "-fx-padding: 10 25; -fx-background-radius: 8; -fx-cursor: hand;"
         );
 
-        // VALIDATION
         dialog.setResultConverter(buttonType -> {
             if (buttonType == btnSauvegarder) {
                 String nom = tfNom.getText().trim();
@@ -514,7 +555,8 @@ public class DestinationController {
                     return null;
                 }
                 if (nom.length() < 3) {
-                    afficherAlert(Alert.AlertType.WARNING, "Nom invalide", "Le nom doit contenir au moins 3 caractères !");
+                    afficherAlert(Alert.AlertType.WARNING, "Nom invalide",
+                            "Le nom doit contenir au moins 3 caractères !");
                     return null;
                 }
 
@@ -524,14 +566,11 @@ public class DestinationController {
                 d.setCodeIata(tfIata.getText().trim().toUpperCase());
                 d.setDescription(taDesc.getText().trim());
 
-                // ✅ Image principale = première de la liste
                 if (!imagesPaths.isEmpty()) {
                     d.setImageUrl(imagesPaths.get(0));
                     d.setImages(new ArrayList<>(imagesPaths));
                 }
 
-                System.out.println("📋 Destination à sauvegarder: " + nom +
-                        " avec " + imagesPaths.size() + " image(s)");
                 return d;
             }
             return null;
@@ -542,6 +581,7 @@ public class DestinationController {
 
     // ============================================
     // 🔄 REBUILD MINIATURES
+    // ✅ Utilise chargerImageAsync()
     // ============================================
     private void rebuildMiniatures(FlowPane flow, List<String> paths) {
         flow.getChildren().clear();
@@ -564,12 +604,9 @@ public class DestinationController {
             mini.setFitWidth(110);
             mini.setFitHeight(75);
             mini.setPreserveRatio(false);
-            try {
-                File f = new File("src/main/resources" + path);
-                mini.setImage(f.exists()
-                        ? new Image(f.toURI().toString())
-                        : new Image(path, true));
-            } catch (Exception ignored) {}
+
+            // ✅ Chargement asynchrone avec User-Agent
+            chargerImageAsync(path, mini);
 
             Label lblNum = new Label(String.valueOf(i + 1));
             lblNum.setStyle(
@@ -644,9 +681,13 @@ public class DestinationController {
         loading.setAlignment(Pos.CENTER);
         loading.setPadding(new Insets(40));
         loading.getChildren().addAll(
-                new Label("✈️ " + destination.getNom()) {{ setFont(Font.font("Arial", FontWeight.BOLD, 20)); }},
+                new Label("✈️ " + destination.getNom()) {{
+                    setFont(Font.font("Arial", FontWeight.BOLD, 20));
+                }},
                 new ProgressIndicator() {{ setPrefSize(50, 50); }},
-                new Label("🔍 Recherche de la vidéo YouTube...") {{ setStyle("-fx-text-fill: #666;"); }}
+                new Label("🔍 Recherche de la vidéo YouTube...") {{
+                    setStyle("-fx-text-fill: #666;");
+                }}
         );
         dialog.getDialogPane().setContent(loading);
 
@@ -672,7 +713,8 @@ public class DestinationController {
                     cadre.setAlignment(Pos.CENTER);
                     cadre.setPadding(new Insets(15));
                     cadre.setStyle("-fx-border-color: #667eea; -fx-border-width: 3;" +
-                            "-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: white;");
+                            "-fx-border-radius: 10; -fx-background-radius: 10;" +
+                            "-fx-background-color: white;");
 
                     Button btnFermer = new Button("✕ Fermer");
                     btnFermer.setStyle("-fx-background-color: #667eea; -fx-text-fill: white;" +

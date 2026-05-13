@@ -232,12 +232,18 @@
 
 .card-hub {
     -fx-background-color: white;
-    -fx-background-radius: 25;
+    -fx-background-radius: 24;
     -fx-padding: 40;
-    -fx-effect: dropshadow(three-pass-box, rgba(37, 99, 235, 0.08), 25, 0, 0, 10);
-    -fx-border-color: #f1f5f9;
-    -fx-border-width: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.05), 20, 0, 0, 5);
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
     -fx-cursor: hand;
+}
+
+.card-hub:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(201, 168, 76, 0.15), 30, 0, 0, 10);
+    -fx-border-color: #c9a84c;
+    -fx-translate-y: -4px;
 }
 
 /* --- Item Cards & Grid --- */

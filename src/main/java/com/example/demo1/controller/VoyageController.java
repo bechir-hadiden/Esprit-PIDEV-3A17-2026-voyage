@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -663,35 +664,84 @@ public class VoyageController {
             return;
         }
 
-        // ✅ FIX : si imageUrl contient ";" → prendre uniquement la première
+        // Prendre seulement la première si plusieurs séparées par ";"
         if (imageUrl.contains(";")) {
             imageUrl = imageUrl.split(";")[0].trim();
         }
-
         if (imageUrl.isEmpty()) {
             ajouterPlaceholder(imagePane, voyage);
             return;
         }
 
-        try {
-            Image img;
-            if (imageUrl.startsWith("/images/")) {
-                File f = new File("src/main/resources" + imageUrl);
-                if (f.exists()) {
-                    img = new Image(f.toURI().toString());
+        final String finalUrl = imageUrl;
+
+        new Thread(() -> {
+            try {
+                String urlComplete;
+
+                if (finalUrl.startsWith("http://") || finalUrl.startsWith("https://")) {
+                    urlComplete = finalUrl;
+                } else if (finalUrl.startsWith("/uploads/")) {
+                    urlComplete = "http://localhost:8000" + finalUrl;
+                } else if (finalUrl.startsWith("/images/") || finalUrl.startsWith("/")) {
+                    var res = getClass().getResource(finalUrl);
+                    if (res != null) {
+                        urlComplete = res.toExternalForm();
+                    } else {
+                        File f = new File("src/main/resources" + finalUrl);
+                        urlComplete = f.exists() ? f.toURI().toString() : null;
+                    }
                 } else {
-                    var res = getClass().getResource(imageUrl);
-                    if (res != null) img = new Image(res.toExternalForm());
-                    else { ajouterPlaceholder(imagePane, voyage); return; }
+                    var res = getClass().getResource("/" + finalUrl);
+                    if (res != null) {
+                        urlComplete = res.toExternalForm();
+                    } else {
+                        File f = new File("src/main/resources/" + finalUrl);
+                        if (!f.exists()) f = new File(finalUrl);
+                        urlComplete = f.exists() ? f.toURI().toString() : null;
+                    }
                 }
-            } else {
-                img = new Image(imageUrl, true);
+
+                if (urlComplete == null) {
+                    Platform.runLater(() -> ajouterPlaceholder(imagePane, voyage));
+                    return;
+                }
+
+                // ✅ MÊME LOGIQUE QUE DestinationController : HttpURLConnection + User-Agent
+                java.net.HttpURLConnection conn =
+                        (java.net.HttpURLConnection) new java.net.URL(urlComplete).openConnection();
+                conn.setRequestProperty("User-Agent",
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+                                "Chrome/120.0.0.0 Safari/537.36");
+                conn.setRequestProperty("Accept", "image/webp,image/apng,image/*,*/*;q=0.8");
+                conn.setConnectTimeout(8000);
+                conn.setReadTimeout(15000);
+                conn.connect();
+
+                int code = conn.getResponseCode();
+                if (code != java.net.HttpURLConnection.HTTP_OK) {
+                    System.err.println("❌ HTTP " + code + " pour: " + urlComplete);
+                    Platform.runLater(() -> ajouterPlaceholder(imagePane, voyage));
+                    return;
+                }
+
+                try (java.io.InputStream is = conn.getInputStream()) {
+                    Image img = new Image(is);
+                    if (!img.isError()) {
+                        Platform.runLater(() -> {
+                            imgView.setImage(img);
+                            System.out.println("✅ Image chargée : " + finalUrl);
+                        });
+                    } else {
+                        Platform.runLater(() -> ajouterPlaceholder(imagePane, voyage));
+                    }
+                }
+
+            } catch (Exception e) {
+                System.err.println("❌ Erreur image : " + finalUrl + " → " + e.getMessage());
+                Platform.runLater(() -> ajouterPlaceholder(imagePane, voyage));
             }
-            imgView.setImage(img);
-        } catch (Exception e) {
-            System.err.println("❌ Image non trouvée: " + imageUrl);
-            ajouterPlaceholder(imagePane, voyage);
-        }
+        }).start();
     }
 
     private void mettreAJourDots(HBox dots, int indexActif) {

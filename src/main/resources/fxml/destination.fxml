@@ -8,59 +8,52 @@
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.demo1.controller.DestinationController"
       spacing="0"
-      style="-fx-background-color: #f5f6fa;">
+      stylesheets="@../css/smarttrip_theme.css"
+      style="-fx-background-color: #f5f0e8;">
 
     <!-- ===== HEADER ===== -->
-    <HBox style="-fx-background-color: #667eea; -fx-padding: 20;"
+    <HBox style="-fx-background-color: #0d1b2a; -fx-padding: 24;"
           alignment="CENTER_LEFT" spacing="15">
         <VBox HBox.hgrow="ALWAYS">
             <Label text="🌍 Destinations"
-                   style="-fx-font-size: 24px; -fx-font-weight: bold;
-                          -fx-text-fill: white;"/>
+                   style="-fx-font-family: 'Playfair Display'; -fx-font-size: 28px; -fx-font-weight: bold;
+                          -fx-text-fill: #c9a84c;"/>
             <Label fx:id="lblCount"
                    text="0 destinations"
-                   style="-fx-font-size: 13px;
+                   style="-fx-font-family: 'Plus Jakarta Sans', sans-serif; -fx-font-size: 13px;
                           -fx-text-fill: rgba(255,255,255,0.8);"/>
         </VBox>
         <Button text="➕ Ajouter"
                 onAction="#handleAjouter"
-                style="-fx-background-color: white;
-                       -fx-text-fill: #667eea;
-                       -fx-font-weight: bold;
-                       -fx-padding: 10 20;
-                       -fx-background-radius: 20;
-                       -fx-cursor: hand;"/>
+                styleClass="btn-primary"
+                style="-fx-padding: 10 24;"/>
     </HBox>
 
     <!-- ===== BARRE DE RECHERCHE ===== -->
-    <HBox style="-fx-background-color: white; -fx-padding: 15;"
-          alignment="CENTER_LEFT" spacing="10">
+    <HBox style="-fx-background-color: white; -fx-padding: 18;
+                 -fx-border-color: rgba(201,168,76,0.2); -fx-border-width: 0 0 1 0;"
+          alignment="CENTER_LEFT" spacing="12">
         <TextField fx:id="tfRecherche"
                    promptText="🔍 Rechercher une destination..."
-                   prefWidth="300"
+                   prefWidth="320"
                    onKeyReleased="#handleRecherche"
-                   style="-fx-padding: 8 15;
-                          -fx-border-color: #ddd;
-                          -fx-border-radius: 20;
-                          -fx-background-radius: 20;"/>
+                   styleClass="form-input-light"
+                   style="-fx-padding: 10 15;"/>
         <Button text="🔄 Actualiser"
                 onAction="#handleActualiser"
-                style="-fx-background-color: #f0f4ff;
-                       -fx-text-fill: #667eea;
-                       -fx-padding: 8 15;
-                       -fx-background-radius: 20;
-                       -fx-cursor: hand;"/>
+                styleClass="btn-outline-light"
+                style="-fx-border-color: #0d1b2a; -fx-text-fill: #0d1b2a; -fx-padding: 10 20;"/>
     </HBox>
 
     <!-- ===== GRILLE DES DESTINATIONS ===== -->
     <ScrollPane fitToWidth="true"
                 VBox.vgrow="ALWAYS"
                 style="-fx-background-color: transparent;
-                       -fx-background: transparent;">
+                       -fx-background: transparent; -fx-border-color: transparent;">
         <GridPane fx:id="gridDestinations"
-                  hgap="20" vgap="20"
-                  style="-fx-padding: 25;
-                         -fx-background-color: #f5f6fa;"/>
+                  hgap="24" vgap="24"
+                  style="-fx-padding: 30;
+                         -fx-background-color: #f5f0e8;"/>
     </ScrollPane>
 
     <!-- ===== LOADING ===== -->
@@ -71,7 +64,7 @@
           visible="false">
         <ProgressIndicator prefWidth="30" prefHeight="30"/>
         <Label text="Chargement..."
-               style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+               style="-fx-font-family: 'Plus Jakarta Sans', sans-serif; -fx-font-size: 14px; -fx-text-fill: #7a8a99;"/>
     </HBox>
 
 </VBox>
