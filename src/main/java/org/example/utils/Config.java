@@ -51,6 +51,13 @@ public class Config {
                 return stripeVal;
             }
         }
+        
+        if ("stripe.public.key".equals(key)) {
+            String stripeVal = getEnv("STRIPE_PUBLIC_KEY", "STRIPE_PUBLISHABLE_KEY");
+            if (stripeVal != null) {
+                return stripeVal;
+            }
+        }
 
         // Generic env mapping fallback.
         String envKey = key.replace(".", "_").toUpperCase();
@@ -61,6 +68,10 @@ public class Config {
 
         // Finally check properties files.
         String propVal = props.getProperty(key);
-        return propVal != null ? propVal : "YOUR_API_KEY_HERE";
+        if (propVal != null) {
+            return propVal;
+        }
+
+        return "YOUR_API_KEY_HERE";
     }
 }

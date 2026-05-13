@@ -77,6 +77,22 @@ public class UserService {
         return null;
     }
 
+    public java.util.List<User> getAllUsers() {
+        ensureSchemaConsistency();
+        java.util.List<User> users = new java.util.ArrayList<>();
+        String sql = "SELECT * FROM " + USERS_TABLE;
+        try (Connection con = DatabaseConnection.getConnection();
+             Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                users.add(mapUser(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
     public User getUserById(int idUser) {
         ensureSchemaConsistency();
         String sql = "SELECT * FROM " + USERS_TABLE + " WHERE id=? LIMIT 1";

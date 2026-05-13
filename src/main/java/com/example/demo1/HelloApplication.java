@@ -68,7 +68,7 @@ public class HelloApplication extends Application {
             if (scene == null) {
                 scene = new Scene(root);
                 scene.getStylesheets()
-                        .add(HelloApplication.class.getResource("/com/smarttrip/css/main.css").toExternalForm());
+                        .add(HelloApplication.class.getResource("/css/main.css").toExternalForm());
                 primaryStage.setScene(scene);
             } else {
                 scene.setRoot(root);
